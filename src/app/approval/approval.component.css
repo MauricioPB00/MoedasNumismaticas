@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+.container {
+    background-color: #e0dfdf; 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 0 auto;
+    margin-top: 3%;
+    color: black;
+}
+
+.header {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-family: "Open Sans", sans-serif;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.form-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+.form-column p {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "Open Sans", sans-serif;
+}
+
+.form-column:last-child {
+    margin-right: 0;
+}
+
+.form-input {
+    padding: 15px 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+
+.btnCancelar {
+    margin-top: 15px;
+    padding: 15px 10px;
+    border:none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #f50f0f;
+    width: 45%;
+}
+.btnCancelar i {
+    font-size: 15px; 
+    font-weight: 900;
+}
+
+.btn {
+    margin-top: 15px;
+    padding: 15px 10px;
+    border:none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #0acc0a;
+    width: 45%;
+}
+.btnClothes {
+    margin-top: 15px;
+    padding: 15px 10px;
+    border:none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #0acc0a;
+    width: 100%;
+}
+.btn i {
+    font-size: 15px; 
+}
+
+.btnSupplier{
+    margin-top: 40px;
+    border:none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: rgb(204, 203, 203);
+    width: 10%;
+    border-color: none;
+}
+
+.btnSupplier i {
+    font-size: 20px; 
+}
+
+.form-input:focus {
+    border-color: #0acc0a;
+    outline: none;
+}

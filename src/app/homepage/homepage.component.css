@@ -1,0 +1,237 @@
+
+
+/* ===== LAYOUT GERAL ===== */
+.home-container {
+  font-family: "Montserrat", sans-serif;
+  color: hsl(220, 68%, 4%);
+  background: #f9f9f9;
+}
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  background: hsl(208, 92%, 54%);
+  color: white;
+  flex-wrap: wrap; /* permite quebra em telas menores */
+}
+
+.home-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.home-header img {
+  width: 50px;
+  height: 50px;
+}
+
+.menu {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.menu a {
+  color: white;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.menu a:hover {
+  color: hsl(208, 100%, 85%);
+}
+
+/* ===== BANNER ===== */
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #e6f0ff, #ffffff);
+  flex-wrap: wrap; /* adapta imagem/texto em telas menores */
+}
+
+.banner-text {
+  flex: 1;
+  text-align: left;
+  min-width: 250px;
+}
+
+.banner-text h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.banner-text p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.banner-text button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.5rem;
+  background: hsl(208, 92%, 54%);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.banner-img {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.banner-img img {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 1rem;
+}
+/* ===== FUNCIONALIDADES ===== */
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3rem;
+  justify-content: center;
+  padding: 3rem 2rem;
+}
+
+.features .card {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 250px;
+  transition: transform 0.3s;
+  text-align: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;  
+}
+.features .card:hover {
+  transform: translateY(-5px);
+}
+
+.features button {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background: hsl(208, 92%, 54%);
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+
+
+
+/* ===== DESTAQUES ===== */
+.highlights {
+  padding: 3rem 2rem;
+  background: #fff;
+  text-align: center;
+}
+
+.highlight-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.highlight-card {
+  width: 200px;
+  background: #f3f7ff;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.highlight-card:hover {
+  transform: translateY(-5px);
+}
+
+.highlight-card img {
+  width: 100%;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ===== RODAPÉ ===== */
+.footer {
+  background: hsl(208, 92%, 54%);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+
+@media (max-width: 768px) {
+  .home-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .menu {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .banner {
+    flex-direction: column;
+    text-align: center;
+    display: flex;
+  }
+
+  .banner-text {
+    text-align: center;
+  }
+
+  .banner-text h1 {
+    font-size: 2rem;
+  }
+
+  .banner-text p {
+    font-size: 1rem;
+  }
+
+  .banner-img img {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-header {
+    padding: 1rem;
+  }
+
+  .menu {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .banner-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .banner-text p {
+    font-size: 0.9rem;
+  }
+
+  .banner-text button {
+    width: 100%;
+  }
+}

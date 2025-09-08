@@ -1,0 +1,67 @@
+/* Barra horizontal fixa */
+#horizontal-bar {
+  width: 100%;
+  height: 60px;
+  background: var(--sidebar-color, hsl(208, 92%, 54%));
+  color: var(--sidebar-txt-color, #fff);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.logo img {
+  width: 40px;
+  height: 40px;
+}
+
+.logo h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+}
+
+/* Menu */
+.menu {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.menu a {
+  color: white;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.menu a:hover {
+  color: hsl(208, 100%, 85%);
+}
+
+/* Responsivo */
+@media screen and (max-width: 768px) {
+  #horizontal-bar {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+}

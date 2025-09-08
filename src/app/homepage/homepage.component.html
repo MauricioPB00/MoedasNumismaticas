@@ -1,0 +1,89 @@
+  <!-- ===== CABEÇALHO ===== -->
+<app-header *ngIf="showHeader"></app-header>
+  <!-- ===== CABEÇALHO ===== -->
+
+
+<div class="home-container">
+  <!-- ===== CABEÇALHO ===== -->
+  <header class="home-header">
+    <div class="logo">
+      <img src="assets/img/Logo.png" alt="Logo" />
+      <h2>Álbum Numismático</h2>
+    </div>
+    <nav class="menu">
+      <a routerLink="/">Início</a>
+      <a routerLink="/catalogo">Catálogo</a>
+      <a routerLink="/colecao">Minha Coleção</a>
+      <a routerLink="/estatisticas">Estatísticas</a>
+      <a (click)="goToLogin()">Entrar</a>
+    </nav>
+  </header>
+
+  <!-- ===== BANNER ===== -->
+  <section class="banner">
+    <div class="banner-img">
+      <img src="assets/img/Logo.png" alt="Moedas" />
+    </div>
+    <div class="banner-text">
+      <h1>Bem-vindo ao Álbum Numismático</h1>
+      <p>
+        Organize, catalogue e explore o fascinante mundo das moedas.
+      </p>
+      <button routerLink="/catalogo">Explorar agora</button>
+    </div>
+  </section>
+
+  <!-- ===== FUNCIONALIDADES ===== -->
+  <section class="features">
+    <div class="card">
+      <h2>📖 Catálogo</h2>
+      <p>Explore todas as moedas cadastradas no sistema.</p>
+      <button routerLink="/catalogo">Ver catálogo</button>
+    </div>
+
+    <div class="card">
+      <h2>🪙 Minha Coleção</h2>
+      <p>Gerencie e acompanhe sua coleção pessoal.</p>
+      <button routerLink="/colecao">Ver coleção</button>
+    </div>
+
+    <div class="card">
+      <h2>📊 Estatísticas</h2>
+      <p>Veja gráficos e informações detalhadas sobre suas moedas.</p>
+      <button routerLink="/estatisticas">Ver estatísticas</button>
+    </div>
+
+    <div class="card">
+      <h2>📰 Novidades</h2>
+      <p>Fique por dentro das últimas notícias e curiosidades da numismática.</p>
+      <button routerLink="/noticias">Ver novidades</button>
+    </div>
+  </section>
+
+  <!-- ===== DESTAQUES ===== -->
+  <section class="highlights">
+    <h2>Nosso catálogo conta com:</h2>
+    <div class="highlight-grid">
+      <div class="highlight-card">
+        <img src="assets/img/moedaimperio.png" alt="Moeda 1" />
+        <p>Moedas do Brasil</p>
+      </div>
+      <div class="highlight-card">
+        <img src="assets/img/cedulaBrasil.png" alt="Moeda 2" />
+        <p>Cédulas do Brasil</p>
+      </div>
+      <div class="highlight-card">
+        <img src="assets/img/Onu.png" alt="Moeda 3" />
+        <p>Países Estrangeiros</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RODAPÉ ===== -->
+  <footer class="footer">
+    <p>© 2025 Álbum Numismático - Todos os direitos reservados.</p>
+    <p>
+      Desenvolvido por <a href="https://github.com/MauricioPB00">Mauricio Perin</a>
+    </p>
+  </footer>
+</div>

@@ -1,0 +1,97 @@
+<!-- ===== CABEÇALHO ===== -->
+<app-header *ngIf="showHeader"></app-header>
+<!-- ===== CABEÇALHO ===== -->
+
+
+<div class="home-container">
+  <!-- ===== CABEÇALHO ===== -->
+  <header class="home-header">
+    <div class="logo">
+      <img src="assets/img/Logo.png" alt="Logo" />
+      <h2>Álbum Numismático</h2>
+    </div>
+    <nav class="menu">
+      <a routerLink="/">Início</a>
+      <a routerLink="/cadastro">Cadastro</a>
+      <!-- <a (click)="goToLogin()">Entrar</a> -->
+    </nav>
+  </header>
+
+
+  <div class="container" [class.sign-up-mode]="isSignUpMode">
+    <div class="forms-container">
+      <div class="signin-signup">
+        <!-- Sign In Form -->
+        <form (ngSubmit)="onSignIn()" class="sign-in-form">
+          <h2 class="title">Entrar</h2>
+          <div class="input-field">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" name="username" autocomplete="off" [(ngModel)]="dados.username" required
+              placeholder="E-mail">
+          </div>
+          <div class="input-field">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" name="password" [(ngModel)]="dados.password" required
+              placeholder="Senha">
+          </div>
+
+          <button type="button" (click)="logar()" [ngStyle]="{ 'background-color': getButtonBackgroundColor() }"
+            class="login-button">
+            Login
+          </button>
+          <!-- <p class="social-text">Or Sign in with social platforms</p>
+        <div class="social-media">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+        </div> -->
+        </form>
+
+        <!-- Sign Up Form -->
+        <form (ngSubmit)="onSignUp()" class="sign-up-form">
+          <h2 class="title">Cadastro</h2>
+          <div class="input-field">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" name="username" autocomplete="off" [(ngModel)]="dados.username" required
+              placeholder="Nome">
+          </div>
+          <div class="input-field">
+            <i class="fas fa-envelope"></i>
+            <input type="email" placeholder="Email" [(ngModel)]="signUpData.email" name="signupEmail" />
+          </div>
+          <div class="input-field">
+            <i class="fas fa-lock"></i>
+            <input type="password" placeholder="Password" [(ngModel)]="signUpData.password" name="signupPassword" />
+          </div>
+          <input type="submit" class="btn" value="Sign up" />
+          <!-- <p class="social-text">Or Sign up with social platforms</p>
+        <div class="social-media">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+        </div> -->
+        </form>
+      </div>
+    </div>
+
+    <div class="panels-container">
+      <div class="panel left-panel">
+        <div class="content">
+          <h3>Não possui conta ?</h3>
+          <p>Para se cadastrar é fácil, clique no botão abaixo, <strong>grátis</strong> por 3 meses.</p>
+          <button class="btn transparent" (click)="toggleMode()">Cadrastrar</button>
+        </div>
+        <img src="../../assets/img/1.svg" class="image" alt="" />
+      </div>
+      <div class="panel right-panel">
+        <div class="content">
+          <h3>Já possuo conta</h3>
+          <p>Bem-vindo de volta! Faça login para continuar atualizando seu álbum.</p>
+          <button class="btn transparent" (click)="toggleMode()">Entrar</button>
+        </div>
+        <img src="../../assets/img/sign-up.svg" class="image" alt="" />
+      </div>
+    </div>
+  </div>

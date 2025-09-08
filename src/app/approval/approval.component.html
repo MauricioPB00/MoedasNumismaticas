@@ -1,0 +1,27 @@
+<div class="container">
+    <div>
+        <p class="header">Cadastro de Usuário</p>
+        <div class="form-row">
+            <div class="form-column">
+                <p>Nome:</p>
+                <input type="text" placeholder="Nome" class="form-input" [(ngModel)]="approval.name">
+            </div>
+            <div class="form-column">
+                <p>Telefone:</p>
+                <input type="tel" id="phone" name="phone" placeholder="(XX) XXXXX-XXXX"
+                class="form-input" [(ngModel)]="approval.phone" appPhoneFormat>
+
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-column">
+                <p>Cpf</p>
+                <input type="text" placeholder="CPF" class="form-input" [(ngModel)]="approval.cpf" appCpfFormat>
+            </div>
+        </div>
+        <button class="btnClothes" (click)="addCustomer()">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>

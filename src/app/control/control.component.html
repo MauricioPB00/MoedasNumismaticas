@@ -1,0 +1,143 @@
+
+  <div class="tabs">
+    <div class="tab" *ngFor="let tab of tabs; let i = index" [class.active]="selectedTab === i" (click)="selectTab(i)">
+      <i [class]="tab.icon"></i>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <ng-container *ngIf="selectedTab === 0">
+      <div class="flex-container">
+        <div class="left-side">
+          <h1>Cartão</h1>
+          <select [(ngModel)]="selectedCard" (change)="onCardChange()" class="custom-select">
+            <option *ngFor="let card of cardOptions" [value]="card.id">{{ card.name }}</option>
+          </select>
+          <select [(ngModel)]="selectedFlag" (change)="onFlagChange()" class="custom-select-flag">
+            <option *ngFor="let flag of flagOptions" [value]="flag.id">{{ flag.name }}</option>
+          </select>
+          <input type="number" class="custom-select-flag" placeholder="Desconto" [(ngModel)]="discount"
+            (input)="onDiscountChange()">
+            <input type="text" [(ngModel)]="combinedTotalText" class="total-input" [readonly]="true" />
+            <div class="button">
+            <button class="cancelbutton" onclick="window.location.href='/home';">Cancelar</button>
+            <button class="finishButton" (click) = "finishButton()">Finalizar</button>
+          </div>
+        </div>
+
+        <div class="right-side">
+          <h1>Carrinho</h1>
+          <table class="table-scroll-wrapper" *ngIf="clothing && clothing.length > 0">
+            <thead>
+              <tr>
+                <th style="width:10%;">ID</th>
+                <th>Nome</th>
+                <th style="width:10%;">Tamanho</th>
+                <th style="width:10%;">Valor</th>
+                <th style="width:5%;">Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of clothing">
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.size }}</td>
+                <td>{{ item.resale }}</td>
+                <td style="text-align: center;">
+                  <i class="fa-solid fa-x" (click)="removeItem(item.id)"></i>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4" style="text-align: right; font-weight: bold;">Total:</td>
+                <td style="font-weight: bold;">{{ getTotalResale() | currency:'BRL' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="selectedTab === 1">
+      <div class="flex-container">
+        <div class="left-side">
+          <h1>Dinheiro</h1>
+          <input type="number" class="custom-select-flag" placeholder="Desconto" [(ngModel)]="discount"
+            (input)="onDiscountChange()">
+            <input type="text" [(ngModel)]="combinedTotalText" class="total-input" [readonly]="true" />
+            <div class="button">
+            <button class="cancelbutton" onclick="window.location.href='/home';">Cancelar</button>
+            <button class="finishButton" (click) = "finishButton()">Finalizar</button>
+          </div>
+        </div>
+
+        <div class="right-side">
+          <h1>Carrinho</h1>
+          <table class="table-scroll-wrapper" *ngIf="clothing && clothing.length > 0">
+            <thead>
+              <tr>
+                <th style="width:10%;">ID</th>
+                <th>Nome</th>
+                <th style="width:10%;">Tamanho</th>
+                <th style="width:10%;">Valor</th>
+                <th style="width:5%;">Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of clothing">
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.size }}</td>
+                <td>{{ item.resale }}</td>
+                <td style="text-align: center;">
+                  <i class="fa-solid fa-x" (click)="removeItem(item.id)"></i>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4" style="text-align: right; font-weight: bold;">Total:</td>
+                <td style="font-weight: bold;">{{ getTotalResale() | currency:'BRL' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="selectedTab === 2">
+      <div class="flex-container">
+        <div class="left-side">
+          <h1>Condicional</h1>
+            
+          
+        </div>
+
+        <div class="right-side">
+          <h1>Carrinho</h1>
+          <table class="table-scroll-wrapper" *ngIf="clothing && clothing.length > 0">
+            <thead>
+              <tr>
+                <th style="width:10%;">ID</th>
+                <th>Nome</th>
+                <th style="width:10%;">Tamanho</th>
+                <th style="width:10%;">Valor</th>
+                <th style="width:5%;">Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of clothing">
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.size }}</td>
+                <td>{{ item.resale }}</td>
+                <td style="text-align: center;">
+                  <i class="fa-solid fa-x" (click)="removeItem(item.id)"></i>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4" style="text-align: right; font-weight: bold;">Total:</td>
+                <td style="font-weight: bold;">{{ getTotalResale() | currency:'BRL' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+  </div>

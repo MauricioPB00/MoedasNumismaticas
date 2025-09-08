@@ -1,0 +1,7 @@
+<div [ngClass]="{'numismatico': !isLoginRoute}">
+    <app-side-bar *ngIf="!isLoginRoute"></app-side-bar>
+    <div [ngClass]="{'mainNumismatico': !isLoginRoute}">
+        <router-outlet></router-outlet>
+        <ngx-spinner></ngx-spinner>
+    </div>
+</div>
