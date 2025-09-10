@@ -23,7 +23,7 @@
     <div class="forms-container">
       <div class="signin-signup">
         <!-- Sign In Form -->
-        <form class="sign-in-form">
+        <form class="sign-in-form" (ngSubmit)="logar()">
           <h2 class="title">Entrar</h2>
           <div class="input-field">
             <i class="fas fa-user"></i>
@@ -36,11 +36,11 @@
               placeholder="Senha">
           </div>
 
-          <button type="button" (click)="logar()" [ngStyle]="{ 'background-color': getButtonBackgroundColor() }"
-            class="login-button">
+          <button type="submit" [ngStyle]="{ 'background-color': getButtonBackgroundColor() }" class="login-button">
             Login
           </button>
         </form>
+
 
 
         <!-- Sign Up Form -->
