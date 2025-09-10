@@ -1,6 +1,6 @@
-  <!-- ===== CABEÇALHO ===== -->
+<!-- ===== CABEÇALHO ===== -->
 <app-header *ngIf="showHeader"></app-header>
-  <!-- ===== CABEÇALHO ===== -->
+<!-- ===== CABEÇALHO ===== -->
 
 
 <div class="home-container">
@@ -22,7 +22,7 @@
   <!-- ===== BANNER ===== -->
   <section class="banner">
     <div class="banner-img">
-      <img src="assets/img/Logo.png" alt="Moedas" />
+      <img src="assets/img/Logo01.png" alt="Moedas" />
     </div>
     <div class="banner-text">
       <h1>Bem-vindo ao Álbum Numismático</h1>
@@ -42,7 +42,7 @@
     </div>
 
     <div class="card">
-      <h2>🪙 Minha Coleção</h2>
+      <h2>💰 Coleção</h2>
       <p>Gerencie e acompanhe sua coleção pessoal.</p>
       <button routerLink="/colecao">Ver coleção</button>
     </div>
@@ -78,6 +78,63 @@
       </div>
     </div>
   </section>
+
+  <!-- ===== PLANOS DE ASSINATURA ===== -->
+  <section class="plans">
+    <h2 class="plans-title">Nossos Planos de Assinatura</h2>
+
+    <div class="plans-grid">
+      <!-- Plano Basic -->
+      <div class="plan-card">
+        <h3>Plano Mensal</h3>
+        <p class="old-price">R$ 7,80</p>
+        <p class="new-price">R$ 4,99</p>
+        <ul>
+          <li>✔ Álbuns Nacionais </li>
+          <li>✔ Álbuns Internacionais</li>
+        </ul>
+        <button class="btn">Assinar</button>
+      </div>
+
+      <!-- Plano Platinum (Destaque) -->
+      <div class="plan-card popular">
+        <div class="badge">Mais Popular</div>
+        <h3>Plano Anual</h3>
+        <p class="old-price">R$ 84,99</p>
+        <p class="new-price">R$ 49,80</p>
+        <ul>
+          <li>✔ Álbuns Nacionais </li>
+          <li>✔ Álbuns Internacionais</li>
+          <li>✔ Grupo livre para trocas</li>
+        </ul>
+        <button class="btn">Assinar</button>
+      </div>
+
+      <!-- Plano Master -->
+      <div class="plan-card">
+        <h3>Plano Trimestral</h3>
+        <p class="old-price">R$ 22,99</p>
+        <p class="new-price">R$ 13,90</p>
+        <ul>
+          <li>✔ Álbuns Nacionais </li>
+          <li>✔ Álbuns Internacionais</li>
+        </ul>
+        <button class="btn">Assinar</button>
+      </div>
+    </div>
+
+    <!-- Chamada Extra -->
+    <div class="plans-promo">
+      <p>🎉 Cadastre-se agora e <strong>ganhe 3 meses grátis</strong>!</p>
+    </div>
+  </section>
+
+  
+<!-- IMG CATALOGO -->
+<section class="catalogo-preview">
+  <img src="assets/img/catalogo.png" alt="Catálogo de moedas" />
+</section>
+
 
   <!-- ===== RODAPÉ ===== -->
   <footer class="footer">

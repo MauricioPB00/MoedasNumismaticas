@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild , HostListener} from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Login } from '../models/login';
@@ -16,32 +16,20 @@ import { NgxSpinnerService } from "ngx-spinner";
 export class LoginComponent {
 
 
-   isSignUpMode = false;
-
-  signInData = {
-    username: '',
-    password: ''
-  };
+  isSignUpMode = false;
 
   signUpData = {
-    username: '',
+    name: '',
     email: '',
-    password: ''
+    password: '',
+    number: '',
   };
 
   toggleMode() {
     this.isSignUpMode = !this.isSignUpMode;
   }
 
-  onSignIn() {
-    console.log('Sign In Data:', this.signInData);
-    // aqui você pode chamar seu serviço de autenticação
-  }
 
-  onSignUp() {
-    console.log('Sign Up Data:', this.signUpData);
-    // aqui você pode chamar seu serviço de registro
-  }
 
   constructor(
     private loginService: LoginService,
@@ -53,10 +41,11 @@ export class LoginComponent {
   dados: Login = { username: "", password: "" };
   showHeader = false;
 
-   
+
   ngOnInit(): void {
     this.dados.username = "";
     this.dados.password = "";
+    document.body.classList.remove('dark-mode');
   }
 
   isLoginValid() {
@@ -70,15 +59,41 @@ export class LoginComponent {
   getButtonBackgroundColor() {
     return this.isLoginValid() ? '#EFBF04' : '#464646';
   }
+
   logar() {
-    console.log('adas');
-     console.log('this.dados.username, this.dados.password', this.dados.username, this.dados.password);
     // this.spinner.show();
     if (this.isLoginValid()) {
-      console.log('this.dados.username, this.dados.password', this.dados.username, this.dados.password);
       this.loginService.login(this.dados.username, this.dados.password).pipe(take(1)).subscribe(
         data => {
-          this.toastr.success('Logado com sucesso') 
+          this.toastr.success('Logado com sucesso')
+          this.router.navigateByUrl('/home');
+          this.spinner.hide();
+        },
+        error => {
+          this.showAlert(error.error);
+          this.spinner.hide();
+        })
+    }
+  }
+
+  isSingUpValid() {
+    return (
+      this.signUpData.email.includes('@') &&
+      this.signUpData.email.length >= 10 &&
+      this.signUpData.name.length >= 3 &&
+      this.signUpData.password.length >= 6 &&
+      this.signUpData.number.length >= 6
+    );
+  }
+
+  onSignUp() {
+    console.log('Sign Up Data:', this.signUpData);
+    // this.spinner.show();
+
+    if (this.isSingUpValid()) {
+      this.loginService.login(this.dados.username, this.dados.password).pipe(take(1)).subscribe(
+        data => {
+          this.toastr.success('Logado com sucesso')
           this.router.navigateByUrl('/home');
           this.spinner.hide();
         },
@@ -100,6 +115,7 @@ export class LoginComponent {
       }
     }
   }
+
   @HostListener('window:scroll', [])
   onWindowScroll() {
     this.showHeader = window.scrollY > 150; // só aparece depois de rolar 150px
