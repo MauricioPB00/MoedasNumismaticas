@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 import { Login } from '../models/login';
 import { LoginService } from '../AuthService/login.service';
+import { RegisterService } from '../AuthService/register.service';
 import { take } from 'rxjs/operators';
 
 import { ToastrService } from 'ngx-toastr';
@@ -15,8 +16,13 @@ import { NgxSpinnerService } from "ngx-spinner";
 })
 export class LoginComponent {
 
-
-  isSignUpMode = false;
+  constructor(
+    private registerService: RegisterService,
+    private loginService: LoginService,
+    private router: Router,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
+  ) { }
 
   signUpData = {
     name: '',
@@ -25,33 +31,24 @@ export class LoginComponent {
     number: '',
   };
 
+  dados: Login = { email: "", password: "" };
+  showHeader = false;
+  isSignUpMode = false;
+
   toggleMode() {
     this.isSignUpMode = !this.isSignUpMode;
   }
 
-
-
-  constructor(
-    private loginService: LoginService,
-    private router: Router,
-    private toastr: ToastrService,
-    private spinner: NgxSpinnerService
-  ) { }
-
-  dados: Login = { username: "", password: "" };
-  showHeader = false;
-
-
   ngOnInit(): void {
-    this.dados.username = "";
+    this.dados.email = "";
     this.dados.password = "";
     document.body.classList.remove('dark-mode');
   }
 
   isLoginValid() {
     return (
-      //this.loginData.username.includes('@') &&
-      this.dados.username.length >= 8 &&
+      //this.loginData.email.includes('@') &&
+      this.dados.email.length >= 8 &&
       this.dados.password.length >= 6
     );
   }
@@ -63,7 +60,7 @@ export class LoginComponent {
   logar() {
     // this.spinner.show();
     if (this.isLoginValid()) {
-      this.loginService.login(this.dados.username, this.dados.password).pipe(take(1)).subscribe(
+      this.loginService.login(this.dados.email, this.dados.password).pipe(take(1)).subscribe(
         data => {
           this.toastr.success('Logado com sucesso')
           this.router.navigateByUrl('/home');
@@ -88,13 +85,13 @@ export class LoginComponent {
 
   onSignUp() {
     console.log('Sign Up Data:', this.signUpData);
-    // this.spinner.show();
+    this.spinner.show();
 
     if (this.isSingUpValid()) {
-      this.loginService.login(this.dados.username, this.dados.password).pipe(take(1)).subscribe(
+      this.registerService.postRegister(this.signUpData).pipe(take(1)).subscribe(
         data => {
-          this.toastr.success('Logado com sucesso')
-          this.router.navigateByUrl('/home');
+          this.toastr.success('Cadastrado com sucesso')
+          this.router.navigateByUrl('/login');
           this.spinner.hide();
         },
         error => {

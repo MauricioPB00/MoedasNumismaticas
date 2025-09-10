@@ -31,8 +31,8 @@ export class LoginService {
     }),
   }
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post(`${API_CONFIG.baseUrl}/login`, { username, password }, this.httpOptions)
+  login(email: string, password: string): Observable<any> {
+    return this.http.post(`${API_CONFIG.baseUrl}/login`, { email, password }, this.httpOptions)
       .pipe(
         map((data: any) => {
           if (data && data.token) {
@@ -40,7 +40,7 @@ export class LoginService {
             var userData = {
               permi: data.permi,
               id: data.id,
-              username: data.username,
+              email: data.email,
               name: data.nome
             }
             localStorage.setItem('jwt', JSON.stringify(data.token));
