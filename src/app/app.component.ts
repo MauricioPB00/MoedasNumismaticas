@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd, Event } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +13,13 @@ export class AppComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    this.router.events.subscribe(() => {
-      this.isLoginRoute = this.router.url === '/' || this.router.url === '/login';
-    });
+    this.router.events
+      .pipe(
+        filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)
+      )
+      .subscribe((event: NavigationEnd) => {
+        // Aqui o TypeScript sabe que event é NavigationEnd
+        this.isLoginRoute = event.url === '/' || event.url === '/login' || event.url === '/password-reset';
+      });
   }
 }

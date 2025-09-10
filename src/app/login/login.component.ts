@@ -81,6 +81,9 @@ export class LoginComponent {
   goToRegister(){
     this.isSignUpMode = true;
   }
+  goToPasswordReset(){
+    this.router.navigateByUrl('/password-reset');
+  }
 
   isSingUpValid() {
     return (

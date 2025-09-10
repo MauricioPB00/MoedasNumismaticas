@@ -20,6 +20,7 @@ import { ControlComponent } from './control/control.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ApprovalComponent } from './approval/approval.component';
+import { PasswordResetComponent } from './password-reset/password-reset.component';
 
 import { PhoneFormatDirective } from './config/phone-format.directive';
 import { CpfFormatDirective } from './config/cpf-format.directive';
@@ -38,7 +39,8 @@ import { HeaderComponent } from './header/header.component';
     PhoneFormatDirective,
     CpfFormatDirective,
     HomepageComponent,
-    HeaderComponent
+    HeaderComponent,
+    PasswordResetComponent,
   ],
   imports: [
     BrowserModule,
