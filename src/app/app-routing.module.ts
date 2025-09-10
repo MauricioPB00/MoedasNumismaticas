@@ -9,6 +9,7 @@ import { ControlComponent } from './control/control.component';
 import { ApprovalComponent } from './approval/approval.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 enum Permi { admin = 1, operador = 2 }
 
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: '', component: HomepageComponent },
   { path: 'login', component: LoginComponent},
   { path: 'password-reset', component: PasswordResetComponent},
+  { path: 'reset-password', component: ResetPasswordComponent},
   { path: 'sidebar', component: SideBarComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },

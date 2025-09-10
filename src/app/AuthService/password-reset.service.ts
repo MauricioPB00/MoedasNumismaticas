@@ -31,13 +31,24 @@ export class PasswordResetService {
     }),
   }
 
- forgotPassword(email: string): Observable<any> {
-  return this.httpClient.post(
-    `${API_CONFIG.baseUrl}/forgot-password`,
-    { email: email },
-    { headers: { 'Content-Type': 'application/json' } } // importante
-  );
-}
+  forgotPassword(email: string): Observable<any> {
+    return this.httpClient.post(
+      `${API_CONFIG.baseUrl}/forgot-password`,
+      { email: email },
+      { headers: { 'Content-Type': 'application/json' } } // importante
+    );
+  }
+
+
+  resetPassword(token: string, password: string): Observable<any> {
+    return this.httpClient.post(
+      `${API_CONFIG.baseUrl}/reset-password`,
+      { token: token,
+        password: password
+       },
+      { headers: { 'Content-Type': 'application/json' } } // importante
+    );
+  }
 
 
 

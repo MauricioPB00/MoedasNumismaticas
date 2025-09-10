@@ -26,6 +26,7 @@ import { PhoneFormatDirective } from './config/phone-format.directive';
 import { CpfFormatDirective } from './config/cpf-format.directive';
 import { HomepageComponent } from './homepage/homepage.component';
 import { HeaderComponent } from './header/header.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { HeaderComponent } from './header/header.component';
     HomepageComponent,
     HeaderComponent,
     PasswordResetComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

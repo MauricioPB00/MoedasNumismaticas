@@ -19,7 +19,12 @@ export class AppComponent implements OnInit {
       )
       .subscribe((event: NavigationEnd) => {
         // Aqui o TypeScript sabe que event é NavigationEnd
-        this.isLoginRoute = event.url === '/' || event.url === '/login' || event.url === '/password-reset';
+        this.isLoginRoute = 
+        event.url === '/' || 
+        event.url === '/login' || 
+        event.url === '/password-reset' || 
+        event.url === '/reset-password' ||
+        event.url.startsWith('/reset-password');
       });
   }
 }
