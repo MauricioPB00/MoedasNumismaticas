@@ -1,11 +1,10 @@
-
-
 /* ===== LAYOUT GERAL ===== */
 .home-container {
   font-family: "Montserrat", sans-serif;
   color: hsl(220, 68%, 4%);
   background: #f9f9f9;
 }
+
 .home-header {
   display: flex;
   justify-content: space-between;
@@ -13,7 +12,8 @@
   padding: 1.5rem 3rem;
   background: hsl(208, 92%, 54%);
   color: white;
-  flex-wrap: wrap; /* permite quebra em telas menores */
+  flex-wrap: wrap;
+  /* permite quebra em telas menores */
 }
 
 .home-header .logo {
@@ -42,29 +42,44 @@
 .menu a:hover {
   color: hsl(208, 100%, 85%);
 }
+
 /* ===== BANNER ===== */
+
 .banner {
   display: flex;
   align-items: center;
-  justify-content: center; /* Centraliza horizontalmente */
-  gap: 2.8rem; /* Espaço entre imagem e texto */
+  justify-content: center;
+  /* Centraliza horizontalmente */
+  gap: 2.8rem;
+  /* Espaço entre imagem e texto */
   padding: 4rem 2rem;
   background: linear-gradient(135deg, #e6f0ff, #ffffff);
   width: 100%;
   box-sizing: border-box;
-  flex-wrap: wrap; /* Para adaptar em telas pequenas */
+  flex-wrap: wrap;
+  /* Para adaptar em telas pequenas */
   text-align: left;
 }
 
-
+a {
+  text-decoration: none;
+  /* remove underline de todos os links */
+  color: inherit;
+  /* mantém a cor do texto */
+  cursor: pointer;
+  /* deixa mãozinha ao passar o mouse */
+  font-family: "Open Sans", sans-serif;
+}
 
 .banner-text h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  font-family: "Open Sans", sans-serif;
 }
 
 .banner-text p {
   font-size: 1.2rem;
+  font-family: "Open Sans", sans-serif;
   margin-bottom: 1.5rem;
 }
 
@@ -97,23 +112,34 @@
   gap: 3rem;
   justify-content: center;
   padding: 3rem 2rem;
+  font-family: "Open Sans", sans-serif;
 }
 
 .features .card {
   background: white;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 250px;
   transition: transform 0.3s;
   text-align: center;
 }
 
+h2,
+h1,
+p,
+a,
+h3,
+li {
+  font-family: "Open Sans", sans-serif;
+}
+
 .card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;  
+  justify-content: space-between;
 }
+
 .features .card:hover {
   transform: translateY(-5px);
 }
@@ -152,7 +178,7 @@
   background: #f3f7ff;
   border-radius: 1rem;
   padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s;
 }
 
@@ -169,8 +195,10 @@
 .plans {
   text-align: center;
   padding: 4rem 2rem;
-  background: #ffffff; /* fundo branco */
-  color: #1E3A8A; /* azul */
+  background: #ffffff;
+  /* fundo branco */
+  color: #1E3A8A;
+  /* azul */
 }
 
 .plans-title {
@@ -189,10 +217,11 @@
 }
 
 .plan-card {
-  background: #e7e7e8; /* azul bem claro */
+  background: #e7e7e8;
+  /* azul bem claro */
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   position: relative;
   transition: transform 0.3s ease;
 }
@@ -217,7 +246,8 @@
   font-size: 2rem;
   font-weight: bold;
   margin: 0.5rem 0 1.5rem;
-  color: #EFBF04; /* dourado */
+  color: #EFBF04;
+  /* dourado */
 }
 
 .plan-card ul {
@@ -232,8 +262,10 @@
 }
 
 .btn {
-  background: #EFBF04; /* dourado */
-  color: #1E3A8A; /* azul */
+  background: #EFBF04;
+  /* dourado */
+  color: #1E3A8A;
+  /* azul */
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: 0.5rem;
@@ -248,10 +280,13 @@
 
 /* === PLANO DO MEIO (destaque) === */
 .popular {
-  background: #1E3A8A; /* azul */
-  border: 3px solid #EFBF04; /* borda dourada */
+  background: #1E3A8A;
+  /* azul */
+  border: 3px solid #EFBF04;
+  /* borda dourada */
   color: white;
-  transform: scale(1.10); /* mais alto/largo que os outros */
+  transform: scale(1.10);
+  /* mais alto/largo que os outros */
   z-index: 2;
 }
 
@@ -261,12 +296,15 @@
 }
 
 .popular .new-price {
-  color: #EFBF04; /* dourado */
+  color: #EFBF04;
+  /* dourado */
 }
 
 .popular .badge {
-  background: #EFBF04; /* dourado */
-  color: #1E3A8A; /* azul */
+  background: #EFBF04;
+  /* dourado */
+  color: #1E3A8A;
+  /* azul */
   font-weight: bold;
   padding: 0.3rem 1rem;
   border-radius: 0 0 0.5rem 0.5rem;
@@ -282,15 +320,18 @@
   text-align: center;
   font-size: 1.3rem;
   font-weight: bold;
-  color: #1e3a8a; /* azul forte */
-  background: linear-gradient(90deg, #EFBF04, #EFBF04); /* dourado */
+  color: #1e3a8a;
+  /* azul forte */
+  background: linear-gradient(90deg, #EFBF04, #EFBF04);
+  /* dourado */
   padding: 1rem;
   border-radius: 0.5rem;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .plans-promo strong {
-  color: #1e40af; /* azul mais escuro */
+  color: #1e40af;
+  /* azul mais escuro */
 }
 
 
@@ -307,15 +348,19 @@
 
 /* imagem fluida, centralizada e com limite máximo */
 .catalogo-preview img {
-  display: block;                     /* importante para margin auto funcionar */
+  display: block;
+  /* importante para margin auto funcionar */
   width: 100%;
-  max-width: 720px;                   /* ajusta o tamanho "máximo" no desktop */
+  max-width: 720px;
+  /* ajusta o tamanho "máximo" no desktop */
   height: auto;
-  margin: 0 auto;                     /* centraliza */
+  margin: 0 auto;
+  /* centraliza */
   border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
   transition: transform 0.25s ease;
-  object-fit: contain;                /* evita deformação se tiver diferente aspect */
+  object-fit: contain;
+  /* evita deformação se tiver diferente aspect */
 }
 
 /* ===== RODAPÉ ===== */

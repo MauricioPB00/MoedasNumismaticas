@@ -67,10 +67,19 @@ export class LoginComponent {
           this.spinner.hide();
         },
         error => {
-          this.showAlert(error.error);
+          const msg =  'Email ou senha incorreto';
+          //this.showAlert(error.error); 
+          this.toastr.error(msg);
           this.spinner.hide();
         })
+    } else {
+      this.toastr.error('Preencha todos os campos corretamente antes de se cadastrar.');
+      this.spinner.hide();
     }
+  }
+
+  goToRegister(){
+    this.isSignUpMode = true;
   }
 
   isSingUpValid() {
@@ -90,14 +99,20 @@ export class LoginComponent {
     if (this.isSingUpValid()) {
       this.registerService.postRegister(this.signUpData).pipe(take(1)).subscribe(
         data => {
-          this.toastr.success('Cadastrado com sucesso')
-          this.router.navigateByUrl('/login');
+          this.toastr.success('Cadastrado com sucesso');
+          this.isSignUpMode = false;
           this.spinner.hide();
         },
         error => {
-          this.showAlert(error.error);
+          // Aqui exibimos o erro de forma amigável
+          const msg = error?.error?.message || 'Erro ao tentar cadastrar. Verifique os dados.';
+          this.toastr.error(msg);
           this.spinner.hide();
-        })
+        }
+      )
+    } else {
+      this.toastr.error('Preencha todos os campos corretamente antes de se cadastrar.');
+      this.spinner.hide();
     }
   }
 

@@ -17,9 +17,13 @@ export class HomepageComponent {
   onWindowScroll() {
     this.showHeader = window.scrollY > 150; // só aparece depois de rolar 150px
   }
-  
+
   goToLogin() {
     console.log('a');
+    this.router.navigateByUrl('/login');
+  }
+
+  goToRegister(){
     this.router.navigateByUrl('/login');
   }
 }

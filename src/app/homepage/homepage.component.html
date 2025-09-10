@@ -11,11 +11,10 @@
       <h2>Álbum Numismático</h2>
     </div>
     <nav class="menu">
-      <a routerLink="/">Início</a>
-      <a routerLink="/catalogo">Catálogo</a>
-      <a routerLink="/colecao">Minha Coleção</a>
-      <a routerLink="/estatisticas">Estatísticas</a>
+      <a (click)="goToLogin()">Catálogo</a>
+      <a (click)="goToLogin()">Minha Coleção</a>
       <a (click)="goToLogin()">Entrar</a>
+      <a (click)="goToRegister()">Cadastro</a>
     </nav>
   </header>
 
