@@ -20,3 +20,14 @@ body.dark-mode {
 body.dark-mode .container {
     background-color: #949292;
 }
+
+
+/* Hover Tela Settings (modo claro) */
+.settings-header-profile:hover {
+  background-color: rgb(242, 242, 240);
+}
+
+/* Hover Tela Settings (modo escuro) */
+.dark-mode .settings-header-profile:hover {
+  background-color: rgb(104, 104, 104);
+}

@@ -1,0 +1,171 @@
+.settings-container {
+  width: 100%;
+}
+.settings-header-title{
+  width: 100%;
+  padding: 0.01rem;
+}
+
+.settings-header-title h2{
+  text-align: center;
+}
+
+/* .settings-header-profile:hover{
+ background-color: rgb(242, 242, 240);
+} */
+
+.settings-header {
+  width: 100%;
+  padding: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.arrow {
+  font-size: 1.2rem;
+}
+
+/* === FORM animação === */
+/* ============ ABRIR E FECHAR ======================== */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem; /* espaço entre os campos */
+  padding: 1rem;
+  border-bottom: 1px solid #ddd; /* linha no final */
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: all 0.4s ease;
+  border-radius: 0 0 8px 8px; /* arredondado só embaixo */
+}
+
+form.expanded {
+  max-height: 2000px; /* grande o suficiente para expandir */
+  opacity: 1;
+  padding: 1rem;
+}
+
+/* ===== LABELS ===== */
+form label {
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+  font-size: 0.95rem;
+}
+
+/* ===== INPUTS ===== */
+form input {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 10px;
+}
+
+form input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
+/* ===== BOTÃO SUBMIT ===== */
+form button[type="submit"] {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+  background: #0056b3;
+}
+
+/* ============= PHOTO ============== */
+
+.photo-preview {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.photo-preview img {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.profile-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.profile-photo:hover {
+  transform: scale(1.05);
+  border-color: #888;
+}
+
+.photo-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.change-photo-btn {
+  padding: 0.5rem 1rem;
+  background-color: #EFBF04;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.change-photo-btn:hover {
+  background-color: #856A00;
+}
+
+.save-photo-btn {
+  display: block;
+  margin: 0 auto;
+  padding: 0.8rem 1.2rem;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.save-photo-btn:hover {
+  background: #218838;
+}
+
+
+

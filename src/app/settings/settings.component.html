@@ -1,32 +1,91 @@
-
 <div class="settings-container">
-  <h2>Alterar meus dados</h2>
+  <div class="settings-header-title">
+    <h2>Alterar meus dados</h2>
+  </div>
+  <div class="settings-header-profile">
+    <div class="settings-header" (click)="toggleForm()">
+      <span class="arrow">{{ showForm ? 'Editar Perfil ▲' : 'Editar Perfil ▼' }}</span>
+    </div>
 
-  <form (ngSubmit)="onSubmit()" #profileForm="ngForm">
-    <label for="name">Nome</label>
-    <input type="text" id="name" name="name" [(ngModel)]="user.name" required />
+    <form [class.expanded]="showForm" (ngSubmit)="onSubmit()" #profileForm="ngForm">
+      <label for="name">Nome</label>
+      <input type="text" id="name" name="name" [(ngModel)]="user.name" required />
 
-    <label for="email">E-mail</label>
-    <input type="email" id="email" name="email" [(ngModel)]="user.email" required />
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" [(ngModel)]="user.email" required />
 
-    <label for="cpf">CPF</label>
-    <input type="text" id="cpf" name="cpf" [(ngModel)]="user.cpf" />
+      <label for="cpf">CPF</label>
+      <input type="text" id="cpf" name="cpf" [(ngModel)]="user.cpf" />
 
-    <label for="rg">RG</label>
-    <input type="text" id="rg" name="rg" [(ngModel)]="user.rg" />
+      <label for="rg">RG</label>
+      <input type="text" id="rg" name="rg" [(ngModel)]="user.rg" />
 
-    <label for="datNasc">Data de Nascimento</label>
-    <input type="date" id="datNasc" name="datNasc" [(ngModel)]="user.datNasc" />
+      <label for="datNasc">Data de Nascimento</label>
+      <input type="date" id="datNasc" name="datNasc" [(ngModel)]="user.datNasc" />
 
-    <label for="city">Cidade</label>
-    <input type="text" id="city" name="city" [(ngModel)]="user.city" />
+      <label for="city">Cidade</label>
+      <input type="text" id="city" name="city" [(ngModel)]="user.city" />
 
-    <label for="number">Telefone</label>
-    <input type="text" id="number" name="number" [(ngModel)]="user.number" />
+      <label for="number">Telefone</label>
+      <input type="text" id="number" name="number" [(ngModel)]="user.number" />
 
-    <label for="password">Nova senha</label>
-    <input type="password" id="password" name="password" [(ngModel)]="user.password" />
+      <button type="submit">Salvar alterações</button>
+    </form>
+  </div>
 
-    <button type="submit">Salvar alterações</button>
-  </form>
+
+
+
+
+
+
+
+  <!-- 
+  <div class="settings-header-photo">
+    <div class="settings-header" (click)="togglePhoto()">
+      <span class="arrow">{{ showPhoto ? 'Editar Foto ▲' : 'Editar Foto ▼' }}</span>
+    </div>
+
+    <form [class.expanded]="showPhoto" (ngSubmit)="onSubmitPhoto()" enctype="multipart/form-data">
+
+      <div class="photo-preview">
+        <img [src]="previewUrl || ('http://localhost:3000/uploads/users/' + user.photo)" alt="Foto do usuário"
+          class="profile-photo" (click)="selectFileInput.click()">
+
+        <input type="file" hidden #selectFileInput (change)="onFileSelected($event)" accept="image/*">
+      </div>
+
+      <button type="submit">Salvar Foto</button>
+    </form>
+  </div> -->
+
+
+
+  <div class="settings-header-photo">
+    <div class="settings-header" (click)="togglePhoto()">
+      <span class="arrow">{{ showPhoto ? 'Editar Foto ▲' : 'Editar Foto ▼' }}</span>
+    </div>
+
+    <form [class.expanded]="showPhoto" (ngSubmit)="onSubmitPhoto()" enctype="multipart/form-data">
+
+      <!-- Foto atual / preview -->
+      <div class="photo-preview">
+        <a (click)="selectFileInput.click()"><img
+            [src]="previewUrl || ('http://localhost:8000/api/photo' + user.photo)" class="profile-photo"></a>
+      </div>
+
+      <!-- Botão para alterar a foto -->
+      <div class="photo-btn-container">
+        <button type="button" class="change-photo-btn" (click)="selectFileInput.click()">
+          Alterar Foto
+        </button>
+        <input type="file" hidden #selectFileInput (change)="onFileSelected($event)" accept="image/*">
+      </div>
+
+      <button type="submit">Salvar Foto</button>
+    </form>
+  </div>
+
+
+
 </div>
