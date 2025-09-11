@@ -63,4 +63,8 @@ export class ResetPasswordComponent implements OnInit {
       }
     });
   }
+
+  goToLogin() {
+    this.router.navigateByUrl('/login');
+  }
 }
