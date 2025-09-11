@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApprovalComponent } from './approval.component';
+import { ProfileComponent } from './profile.component';
 
-describe('ApprovalComponent', () => {
-  let component: ApprovalComponent;
-  let fixture: ComponentFixture<ApprovalComponent>;
+describe('ProfileComponent', () => {
+  let component: ProfileComponent;
+  let fixture: ComponentFixture<ProfileComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ApprovalComponent]
+      declarations: [ProfileComponent]
     });
-    fixture = TestBed.createComponent(ApprovalComponent);
+    fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

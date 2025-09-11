@@ -43,7 +43,7 @@ export class LoginService {
               email: data.email,
               name: data.nome
             }
-            localStorage.setItem('jwt', JSON.stringify(data.token));
+            localStorage.setItem('jwt', data.token);
             localStorage.setItem('ControleUsuarioPermi', JSON.stringify(data.permi));
             localStorage.setItem('ControleUsuario', JSON.stringify(userData));
             localStorage.setItem('ControleUsuarioIP', JSON.stringify(data.ip));

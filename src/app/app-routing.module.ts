@@ -5,13 +5,12 @@ import { SideBarComponent } from './side-bar/side-bar.component';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './guard/auth.guard';
 import { SettingsComponent } from './settings/settings.component';
-import { ControlComponent } from './control/control.component';
-import { ApprovalComponent } from './approval/approval.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ProfileComponent } from './profile/profile.component';
 
-enum Permi { admin = 1, operador = 2 }
+enum Permi { admin = 2, operador = 1 }
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
@@ -21,8 +20,7 @@ const routes: Routes = [
   { path: 'sidebar', component: SideBarComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
-  { path: 'control', component: ControlComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
-  { path: 'approval', component: ApprovalComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], data: { roles: [Permi.admin] } },
   { path: '**', component: HomepageComponent, canActivate: [AuthGuard] },
 ];
 

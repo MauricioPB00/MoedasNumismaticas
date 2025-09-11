@@ -16,10 +16,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SettingsComponent } from './settings/settings.component';
-import { ControlComponent } from './control/control.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ApprovalComponent } from './approval/approval.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 
 import { PhoneFormatDirective } from './config/phone-format.directive';
@@ -27,6 +25,7 @@ import { CpfFormatDirective } from './config/cpf-format.directive';
 import { HomepageComponent } from './homepage/homepage.component';
 import { HeaderComponent } from './header/header.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -35,14 +34,13 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     SideBarComponent,
     HomeComponent,
     SettingsComponent,
-    ControlComponent,
-    ApprovalComponent,
     PhoneFormatDirective,
     CpfFormatDirective,
     HomepageComponent,
     HeaderComponent,
     PasswordResetComponent,
     ResetPasswordComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
