@@ -33,14 +33,6 @@
     </form>
   </div>
 
-
-
-
-
-
-
-
-  <!-- 
   <div class="settings-header-photo">
     <div class="settings-header" (click)="togglePhoto()">
       <span class="arrow">{{ showPhoto ? 'Editar Foto ▲' : 'Editar Foto ▼' }}</span>
@@ -49,32 +41,11 @@
     <form [class.expanded]="showPhoto" (ngSubmit)="onSubmitPhoto()" enctype="multipart/form-data">
 
       <div class="photo-preview">
-        <img [src]="previewUrl || ('http://localhost:3000/uploads/users/' + user.photo)" alt="Foto do usuário"
-          class="profile-photo" (click)="selectFileInput.click()">
-
-        <input type="file" hidden #selectFileInput (change)="onFileSelected($event)" accept="image/*">
+        <a (click)="selectFileInput.click()">
+          <img [src]="previewUrl || ('http://localhost:8000/uploads/users/' + user.photo)" class="profile-photo" />
+        </a>
       </div>
 
-      <button type="submit">Salvar Foto</button>
-    </form>
-  </div> -->
-
-
-
-  <div class="settings-header-photo">
-    <div class="settings-header" (click)="togglePhoto()">
-      <span class="arrow">{{ showPhoto ? 'Editar Foto ▲' : 'Editar Foto ▼' }}</span>
-    </div>
-
-    <form [class.expanded]="showPhoto" (ngSubmit)="onSubmitPhoto()" enctype="multipart/form-data">
-
-      <!-- Foto atual / preview -->
-      <div class="photo-preview">
-        <a (click)="selectFileInput.click()"><img
-            [src]="previewUrl || ('http://localhost:8000/api/photo' + user.photo)" class="profile-photo"></a>
-      </div>
-
-      <!-- Botão para alterar a foto -->
       <div class="photo-btn-container">
         <button type="button" class="change-photo-btn" (click)="selectFileInput.click()">
           Alterar Foto
@@ -85,7 +56,4 @@
       <button type="submit">Salvar Foto</button>
     </form>
   </div>
-
-
-
 </div>

@@ -37,7 +37,10 @@
             <div class="line" [ngStyle]="{'background-color': sidebarLnColor}"></div>
             <div class="logout">
                 <h2>{{ name }}</h2>
-                <img src="../../assets/img/person.png" class="profile-image">
+                <img *ngIf="photo; else defaultImg" [src]="photo" class="profile-image">
+                <ng-template #defaultImg>
+                    <img src="../../assets/img/person.png" class="profile-image">
+                </ng-template>
                 <button class="logout" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i><span>
                         Logout</span></button>
             </div>
