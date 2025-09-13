@@ -3,31 +3,33 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
-html, body{
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    height: 100%;
+html,
+body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
 }
-*{
-box-sizing: border-box;
+
+* {
+  box-sizing: border-box;
 }
+
 body.dark-mode {
-    background-color: #838383;
-    color: #ffffff;
+  background-color: #838383;
+  color: #ffffff;
 }
 
 body.dark-mode .container {
-    background-color: #949292;
+  background-color: #949292;
 }
-
 
 /* Hover Tela Settings (modo claro) */
 .settings-header-profile:hover {
-  background-color: rgb(242, 242, 240);
+  background-color: rgb(243, 243, 243);
 }
 
 /* Hover Tela Settings (modo escuro) */
 .dark-mode .settings-header-profile:hover {
-  background-color: rgb(104, 104, 104);
+  background-color: rgb(145, 145, 145);
 }

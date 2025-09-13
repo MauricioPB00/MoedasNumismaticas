@@ -1,0 +1,43 @@
+.settings-header-title {
+  width: 100%;
+  padding: 0.01rem;
+}
+
+.settings-header-title h2 {
+  text-align: center;
+}
+
+.profile-container {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* 2 usuários por linha */
+  gap: 20px;
+  /* espaço entre os cards */
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 15px;
+  object-fit: cover;
+}
+
+.user-info h3 {
+  margin: 0;
+}
+
+.user-info p {
+  margin: 0;
+  color: #666;
+}

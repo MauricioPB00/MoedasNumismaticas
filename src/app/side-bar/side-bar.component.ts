@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SIDEBAR_COLOR } from '../../../color';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from '../AuthService/user.service';
 
 
 @Component({
@@ -30,7 +31,11 @@ export class SideBarComponent implements OnInit, AfterViewInit {
   isDarkMode: boolean = false;
   photo: string | null = null;
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private userService: UserService,
+  ) {
     const savedMode = localStorage.getItem('darkMode');
     if (savedMode) {
       this.isDarkMode = JSON.parse(savedMode);
@@ -40,9 +45,8 @@ export class SideBarComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     const AuthUsername = localStorage.getItem('ControleUsuario');
     const darkMode = localStorage.getItem('darkMode');
-    const token = localStorage.getItem('jwt');
-
     const sideBarMinimized = localStorage.getItem('SideBarMinimized');
+
     if (AuthUsername) {
       const userObj = JSON.parse(AuthUsername);
       this.name = userObj.name ? userObj.name.split('@')[0] : 'Usuário';
@@ -52,20 +56,7 @@ export class SideBarComponent implements OnInit, AfterViewInit {
     if (sideBarMinimized !== null) {
       this.isSidebarMinimizedActive = JSON.parse(sideBarMinimized);
     }
-
-    this.http.get<any>('http://localhost:8000/api/informacao', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }).subscribe({
-      next: (user) => {
-        this.name = user.name;
-        this.photo = user.photo ? `http://localhost:8000/uploads/users/${user.photo}` : null;
-      },
-      error: (err) => {
-        console.error('Erro ao carregar usuário:', err);
-      }
-    });
+    this.getPhoto();
   }
 
   ngAfterViewInit(): void {
@@ -80,6 +71,20 @@ export class SideBarComponent implements OnInit, AfterViewInit {
   toggleSidebarMinimized(): void {
     this.isSidebarMinimizedActive = !this.isSidebarMinimizedActive;
     localStorage.setItem('SideBarMinimized', JSON.stringify(this.isSidebarMinimizedActive))
+  }
+
+  getPhoto() {
+    this.userService.getUserInfo().subscribe({
+      next: (user) => {
+        this.name = user.name;
+        this.photo = user.photo
+          ? `http://localhost:8000/uploads/users/${user.photo}`
+          : null;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar usuário:', err);
+      }
+    });
   }
 
   logout(): void {

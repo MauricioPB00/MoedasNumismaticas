@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { UserService } from '../AuthService/user.service';
+import { take } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-settings',
@@ -13,7 +17,12 @@ export class SettingsComponent implements OnInit {
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private userService: UserService,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService,
+  ) { }
 
   ngOnInit() {
     const controleUsuario = localStorage.getItem('ControleUsuario');
@@ -21,7 +30,6 @@ export class SettingsComponent implements OnInit {
       this.user = JSON.parse(controleUsuario);
     }
   }
-
 
   toggleForm() {
     this.showForm = !this.showForm;
@@ -33,11 +41,13 @@ export class SettingsComponent implements OnInit {
     if (this.showPhoto) {
       this.previewUrl = null;
 
-      const token = localStorage.getItem('jwt');
-      this.http.get('http://localhost:8000/api/informacao', {
-        headers: { Authorization: `Bearer ${token}` }
-      }).subscribe((res: any) => {
-        this.user = res; // atualiza dados do usuário
+      this.userService.getUserInfo().subscribe({
+        next: (res: any) => {
+          this.user = res; // traz name, email e photo
+        },
+        error: (err) => {
+          console.error('Erro ao carregar informações do usuário', err);
+        }
       });
     }
   }
@@ -47,53 +57,46 @@ export class SettingsComponent implements OnInit {
     if (this.selectedFile) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.previewUrl = e.target.result; // mostra preview da foto escolhida
+        this.previewUrl = e.target.result; // preview da foto escolhida
       };
       reader.readAsDataURL(this.selectedFile);
     }
   }
 
   onSubmit() {
-    const token = localStorage.getItem('jwt'); // pega o JWT
-    console.log(token);
-    if (!token) {
-      alert('Usuário não autenticado');
+    if (!this.user) {
+      alert('Usuário não carregado');
       return;
     }
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-
-    this.http.put<any>('http://localhost:8000/api/update', JSON.stringify(this.user), { headers })
-      .subscribe({
-        next: (res) => {
-          console.log(res);
+    this.userService.updateUser(this.user).subscribe({
+      next: (res) => {
+        if (res.token) {
           localStorage.setItem('jwt', res.token);
-          alert('Dados atualizados com sucesso!');
-          this.showForm = false;
-        },
-        error: (err) => {
-          console.error(err);
-          alert('Erro ao atualizar dados');
         }
-      });
+        alert('Dados atualizados com sucesso!');
+        this.showForm = false;
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar usuário:', err);
+        alert('Erro ao atualizar dados');
+      }
+    });
   }
 
   onSubmitPhoto() {
-    const token = localStorage.getItem('jwt');
     if (!this.selectedFile) return;
 
-    const formData = new FormData();
-    formData.append('photo', this.selectedFile);
-
-    this.http.post('http://localhost:8000/api/photo', formData, {
-      headers: { Authorization: `Bearer ${token}` }
-    }).subscribe((res: any) => {
-      this.user.photo = res.photo; // backend retorna nome salvo
-      this.previewUrl = null;      // volta a exibir a foto oficial do banco
-      this.selectedFile = null;
+    this.userService.uploadPhoto(this.selectedFile).subscribe({
+      next: (res: any) => {
+        this.user.photo = res.photo; // retorna o nome salvo
+        this.previewUrl = null;      // exibir a foto do banco
+        this.selectedFile = null;
+      },
+      error: (err) => {
+        console.error('Erro ao salvar foto:', err);
+      }
     });
   }
+
 
 }

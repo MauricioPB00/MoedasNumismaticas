@@ -1,12 +1,13 @@
 .settings-container {
   width: 100%;
 }
-.settings-header-title{
+
+.settings-header-title {
   width: 100%;
   padding: 0.01rem;
 }
 
-.settings-header-title h2{
+.settings-header-title h2 {
   text-align: center;
 }
 
@@ -42,18 +43,22 @@
 form {
   display: flex;
   flex-direction: column;
-  gap: 0.1rem; /* espaço entre os campos */
+  gap: 0.1rem;
+  /* espaço entre os campos */
   padding: 1rem;
-  border-bottom: 1px solid #ddd; /* linha no final */
+  border-bottom: 1px solid #ddd;
+  /* linha no final */
   overflow: hidden;
   max-height: 0;
   opacity: 0;
   transition: all 0.4s ease;
-  border-radius: 0 0 8px 8px; /* arredondado só embaixo */
+  border-radius: 0 0 8px 8px;
+  /* arredondado só embaixo */
 }
 
 form.expanded {
-  max-height: 2000px; /* grande o suficiente para expandir */
+  max-height: 2000px;
+  /* grande o suficiente para expandir */
   opacity: 1;
   padding: 1rem;
 }
@@ -166,6 +171,3 @@ form button[type="submit"]:hover {
 .save-photo-btn:hover {
   background: #218838;
 }
-
-
-
