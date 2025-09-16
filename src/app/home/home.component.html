@@ -1,5 +1,23 @@
+<div class="coins-container">
+    <div class="coin-card" *ngFor="let coin of coins">
+        <div class="coin-images">
+            <img *ngIf="coin.obverse" [src]="'assets/img/imagens/' + coin.obverse" alt="Obverse">
+            <img *ngIf="coin.reverse" [src]="'assets/img/imagens/' + coin.reverse" alt="Reverse">
+        </div>
 
-    <div class="clothing">
-    
+        <h3>{{ coin.title }}</h3>
 
+        <p class="category">
+            {{ coin.categoryDisplay }}
+            <img *ngIf="coin.showBrazilFlag" src="assets/img/bandeira-Brasil.png" alt="Brasil" class="flag">
+        </p>
+        <!-- <p class="issuer">
+            Emissor: {{ coin.issuer }}
+            <img *ngIf="coin.showBrazilFlag" src="assets/img/bandeira-Brasil.png" alt="Brasil" class="flag">
+        </p> -->
+
+        <p *ngIf="coin.min_year || coin.max_year">
+            Ano: {{ coin.min_year }} - {{ coin.max_year }}
+        </p>
     </div>
+</div>
