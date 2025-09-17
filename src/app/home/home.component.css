@@ -1,60 +1,157 @@
 .coins-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
 }
 
 .coin-card {
-    flex: 0 0 calc(50% - 1rem);
-    background: #f9f9f9;
-    padding: 1rem;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  /* background: #f9f9f9; */
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: -10;
 }
 
 .coin-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .coin-images {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  /* Agora lado a lado */
+  gap: 0.5rem;
+  margin-right: 1rem;
 }
 
 .coin-images img {
-    max-width: 80px;
-    height: auto;
-    border-radius: 4px;
+  max-width: 120px;
+  height: auto;
 }
 
-.coin-card h3 {
-    margin: 0.5rem 0;
-    font-size: 1.1rem;
-    font-weight: 600;
+.coin-info {
+  flex: 1;
 }
 
-.category {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.3rem;
+.coin-info h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
-/* .issuer {
+.coin-info p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.issuer {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.3rem;
-} */
+}
 
 .flag {
-    width: 20px;
-    height: auto;
-    border-radius: 3px;
+  width: 20px;
+  height: auto;
+  border-radius: 3px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f3f3f3;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  /* Mantém fixo ao rolar */
+  top: 0;
+  /* Fica no topo da tela */
+  z-index: 0;
+  /* Para ficar acima do conteúdo */
+  align-items: center;
+  justify-content: center;
+  /* Centraliza horizontalmente */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  /* sombra sutil */
+}
+
+/* Inputs e selects */
+.filters input[type="text"],
+.filters input[type="number"],
+.filters select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.filters input[type="text"]:focus,
+.filters input[type="number"]:focus,
+.filters select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+/* Botão de reset */
+.filters button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.filters button:hover {
+  background-color: #0056b3;
+}
+
+
+
+@media (max-width: 768px) {
+  .coins-container {
+    grid-template-columns: 1fr;
+    /* 1 card por linha */
+  }
+
+  .coin-card {
+    flex-direction: column;
+    /* Foto em cima, info embaixo */
+    text-align: center;
+  }
+
+  .coin-images {
+    margin: 0 0 1rem 0;
+    justify-content: center;
+  }
+
+  .coin-images img {
+    max-width: 120px;
+  }
+
+  .coin-info {
+    text-align: center;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filters input[type="text"],
+  .filters input[type="number"],
+  .filters select,
+  .filters button {
+    width: 100%;
+  }
 }
