@@ -17,6 +17,9 @@
 
     <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
     <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
+ 
+    <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
+
 </div>
 
 <div class="coins-container">

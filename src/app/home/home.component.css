@@ -7,7 +7,6 @@
 .coin-card {
   display: flex;
   align-items: center;
-  /* background: #f9f9f9; */
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -18,13 +17,11 @@
 .coin-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  
 }
 
 .coin-images {
   display: flex;
   flex-direction: row;
-  /* Agora lado a lado */
   gap: 0.5rem;
   margin-right: 1rem;
 }
@@ -69,19 +66,13 @@
   padding: 1rem;
   background-color: #f3f3f3;
   border-bottom: 1px solid #ddd;
-  /* Mantém fixo ao rolar */
   top: 0;
-  /* Fica no topo da tela */
   z-index: 1;
-  /* Para ficar acima do conteúdo */
   align-items: center;
   justify-content: center;
-  /* Centraliza horizontalmente */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  /* sombra sutil */
 }
 
-/* Inputs e selects */
 .filters input[type="text"],
 .filters input[type="number"],
 .filters select {
@@ -100,7 +91,6 @@
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
 }
 
-/* Botão de reset */
 .filters button {
   padding: 0.5rem 1rem;
   background-color: #007bff;
@@ -150,10 +140,10 @@
 }
 
 .btn button {
-  background: #EFBF04; /* fundo escuro */
-  color: #fff; /* ícone branco */
+  background: #EFBF04; 
+  color: #fff; 
   border: none;
-  border-radius: 50%; /* botão redondo */
+  border-radius: 50%; 
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -169,26 +159,29 @@
 }
 
 .btn button:hover {
-  background: #2c7a7b; /* verde água no hover */
-  transform: scale(1.1); /* dá um leve zoom */
+  background: #2c7a7b; 
+  transform: scale(1.1); 
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
 }
 
 .btn button:active {
-  transform: scale(0.95); /* clique com efeito */
+  transform: scale(0.95); 
 }
 
+button.btn-limpar {
+  background-color: #EFBF04 !important;
+  color: #000 !important;
+  border-radius: 6px !important;
+}
 
 
 @media (max-width: 768px) {
   .coins-container {
     grid-template-columns: 1fr;
-    /* 1 card por linha */
   }
 
   .coin-card {
     flex-direction: column;
-    /* Foto em cima, info embaixo */
     text-align: center;
   }
 
