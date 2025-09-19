@@ -20,19 +20,36 @@
 </div>
 
 <div class="coins-container">
-    <div class="coin-card" *ngFor="let coin of filteredCoins">
-        <div class="coin-images">
-            <img *ngIf="coin.obverse" [src]="'assets/img/imagens/' + coin.obverse" alt="Obverse">
-            <img *ngIf="coin.reverse" [src]="'assets/img/imagens/' + coin.reverse" alt="Reverse">
-        </div>
-
-        <div class="coin-info">
-            <h3>{{ coin.title }}</h3>
-            <p class="issuer">
-                {{ coin.categoryDisplay }}
-                <img *ngIf="coin.showBrazilFlag" src="assets/img/bandeira-Brasil.png" alt="Brasil" class="flag">
-            </p>
-            <p *ngIf="coin.min_year || coin.max_year">Ano: {{ coin.min_year }} - {{ coin.max_year }}</p>
-        </div>
+  <div class="coin-card" *ngFor="let coin of paginatedCoins">
+    <div class="coin-images">
+      <img *ngIf="coin.obverse" [src]="'assets/img/imagens/' + coin.obverse" alt="Obverse">
+      <img *ngIf="coin.reverse" [src]="'assets/img/imagens/' + coin.reverse" alt="Reverse">
     </div>
+
+    <div class="coin-info">
+      <h3>{{ coin.title }}</h3>
+      <p class="issuer">
+        {{ coin.categoryDisplay }}
+        <img *ngIf="coin.showBrazilFlag" src="assets/img/bandeira-Brasil.png" alt="Brasil" class="flag">
+      </p>
+      <p *ngIf="coin.min_year || coin.max_year">
+        Ano: {{ coin.min_year }} - {{ coin.max_year }}
+      </p>
+    </div>
+
+    <div class="btn">
+      <button (click)="verDetalhes(coin.id)">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Controles de Paginação -->
+<div class="pagination">
+  <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
+
+  <span>Página {{ currentPage }} de {{ totalPages }}</span>
+
+  <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Próxima</button>
 </div>

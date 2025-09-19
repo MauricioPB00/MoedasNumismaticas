@@ -12,12 +12,13 @@
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  z-index: -10;
+  z-index: 0;
 }
 
 .coin-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  
 }
 
 .coin-images {
@@ -68,11 +69,10 @@
   padding: 1rem;
   background-color: #f3f3f3;
   border-bottom: 1px solid #ddd;
-  position: sticky;
   /* Mantém fixo ao rolar */
   top: 0;
   /* Fica no topo da tela */
-  z-index: 0;
+  z-index: 1;
   /* Para ficar acima do conteúdo */
   align-items: center;
   justify-content: center;
@@ -114,6 +114,68 @@
 
 .filters button:hover {
   background-color: #0056b3;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  gap: 10px;
+}
+
+.pagination button {
+  background: #444;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #666;
+}
+
+.pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn button {
+  background: #EFBF04; /* fundo escuro */
+  color: #fff; /* ícone branco */
+  border: none;
+  border-radius: 50%; /* botão redondo */
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn button i {
+  font-size: 16px;
+}
+
+.btn button:hover {
+  background: #2c7a7b; /* verde água no hover */
+  transform: scale(1.1); /* dá um leve zoom */
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn button:active {
+  transform: scale(0.95); /* clique com efeito */
 }
 
 

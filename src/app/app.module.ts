@@ -19,6 +19,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
+import { CoinComponent } from './coin/coin.component';
 
 import { PhoneFormatDirective } from './config/phone-format.directive';
 import { CpfFormatDirective } from './config/cpf-format.directive';
@@ -41,6 +42,7 @@ import { ProfileComponent } from './profile/profile.component';
     PasswordResetComponent,
     ResetPasswordComponent,
     ProfileComponent,
+    CoinComponent,
   ],
   imports: [
     BrowserModule,

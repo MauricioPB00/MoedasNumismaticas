@@ -1,0 +1,151 @@
+<div class="coin-detail" *ngIf="coin">
+
+  <!-- Título e meta -->
+  <h2 class="coin-title">
+    {{ coin.title || ('Moeda #' + (coin.id || '')) }}
+    <small class="meta">
+      <span *ngIf="coin.issuer">
+        <img *ngIf="coin.showBrazilFlag" src="assets/img/bandeira-Brasil.png" class="flag" alt="Brasil">
+        {{ coin.issuer.name }}
+      </span>
+      <span *ngIf="coin.category"> • {{ coin.categoryDisplay || coin.category }}</span>
+      <span *ngIf="coin.minYear || coin.maxYear"> • {{ coin.minYear || '??' }} - {{ coin.maxYear || '??' }}</span>
+    </small>
+  </h2>
+
+  <div class="coin-layout">
+
+    <!-- Coluna esquerda: imagens e descrições -->
+    <div class="coin-images">
+
+      <!-- Linha de imagens -->
+      <div class="coin-img-row">
+        <img *ngIf="coin.obverseImg || coin.obverse"
+             [src]="'assets/img/imagens/' + (coin.obverseImg || coin.obverse)"
+             alt="Anverso" class="coin-img">
+
+        <img *ngIf="coin.reverseImg || coin.reverse"
+             [src]="'assets/img/imagens/' + (coin.reverseImg || coin.reverse)"
+             alt="Reverso" class="coin-img">
+
+        <img *ngIf="coin.edgeImg || coin.edge?.picture"
+             [src]="'assets/img/imagens/' + coin.edgeImg"
+             [alt]="coin.title || 'Moeda Borda'"
+             class="coin-edge-img"
+             (error)="removeEdgeImg()">
+      </div>
+
+      <!-- Descrições resumidas -->
+      <div class="img-descriptions">
+        <p *ngIf="coin.obverseDescription"><strong>Anverso:</strong> {{ coin.obverseDescription }}</p>
+        <p *ngIf="coin.reverseDescription"><strong>Reverso:</strong> {{ coin.reverseDescription }}</p>
+      </div>
+
+      <!-- Detalhes das faces e borda -->
+      <div class="more-info">
+        <ng-container *ngFor="let side of ['reverse', 'obverse', 'edge']">
+          <h3>{{ side | titlecase }}</h3>
+          <div *ngIf="coin[side]">
+            <p *ngIf="coin[side].description"><strong>Descrição ({{ side | titlecase }}):</strong> {{ coin[side].description }}</p>
+            <p *ngIf="coin[side].lettering"><strong>Letreiro ({{ side | titlecase }}):</strong> {{ coin[side].lettering }}</p>
+            <p *ngIf="coin[side].lettering_scripts?.length">
+              <strong>Scripts do letreiro ({{ side | titlecase }}):</strong>
+              <span *ngFor="let script of coin[side].lettering_scripts; let last = last">
+                {{ script.name }}<span *ngIf="!last">, </span>
+              </span>
+            </p>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Coluna direita: dados detalhados -->
+    <div class="coin-info">
+
+      <!-- Dados principais -->
+      <section class="section">
+        <h3>Dados principais</h3>
+        <p *ngIf="formatValue(coin)"><strong>Valor:</strong> {{ formatValue(coin) }}</p>
+        <p *ngIf="coin.type"><strong>Tipo:</strong> {{ coin.type }}</p>
+
+        <p *ngIf="coin.ruler?.length"><strong>Governante:</strong>
+          <span *ngFor="let r of coin.ruler; let last = last"> {{ r.name }}<span *ngIf="!last">, </span></span>
+        </p>
+
+        <p *ngIf="coin.ruler?.length"><strong>Grupo:</strong>
+          <span *ngFor="let r of coin.ruler; let last = last">{{ r.group?.name }}<span *ngIf="!last">, </span></span>
+        </p>
+
+        <p *ngIf="coin.referenceCode?.length"><strong>Referência:</strong>
+          <span *ngFor="let ref of coin.referenceCode; let last = last">
+            {{ ref.catalogue?.code || '' }} {{ ref.number || '' }}<span *ngIf="!last">, </span>
+          </span>
+        </p>
+
+        <p *ngIf="coin.isDemonetized !== undefined"><strong>Demonetizada:</strong> {{ coin.isDemonetized ? 'Sim' : 'Não' }}</p>
+        <p *ngIf="coin.demonetizationDate"><strong>Data demonetização:</strong> {{ coin.demonetizationDate | date:'yyyy-MM-dd' }}</p>
+      </section>
+
+      <!-- Especificações -->
+      <section class="section">
+        <h3>Especificações</h3>
+        <p *ngIf="coin.weight"><strong>Peso:</strong> {{ coin.weight | number:'1.0-3' }} g</p>
+        <p *ngIf="coin.size"><strong>Diâmetro:</strong> {{ coin.size }} mm</p>
+        <p *ngIf="coin.thickness"><strong>Espessura:</strong> {{ coin.thickness }} mm</p>
+        <p *ngIf="coin.shape"><strong>Formato:</strong> {{ coin.shape }}</p>
+        <p *ngIf="coin.orientation"><strong>Orientação:</strong> {{ coin.orientation }}</p>
+      </section>
+
+      <!-- Material e fabricação -->
+      <section class="section">
+        <h3>Material e fabricação</h3>
+        <p *ngIf="coin.composition?.text"><strong>Composição:</strong> {{ coin.composition.text }}</p>
+        <p *ngIf="coin.technique?.text"><strong>Técnica:</strong> {{ coin.technique.text }}</p>
+      </section>
+
+      <!-- Marcas e relacionamentos -->
+      <section class="section">
+        <h3>Marcas e relacionamentos</h3>
+
+        <div *ngIf="coin.mints?.length">
+          <p><strong>Cunhagens:</strong></p>
+          <ul class="no-bullets">
+            <li *ngFor="let mint of coin.mints">{{ mint.name || mint }}</li>
+          </ul>
+        </div>
+
+        <div *ngIf="coin.relatedTypes?.length">
+          <p><strong>Tipos relacionados:</strong></p>
+          <ul class="no-bullets">
+            <li *ngFor="let r of coin.relatedTypes">{{ r.title || r.name || r }}</li>
+          </ul>
+        </div>
+
+        <div *ngIf="coin.tags?.length">
+          <p><strong>Tags:</strong></p>
+          <div class="tags">
+            <span class="tag" *ngFor="let t of coin.tags">{{ t }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="coin.coinGroup && (coin.coinGroup.length || coin.coinGroup.name)">
+          <p><strong>Grupo:</strong></p>
+          <div *ngIf="coin.coinGroup.length">
+            <ul class="no-bullets">
+              <li *ngFor="let g of coin.coinGroup">{{ g }}</li>
+            </ul>
+          </div>
+          <div *ngIf="!coin.coinGroup.length">{{ coin.coinGroup.name || coin.coinGroup }}</div>
+        </div>
+      </section>
+
+      <!-- Outros -->
+      <section class="section misc">
+        <h3>Outros</h3>
+        <p *ngIf="coin.currencyName || coin.currency"><strong>Moeda:</strong> {{ coin.currencyName || coin.currency }}</p>
+        <p *ngIf="coin.valueNumeric"><strong>Valor numérico:</strong> {{ coin.valueNumeric }}</p>
+      </section>
+
+    </div>
+  </div>
+</div>
