@@ -65,7 +65,7 @@ export class SettingsComponent implements OnInit {
 
   onSubmit() {
     if (!this.user) {
-      alert('Usuário não carregado');
+      this.toastr.error('Erro, usuário não encontrado.');
       return;
     }
     this.userService.updateUser(this.user).subscribe({
@@ -73,12 +73,12 @@ export class SettingsComponent implements OnInit {
         if (res.token) {
           localStorage.setItem('jwt', res.token);
         }
-        alert('Dados atualizados com sucesso!');
+        this.toastr.success('Dados atualizados com sucesso!');
         this.showForm = false;
       },
       error: (err) => {
         console.error('Erro ao atualizar usuário:', err);
-        alert('Erro ao atualizar dados');
+        this.toastr.error('Preencha todos os campos corretamente.');
       }
     });
   }
@@ -91,9 +91,11 @@ export class SettingsComponent implements OnInit {
         this.user.photo = res.photo; // retorna o nome salvo
         this.previewUrl = null;      // exibir a foto do banco
         this.selectedFile = null;
+        this.toastr.success('Foto atualizada com sucesso!');
       },
       error: (err) => {
         console.error('Erro ao salvar foto:', err);
+        this.toastr.error('Erro ao salvar foto.');
       }
     });
   }
