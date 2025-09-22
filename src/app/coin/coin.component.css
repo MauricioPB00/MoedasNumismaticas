@@ -80,12 +80,15 @@
 }
 
 .coin-edge-img {
-  max-width: 220px; /* ajusta como quiser */
+  max-width: 220px;
+  /* ajusta como quiser */
   width: 100%;
-  height: auto;      /* mantém proporção */
+  height: auto;
+  /* mantém proporção */
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  object-fit: contain; /* garante que a imagem não estique */
+  object-fit: contain;
+  /* garante que a imagem não estique */
   transition: transform 0.3s ease;
 }
 
@@ -164,6 +167,100 @@
   border-radius: 8px;
   font-size: 0.85rem;
 }
+
+
+/* ALBUMMM */
+
+
+.album-form {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #fcfaf7;
+  /* tom claro */
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+}
+
+.album-form h3 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.album-form table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  /* espaço entre linhas */
+}
+
+.album-form th,
+.album-form td {
+  padding: 10px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.album-form th {
+  background-color: #EFBF04;
+  /* dourado */
+  color: #000;
+  font-weight: 600;
+  border-radius: 6px 6px 0 0;
+}
+
+.album-form td {
+  background-color: #fff;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.album-form td input,
+.album-form td select {
+  width: 80%;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.album-form td input:focus,
+.album-form td select:focus {
+  border-color: #EFBF04;
+  box-shadow: 0 0 5px rgba(239, 191, 4, 0.5);
+  outline: none;
+}
+
+.album-form tbody tr:hover td {
+  background-color: #fff7e6;
+  /* leve destaque ao passar o mouse */
+}
+
+.album-form button {
+  margin-top: 15px;
+  background-color: #EFBF04;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.album-form button:hover {
+  background-color: #d9ac03;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
 
 /* Responsividade */
 @media (max-width: 900px) {

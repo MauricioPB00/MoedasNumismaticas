@@ -1,16 +1,43 @@
-// src/app/services/coin.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { API_CONFIG } from '../config/api.config';
+import { retry, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoinsService {
-  constructor(private http: HttpClient) { }
+
+  constructor(private httpClient: HttpClient) { }
 
   getCoin(id: number): Observable<any> {
-    return this.http.get<any>(`${API_CONFIG.baseUrl}/coins/${id}`);
+    return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/coins/${id}`);
   }
+
+  addCoin(payload: any): Observable<any> {
+    const token = localStorage.getItem('jwt');
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Authorization": `Bearer ${token}`
+      })
+    };
+
+    return this.httpClient.post<any>(`${API_CONFIG.baseUrl}/album/add`, payload, httpOptions)
+      .pipe(
+        retry(0),
+        catchError(this.handleError)
+      );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = error.error.message;
+    } else {
+      errorMessage = `Código do erro: ${error.status}, mensagem: ${error.message}`;
+    }
+    return throwError(() => errorMessage);
+  };
 }

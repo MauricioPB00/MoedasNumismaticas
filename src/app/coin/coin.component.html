@@ -20,19 +20,14 @@
 
       <!-- Linha de imagens -->
       <div class="coin-img-row">
-        <img *ngIf="coin.obverseImg || coin.obverse"
-             [src]="'assets/img/imagens/' + (coin.obverseImg || coin.obverse)"
-             alt="Anverso" class="coin-img">
+        <img *ngIf="coin.obverseImg || coin.obverse" [src]="'assets/img/imagens/' + (coin.obverseImg || coin.obverse)"
+          alt="Anverso" class="coin-img">
 
-        <img *ngIf="coin.reverseImg || coin.reverse"
-             [src]="'assets/img/imagens/' + (coin.reverseImg || coin.reverse)"
-             alt="Reverso" class="coin-img">
+        <img *ngIf="coin.reverseImg || coin.reverse" [src]="'assets/img/imagens/' + (coin.reverseImg || coin.reverse)"
+          alt="Reverso" class="coin-img">
 
-        <img *ngIf="coin.edgeImg || coin.edge?.picture"
-             [src]="'assets/img/imagens/' + coin.edgeImg"
-             [alt]="coin.title || 'Moeda Borda'"
-             class="coin-edge-img"
-             (error)="removeEdgeImg()">
+        <img *ngIf="coin.edgeImg || coin.edge?.picture" [src]="'assets/img/imagens/' + coin.edgeImg"
+          [alt]="coin.title || 'Moeda Borda'" class="coin-edge-img" (error)="removeEdgeImg()">
       </div>
 
       <!-- Descrições resumidas -->
@@ -44,19 +39,100 @@
       <!-- Detalhes das faces e borda -->
       <div class="more-info">
         <ng-container *ngFor="let side of ['reverse', 'obverse', 'edge']">
-          <h3>{{ side | titlecase }}</h3>
-          <div *ngIf="coin[side]">
-            <p *ngIf="coin[side].description"><strong>Descrição ({{ side | titlecase }}):</strong> {{ coin[side].description }}</p>
-            <p *ngIf="coin[side].lettering"><strong>Letreiro ({{ side | titlecase }}):</strong> {{ coin[side].lettering }}</p>
+          <ng-container *ngIf="coin[side]">
+            <h3>{{ side | titlecase }}</h3>
+            <p *ngIf="coin[side].description">
+              <strong>Descrição ({{ side | titlecase }}):</strong> {{ coin[side].description }}
+            </p>
+            <p *ngIf="coin[side].lettering">
+              <strong>Letreiro ({{ side | titlecase }}):</strong> {{ coin[side].lettering }}
+            </p>
             <p *ngIf="coin[side].lettering_scripts?.length">
               <strong>Scripts do letreiro ({{ side | titlecase }}):</strong>
               <span *ngFor="let script of coin[side].lettering_scripts; let last = last">
                 {{ script.name }}<span *ngIf="!last">, </span>
               </span>
             </p>
-          </div>
+          </ng-container>
         </ng-container>
+
+
+
+
+
+
+
+
+        <div *ngIf="coin">
+          <h2>{{ coin.title || ('Moeda #' + (coin.id || '')) }}</h2>
+
+          <!-- infos gerais -->
+          <div class="more-info">
+            <ng-container *ngFor="let side of ['reverse', 'obverse']">
+              <h3>{{ side | titlecase }}</h3>
+              <div *ngIf="coin[side]">
+                <p *ngIf="coin[side].description"><strong>Descrição:</strong> {{ coin[side].description }}</p>
+                <p *ngIf="coin[side].lettering"><strong>Letreiro:</strong> {{ coin[side].lettering }}</p>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- adicionar ao álbum -->
+          <div *ngIf="coinEntries.length > 0; else noYears" class="album-form">
+            <h3>Adicionar ao Álbum</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Ano</th>
+                  <th>Quantidade</th>
+                  <th>Estado</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let entry of coinEntries">
+                  <td>{{ entry.year }}</td>
+                  <td>
+                    <input type="number" [(ngModel)]="entry.quantity" min="0" [ngModelOptions]="{standalone: true}"
+                      placeholder="0">
+                  </td>
+                  <td>
+                    <select [(ngModel)]="entry.condition" [ngModelOptions]="{standalone: true}">
+                      <option [ngValue]="null">--</option>
+                      <option value="FC">FC</option>
+                      <option value="S">S</option>
+                      <option value="MBC">MBC</option>
+                      <option value="BC">BC</option>
+                      <option value="R">R</option>
+                      <option value="UTG">UTG</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button (click)="saveEntry(entry)">Salvar</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ng-template #noYears>
+            <p><em>Nenhum ano disponível para esta moeda</em></p>
+          </ng-template>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
       </div>
+
     </div>
 
     <!-- Coluna direita: dados detalhados -->
@@ -82,8 +158,10 @@
           </span>
         </p>
 
-        <p *ngIf="coin.isDemonetized !== undefined"><strong>Demonetizada:</strong> {{ coin.isDemonetized ? 'Sim' : 'Não' }}</p>
-        <p *ngIf="coin.demonetizationDate"><strong>Data demonetização:</strong> {{ coin.demonetizationDate | date:'yyyy-MM-dd' }}</p>
+        <p *ngIf="coin.isDemonetized !== undefined"><strong>Demonetizada:</strong> {{ coin.isDemonetized ? 'Sim' : 'Não'
+          }}</p>
+        <p *ngIf="coin.demonetizationDate"><strong>Data demonetização:</strong> {{ coin.demonetizationDate |
+          date:'yyyy-MM-dd' }}</p>
       </section>
 
       <!-- Especificações -->
@@ -142,7 +220,8 @@
       <!-- Outros -->
       <section class="section misc">
         <h3>Outros</h3>
-        <p *ngIf="coin.currencyName || coin.currency"><strong>Moeda:</strong> {{ coin.currencyName || coin.currency }}</p>
+        <p *ngIf="coin.currencyName || coin.currency"><strong>Moeda:</strong> {{ coin.currencyName || coin.currency }}
+        </p>
         <p *ngIf="coin.valueNumeric"><strong>Valor numérico:</strong> {{ coin.valueNumeric }}</p>
       </section>
 
