@@ -1,57 +1,38 @@
 <div class="filters">
-    <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (input)="applyFilters()">
+  <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (input)="applyFilters()">
 
-    <select [(ngModel)]="selectedIssuer" (change)="applyFilters()">
-        <option value="">Todos emissores</option>
-        <option *ngFor="let issuer of uniqueIssuers" [value]="issuer">
-            {{ issuer }}
-        </option>
-    </select>
+  <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
+  <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
 
-    <select [(ngModel)]="selectedCategory" (change)="applyFilters()">
-        <option value="">Todas categorias</option>
-        <option *ngFor="let cat of uniqueCategories" [value]="cat">
-            {{ cat === 'coin' ? 'Moeda' : cat }}
-        </option>
-    </select>
+  <select [(ngModel)]="selectedCondition" (change)="applyFilters()">
+    <option *ngFor="let cond of uniqueConditions" [value]="cond">
+      {{ cond }}
+    </option>
+  </select>
 
-    <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
-    <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
 
-    <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
-
+  <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
 </div>
 
-<div class="coins-container">
-    <div class="coin-card" *ngFor="let coin of paginatedCoins">
-        <div class="coin-images">
-            <img *ngIf="coin.obverse" [src]="'assets/img/imagens/' + coin.obverse" alt="Obverse">
-            <img *ngIf="coin.reverse" [src]="'assets/img/imagens/' + coin.reverse" alt="Reverse">
-        </div>
-
-        <div class="coin-info">
-            <h3>{{ coin.title }}</h3>
-            <p class="issuer">
-                {{ coin.categoryDisplay }}
-                <img *ngIf="coin.showBrazilFlag" src="assets/img/bandeira-Brasil.png" alt="Brasil" class="flag">
-            </p>
-            <p *ngIf="coin.min_year || coin.max_year">
-                Ano: {{ coin.min_year }} - {{ coin.max_year }}
-            </p>
-        </div>
-
-        <div class="btn">
-            <button (click)="verDetalhes(coin.id)">
-                <i class="fa-solid fa-plus"></i>
-            </button>
-        </div>
+<div class="album-container" *ngIf="filteredCoins.length > 0; else emptyState">
+  <div class="coin-card" *ngFor="let entry of filteredCoins" (click)="viewCoin(entry.coinId)">
+    <div class="coin-images">
+      <img [src]="'/assets/img/imagens/' + (entry.obverse || 'placeholder.png')" (error)="onImgError($event)"
+        alt="Obverse">
+      <img [src]="'/assets/img/imagens/' + (entry.reverse || 'placeholder.png')" (error)="onImgError($event)"
+        alt="Reverse">
     </div>
+    <div class="coin-info">
+      <h3>{{ entry.coinTitle }}</h3>
+      <p>Ano: <span>{{ entry.year }}</span> </p>
+      <p>({{ entry.minYear }} - {{ entry.maxYear }})</p>
+
+      <p>Quantidade: {{ entry.quantity }}</p>
+      <p>Condição: {{ entry.condition }}</p>
+    </div>
+  </div>
 </div>
 
-<div class="pagination">
-    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
-
-    <span>Página {{ currentPage }} de {{ totalPages }}</span>
-
-    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Próxima</button>
-</div>
+<ng-template #emptyState>
+  <p class="empty">Nenhuma moeda encontrada.</p>
+</ng-template>

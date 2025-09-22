@@ -31,6 +31,16 @@ export class CoinsService {
       );
   }
 
+  getAlbumByUser(): Observable<any> {
+    const token = localStorage.getItem('jwt');
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Authorization": `Bearer ${token}`
+      })
+    };
+    return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/album/me`, httpOptions);
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
