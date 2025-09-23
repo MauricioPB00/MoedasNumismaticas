@@ -110,3 +110,20 @@
 .filters button:hover {
   background-color: #0056b3;
 }
+/* ///////////////////////////////////////////////// */
+
+.filters2 {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+.filters2 label {
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+}

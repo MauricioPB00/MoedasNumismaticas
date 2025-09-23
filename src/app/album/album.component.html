@@ -13,7 +13,15 @@
 
   <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
 </div>
+<div class="filters2">
+  <div class="filters2">
+    <label>
+      <input type="checkbox" [(ngModel)]="groupByCoinId" (change)="applyFiltersGroup()">
+      Agrupar por moeda
+    </label>
+  </div>
 
+</div>
 <div class="album-container" *ngIf="filteredCoins.length > 0; else emptyState">
   <div class="coin-card" *ngFor="let entry of filteredCoins" (click)="viewCoin(entry.coinId)">
     <div class="coin-images">
@@ -24,11 +32,16 @@
     </div>
     <div class="coin-info">
       <h3>{{ entry.coinTitle }}</h3>
-      <p>Ano: <span>{{ entry.year }}</span> </p>
+      <p>Ano: <span>{{ entry.yearsSummary || entry.year }}</span></p>
       <p>({{ entry.minYear }} - {{ entry.maxYear }})</p>
 
       <p>Quantidade: {{ entry.quantity }}</p>
-      <p>Condição: {{ entry.condition }}</p>
+      <p *ngIf="!groupByCoinId">Condição: {{ entry.condition }}</p>
+      <p *ngIf="groupByCoinId">
+        Condições: {{ entry.conditionsSummary || '—' }}
+        <br>
+      </p>
+
     </div>
   </div>
 </div>
