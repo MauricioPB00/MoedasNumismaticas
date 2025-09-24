@@ -21,6 +21,7 @@ export class AlbumComponent implements OnInit {
   selectedCondition: string = 'Todas condições';
 
   groupByCoinId: boolean = false;
+  showCoins: boolean = false;
 
   constructor(
     private coinsService: CoinsService,
@@ -38,7 +39,7 @@ export class AlbumComponent implements OnInit {
     this.coinsService.getAlbumByUser().subscribe({
       next: (res) => {
         this.albumCoins = res;
-
+        
         const conds = [...new Set(
           res
             .map((c: any) => c.condition)
@@ -48,8 +49,8 @@ export class AlbumComponent implements OnInit {
         // 🔹 garante que "Todas condições" sempre vem primeiro
         this.uniqueConditions = ['Todas condições', ...conds];
         this.selectedCondition = 'Todas condições';
-
-        this.filteredCoins = [...this.albumCoins]; // cópia inicial
+        
+        this.filteredCoins = [...this.albumCoins];
         this.loading = false;
       },
       error: (err) => {
@@ -60,21 +61,34 @@ export class AlbumComponent implements OnInit {
     });
   }
 
-  applyFilters(): void {
-    this.filteredCoins = this.albumCoins.filter((coin: any) => {
+  // 🔹 filtro base (nome, ano, condição)
+  private getBaseFilteredCoins(): any[] {
+    return this.albumCoins.filter((coin: any) => {
       const matchesName = this.searchName
-        ? coin.coinTitle.toLowerCase().includes(this.searchName.toLowerCase())
+        ? (coin.coinTitle || '').toLowerCase().includes(this.searchName.toLowerCase())
         : true;
 
-      const matchesMinYear = this.minYear ? coin.year >= this.minYear : true;
-      const matchesMaxYear = this.maxYear ? coin.year <= this.maxYear : true;
+      const matchesMinYear = this.minYear ? (coin.year ?? 0) >= this.minYear : true;
+      const matchesMaxYear = this.maxYear ? (coin.year ?? 0) <= this.maxYear : true;
 
       const matchesCondition = this.selectedCondition !== 'Todas condições'
-        ? coin.condition === this.selectedCondition
+        ? (coin.condition ?? '') === this.selectedCondition
         : true;
 
-      return matchesName && matchesMinYear && matchesMaxYear && matchesCondition;
+      const matchesCategory = this.showCoins
+        ? coin.category === 'coin'
+        : true;
+
+      return matchesName && matchesMinYear && matchesMaxYear && matchesCondition && matchesCategory;
     });
+  }
+
+  applyFilters(): void {
+    if (this.groupByCoinId) {
+      this.applyFiltersGroup();
+    } else {
+      this.filteredCoins = this.getBaseFilteredCoins();
+    }
   }
 
   clearFilters(): void {
@@ -82,7 +96,8 @@ export class AlbumComponent implements OnInit {
     this.minYear = null;
     this.maxYear = null;
     this.selectedCondition = 'Todas condições';
-    this.filteredCoins = [...this.albumCoins];
+    this.showCoins = true;
+    this.applyFilters();
   }
 
   viewCoin(coinId: number): void {
@@ -94,23 +109,7 @@ export class AlbumComponent implements OnInit {
   }
 
   applyFiltersGroup(): void {
-    //  filtra as repetidas
-    const coins = this.albumCoins.filter((coin: any) => {
-      const matchesName = this.searchName
-        ? (coin.coinTitle || '').toLowerCase().includes(this.searchName.toLowerCase())
-        : true;
-
-      const matchesMinYear = this.minYear ? (coin.year ?? 0) >= this.minYear : true;
-      const matchesMaxYear = this.maxYear ? (coin.year ?? 0) <= this.maxYear : true;
-
-      const matchesCondition = this.selectedCondition && this.selectedCondition !== 'Todas condições'
-        ? (coin.condition ?? '') === this.selectedCondition
-        : true;
-
-      return matchesName && matchesMinYear && matchesMaxYear && matchesCondition;
-    });
-
-    console.log('filtered (after basic filters):', coins);
+    const coins = this.getBaseFilteredCoins();
 
     // se não agrupando, mostra as moedas normais
     if (!this.groupByCoinId) {
@@ -125,7 +124,7 @@ export class AlbumComponent implements OnInit {
       const coinId = Number(c.coinId);
       const qty = Number(c.quantity) || 0;
 
-      // normaliza condição
+       // normaliza condição
       const cond = (c.condition === null || c.condition === undefined || String(c.condition).trim() === '')
         ? '—'
         : String(c.condition);
@@ -174,10 +173,10 @@ export class AlbumComponent implements OnInit {
         })
         .join(' – ');
 
-      // string dos anos
+        // string dos anos
       g.yearsSummary = g.years.sort((a: any, b: any) => a - b).join(', ');
 
-      // total
+       // total
       g.quantityTotal = Number(g.quantity) || 0;
 
       return g;
@@ -185,4 +184,13 @@ export class AlbumComponent implements OnInit {
     console.log('grouped result:', grouped);
     this.filteredCoins = grouped;
   }
+
+  // 🔹 função chamada pelo novo checkbox
+applyCoinsFilter(value?: boolean): void {
+  if (typeof value === 'boolean') {
+    this.showCoins = value;
+  }
+  // chama a função que já aplica todos os filtros / agrupamento
+  this.applyFilters(); // ou this.applyFiltersGroup() se você usa só essa
+}
 }

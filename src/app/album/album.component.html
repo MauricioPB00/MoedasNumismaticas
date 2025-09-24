@@ -9,19 +9,24 @@
       {{ cond }}
     </option>
   </select>
-
+  
 
   <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
 </div>
 <div class="filters2">
   <div class="filters2">
     <label>
-      <input type="checkbox" [(ngModel)]="groupByCoinId" (change)="applyFiltersGroup()">
+      <input type="checkbox" [(ngModel)]="groupByCoinId" (change)="applyFilters()" />
       Agrupar por moeda
     </label>
-  </div>
 
+    <label>
+      <input type="checkbox" [(ngModel)]="showCoins" (ngModelChange)="applyCoinsFilter($event)" />
+      Moedas
+    </label>
+  </div>
 </div>
+
 <div class="album-container" *ngIf="filteredCoins.length > 0; else emptyState">
   <div class="coin-card" *ngFor="let entry of filteredCoins" (click)="viewCoin(entry.coinId)">
     <div class="coin-images">
