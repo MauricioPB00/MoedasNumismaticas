@@ -262,7 +262,105 @@
 }
 
 
-/* Responsividade */
+
+
+/* Tabela de entradas do álbum (anos / condições) */
+.album-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #24303a;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+/* Cabeçalho */
+.album-table thead th {
+  background: linear-gradient(90deg, #f8e9c4, #fff1b8);
+  color: #1f2d3a;
+  text-align: center;
+  padding: 12px 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Linhas */
+.album-table tbody td {
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 0.95rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+/* Zebra leve */
+.album-table tbody tr:nth-child(even) td {
+  background-color: #fbfbfb;
+}
+
+/* Destaque ao passar o mouse */
+.album-table tbody tr:hover td {
+  background-color: #fff8eb;
+  transform: translateY(-1px);
+  transition: background-color 0.15s ease, transform 0.12s ease;
+}
+
+/* Input número de remoção */
+.album-table input[type="number"] {
+  width: 70px;
+  padding: 6px 8px;
+  border: 1px solid #d8dbe0;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  text-align: center;
+  background: #ffffff;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.album-table input[type="number"]:focus {
+  outline: none;
+  border-color: #EFBF04;
+  box-shadow: 0 0 0 4px rgba(239,191,4,0.12);
+}
+
+/* Botão remover */
+.btn-remove {
+  display: inline-block;
+  padding: 7px 12px;
+  background-color: #E53935;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+  box-shadow: 0 4px 10px rgba(229, 57, 53, 0.12);
+}
+.btn-remove:hover {
+  background-color: #d32f2f;
+  transform: translateY(-2px);
+}
+.btn-remove:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Texto de quantidade  */
+.album-qty {
+  display: inline-block;
+  min-width: 48px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: linear-gradient(180deg,#fff,#fff7e6);
+  color: #2b2b2b;
+  font-weight: 700;
+  border: 1px solid #f0e2b0;
+}
+
 @media (max-width: 900px) {
   .coin-layout {
     grid-template-columns: 1fr;
@@ -275,5 +373,39 @@
 
   .coin-img {
     max-width: 200px;
+  }
+
+  .album-table thead {
+    display: none;
+  }
+  .album-table, .album-table tbody, .album-table tr, .album-table td {
+    display: block;
+    width: 100%;
+  }
+  .album-table tr {
+    margin-bottom: 0.8rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+  }
+  .album-table td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: none;
+  }
+  .album-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 6px;
+    color: #55606a;
+  }
+  .album-table input[type="number"] {
+    width: 100%;
+  }
+  .btn-remove {
+    width: 100%;
+    text-align: center;
+    margin-top: 6px;
   }
 }

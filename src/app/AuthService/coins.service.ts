@@ -41,6 +41,16 @@ export class CoinsService {
     return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/album/me`, httpOptions);
   }
 
+  getCoinAlbumById(id: number): Observable<any> {
+    const token = localStorage.getItem('jwt');
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Authorization": `Bearer ${token}`
+      })
+    };
+    return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/album/me/${id}`, httpOptions);
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
@@ -50,4 +60,21 @@ export class CoinsService {
     }
     return throwError(() => errorMessage);
   };
+
+  removeCoin(payload: any): Observable<any> {
+    const token = localStorage.getItem('jwt');
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Authorization": `Bearer ${token}`
+      })
+    };
+
+    return this.httpClient.post<any>(`${API_CONFIG.baseUrl}/album/remove`, payload, httpOptions)
+      .pipe(
+        retry(0),
+        catchError(this.handleError)
+      );
+  }
+
 }
