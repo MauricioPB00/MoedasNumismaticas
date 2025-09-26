@@ -1,0 +1,89 @@
+<div class="modal-backdrop" *ngIf="show" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>Gerenciar Moeda</h2>
+            <button class="close-btn" (click)="closeModal()">✖</button>
+        </div>
+        <!-- Abas -->
+        <div class="tabs">
+            <button [class.active]="activeTab === 'detalhes'" (click)="setTab('detalhes')">
+                Adicionar Moeda
+            </button>
+            <button [class.active]="activeTab === 'album'" (click)="setTab('album')">
+                Remover Moeda
+            </button>
+        </div>
+        <!-- Conteúdo das abas -->
+        <div class="tab-content" *ngIf="activeTab === 'detalhes'">
+            <div class="album-form">
+                <h3>Adicionar ao Álbum</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ano</th>
+                            <th>Quantidade</th>
+                            <th>Estado</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let entry of coinEntries">
+                            <td>{{ entry.year }}</td>
+                            <td>
+                                <input type="number" [(ngModel)]="entry.quantity" min="0"
+                                    [ngModelOptions]="{standalone: true}" placeholder="0">
+                            </td>
+                            <td>
+                                <select [(ngModel)]="entry.condition" [ngModelOptions]="{standalone: true}">
+                                    <option [ngValue]="null">--</option>
+                                    <option value="FC">FC</option>
+                                    <option value="S">S</option>
+                                    <option value="MBC">MBC</option>
+                                    <option value="BC">BC</option>
+                                    <option value="R">R</option>
+                                    <option value="UTG">UTG</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <button (click)="saveEntry(entry)">Salvar</button>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-content" *ngIf="activeTab === 'album'">
+            <div class="album-form scrollable-table">
+                <h3>Minhas Moedas</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ano</th>
+                            <th>Condição</th>
+                            <th>Quantidade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of albumCoins">
+                            <td data-label="Ano">{{ item.year }}</td>
+                            <td data-label="Condição">{{ item.condition || '—' }}</td>
+                            <td data-label="Quantidade">
+                                <span class="album-qty">{{ item.quantity }}</span>
+                            </td>
+                            <td data-label="Ações">
+                                <div class="actions">
+                                    <input type="number" [(ngModel)]="item.toRemove" [max]="item.quantity" min="1">
+                                    <button class="btn-remove" (click)="removeCoins(item)">Remover</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

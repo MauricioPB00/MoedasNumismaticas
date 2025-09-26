@@ -28,6 +28,7 @@ import { HeaderComponent } from './header/header.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AlbumComponent } from './album/album.component';
+import { ModalCoinComponent } from './modal-coin/modal-coin.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { AlbumComponent } from './album/album.component';
     ProfileComponent,
     CoinComponent,
     AlbumComponent,
+    ModalCoinComponent,
   ],
   imports: [
     BrowserModule,

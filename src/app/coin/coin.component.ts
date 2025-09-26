@@ -20,6 +20,7 @@ export class CoinComponent {
   coinEntries: { year: number; quantity: number | null; condition: string | null }[] = [];
   albumCoins: any[] = [];
   uniqueConditions: string[] = [];
+  showModal = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,7 +33,6 @@ export class CoinComponent {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
       this.loadCoin(id);
-      this.getAlbum(id);
     }
 
   }
@@ -73,104 +73,4 @@ export class CoinComponent {
     this.coin.edgeImg = null;
   }
 
-  saveEntry(entry: { year: number; quantity: number | null; condition: string | null }) {
-    if (!this.coin) return;
-
-    if (!entry.quantity || entry.quantity <= 0) {
-      alert(`Informe uma quantidade válida para o ano ${entry.year}.`);
-      return;
-    }
-
-    const payload = {
-      coinId: this.coin.id,
-      year: entry.year,
-      quantity: entry.quantity,
-      condition: entry.condition
-    };
-
-    this.coinsService.addCoin(payload).subscribe({
-      next: (res) => {
-        if (res.token) {
-          localStorage.setItem('jwt', res.token);
-        }
-        this.toastr.success('Moeda adicionada com sucesso!');
-      },
-      error: (err) => {
-        console.error('Erro ao adicionar moeda:', err);
-        this.toastr.error('Erro ao adicionar moeda.');
-      }
-    });
-  }
-
-  getAlbum(id: number): void {
-    this.coinsService.getCoinAlbumById(id).subscribe({
-      next: (res) => {
-        this.albumCoins = this.sortAlbumCoins(res);
-
-        const conds = [...new Set(
-          res
-            .map((c: any) => c.condition)
-            .filter((c: string | null) => c != null && c.trim() !== '')
-        )] as string[];
-
-        this.uniqueConditions = ['Todas condições', ...conds];
-        console.log('Álbum carregado:', this.albumCoins);
-      },
-      error: (err) => {
-        console.error('Erro ao carregar álbum:', err);
-      }
-    });
-  }
-
-  private sortAlbumCoins(coins: any[]): any[] {
-    const conditionOrder: { [key: string]: number } = {
-      'FC': 1,
-      'S': 2,
-      'MBC': 3,
-      'BC': 4,
-      'R': 5,
-      'Nula': 6,
-      null: 999
-    };
-
-    return coins.sort((a, b) => {
-      if (a.year !== b.year) {
-        return a.year - b.year; // ordena por ano
-      }
-      const condA = conditionOrder[a.condition ?? 'null'] ?? 999;
-      const condB = conditionOrder[b.condition ?? 'null'] ?? 999;
-      return condA - condB; // ordena pela condição
-    });
-  }
-
-  removeCoins(item: any) {
-    const quantidade = item.toRemove || 1;
-
-    if (quantidade > item.quantidade) {
-      this.toastr.error("Você não pode remover mais do que possui!");
-      return;
-    }
-
-    const payload = {
-      coinId: item.coinId,
-      year: item.year,
-      condition: item.condition,
-      quantity: item.toRemove
-    };
-
-    this.coinsService.removeCoin(payload).subscribe({
-      next: (res) => {
-        this.toastr.success(`${quantidade} moeda(s) removida(s)!`);
-
-        item.quantity -= quantidade;
-        if (item.quantity <= 0) {
-          this.albumCoins = this.albumCoins.filter(c => c !== item);
-        }
-      },
-      error: (err) => {
-        console.error('Erro ao remover moeda:', err);
-        this.toastr.error('Erro ao remover moeda.');
-      }
-    });
-  }
 }
