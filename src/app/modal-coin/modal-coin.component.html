@@ -15,7 +15,8 @@
         </div>
         <!-- Conteúdo das abas -->
         <div class="tab-content" *ngIf="activeTab === 'detalhes'">
-            <div class="album-form">
+            <div class="album-form scrollable-table">
+                <!-- <div class="album-form"> -->
                 <h3>Adicionar ao Álbum</h3>
                 <table>
                     <thead>
@@ -53,6 +54,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <!-- </div> -->
             </div>
         </div>
         <div class="tab-content" *ngIf="activeTab === 'album'">

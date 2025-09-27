@@ -26,8 +26,10 @@
 <div class="album-container" *ngIf="pagedCoins.length > 0; else emptyState">
   <div class="coin-card" *ngFor="let entry of pagedCoins" (click)="viewCoin(entry.coinId)">
     <div class="coin-images">
-      <img [src]="'/assets/img/imagens/' + (entry.obverse || 'placeholder.png')" (error)="onImgError($event)" alt="Obverse">
-      <img [src]="'/assets/img/imagens/' + (entry.reverse || 'placeholder.png')" (error)="onImgError($event)" alt="Reverse">
+      <img [src]="'/assets/img/imagens/' + (entry.obverse || 'placeholder.png')" (error)="onImgError($event)"
+        alt="Obverse">
+      <img [src]="'/assets/img/imagens/' + (entry.reverse || 'placeholder.png')" (error)="onImgError($event)"
+        alt="Reverse">
     </div>
     <div class="coin-info">
       <h3>{{ entry.coinTitle }}</h3>
@@ -37,6 +39,9 @@
       <p *ngIf="!groupByCoinId">Condição: {{ entry.condition || '—' }}</p>
       <p *ngIf="groupByCoinId">Condições: {{ entry.conditionsSummary || '—' }}</p>
     </div>
+    <button class="icon-inline" (click)="abrirModal($event, entry.coinId)">
+      <i class="fas fa-edit"></i>
+    </button>
   </div>
 </div>
 
@@ -49,3 +54,7 @@
   <span> Página {{ currentPage }} de {{ totalPages }} </span>
   <button (click)="nextPage()" [disabled]="currentPage === totalPages">Próxima</button>
 </div>
+
+<app-modal-coin *ngIf="showModal && coin" [show]="showModal" [coin]="coin" [coinEntries]="coinEntries"
+  [albumCoins]="albumCoins" (closed)="showModal = false" (updated)="refreshAlbum()">
+</app-modal-coin>

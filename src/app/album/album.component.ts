@@ -23,11 +23,15 @@ export class AlbumComponent implements OnInit {
   selectedCondition: string = 'Todas condições';
 
   groupByCoinId: boolean = false;
-  showCoins: boolean = true; 
+  showCoins: boolean = true;
 
   currentPage = 1;
   itemsPerPage = 24;
   totalPages = 0;
+
+  showModal = false;
+  coinEntries: { year: number; quantity: number | null; condition: string | null }[] = [];
+  coin: any;
 
   constructor(
     private coinsService: CoinsService,
@@ -127,7 +131,7 @@ export class AlbumComponent implements OnInit {
       const coinId = Number(c.coinId);
       const qty = Number(c.quantity) || 0;
       const cond = (c.condition === null || c.condition === undefined || String(c.condition).trim() === '')
-        ? '—' 
+        ? '—'
         : String(c.condition);
 
       if (!map.has(coinId)) {
@@ -210,4 +214,60 @@ export class AlbumComponent implements OnInit {
     }
     this.applyFilters();
   }
+
+  abrirModal(event: Event, coinId: number): void {
+    event.stopPropagation(); 
+    (event.target as HTMLElement).blur(); 
+
+    this.coin = this.albumCoins.find(c => c.coinId === coinId);
+
+    this.coinEntries = [];
+    if (this.coin.minYear != null && this.coin.maxYear != null) {
+      for (let y = this.coin.minYear; y <= this.coin.maxYear; y++) {
+        this.coinEntries.push({
+          year: y,
+          quantity: null,
+          condition: null
+        });
+      }
+    } else {
+      this.coinEntries.push({
+        year: this.coin.year,
+        quantity: null,
+        condition: null
+      });
+    }
+
+    this.showModal = true;
+
+    console.log('Abrir modal para coin:', this.coin);
+    console.log('Coin entries inicializadas:', this.coinEntries);
+  }
+
+  refreshAlbum(): void {
+    this.coinsService.getAlbumByUser().subscribe({
+      next: (res) => {
+        this.albumCoins = res || [];
+
+        const conds = [...new Set(
+          this.albumCoins
+            .map((c: any) => c.condition)
+            .filter((c: string | null) => c != null && String(c).trim() !== '')
+        )] as string[];
+
+        this.uniqueConditions = ['Todas condições', ...conds];
+        this.selectedCondition = this.selectedCondition || 'Todas condições';
+
+        this.applyFilters();
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar álbum:', err);
+      }
+    });
+  }
+
+
+
+
+
 }

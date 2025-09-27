@@ -14,8 +14,9 @@ export class ModalCoinComponent {
   @Input() show = false;
   @Output() closed = new EventEmitter<void>();
   @Input() coin: any;
-@Input() coinEntries: any[] = [];
-@Input() albumCoins: any[] = [];
+  @Input() albumCoins: any[] = [];
+  @Input() coinEntries: any[] = [];
+  @Output() updated = new EventEmitter<void>();
 
   searchName: string = '';
   selectedIssuer: string = '';
@@ -25,7 +26,7 @@ export class ModalCoinComponent {
   years: number[] = [];
   uniqueConditions: string[] = [];
 
-  activeTab: string = 'detalhes'; 
+  activeTab: string = 'detalhes';
 
   constructor(
     private route: ActivatedRoute,
@@ -35,11 +36,20 @@ export class ModalCoinComponent {
   ) { }
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (id) {
-      this.getAlbum(id);
+    const routeId = Number(this.route.snapshot.paramMap.get('id'));
+    
+    if (this.coin && (this.coin.coinId || this.coin.id)) {
+      const coinId = this.coin.coinId ?? this.coin.id;
+      this.getAlbum(coinId);
+      return;
     }
 
+    if (routeId && !isNaN(routeId)) {
+      this.getAlbum(routeId);
+      return;
+    }
+
+    console.warn('Nenhum CoinId válido encontrado. O modal não irá carregar o álbum.');
   }
 
   setTab(tab: string) {
@@ -50,7 +60,7 @@ export class ModalCoinComponent {
     this.closed.emit();
   }
 
-saveEntry(entry: { year: number; quantity: number | null; condition: string | null }) {
+  saveEntry(entry: { year: number; quantity: number | null; condition: string | null }) {
     if (!this.coin) return;
 
     if (!entry.quantity || entry.quantity <= 0) {
@@ -58,8 +68,15 @@ saveEntry(entry: { year: number; quantity: number | null; condition: string | nu
       return;
     }
 
+    const coinId = this.coin.id ?? this.coin.coinId;
+
+    if (!coinId) {
+      console.error('CoinId inválido, não é possível salvar a entrada.');
+      return;
+    }
+
     const payload = {
-      coinId: this.coin.id,
+      coinId,
       year: entry.year,
       quantity: entry.quantity,
       condition: entry.condition
@@ -71,9 +88,10 @@ saveEntry(entry: { year: number; quantity: number | null; condition: string | nu
           localStorage.setItem('jwt', res.token);
         }
         this.toastr.success('Moeda adicionada com sucesso!');
-        this.getAlbum(this.coin.id);
+        this.getAlbum(coinId);
         entry.quantity = null;
         entry.condition = null;
+        this.updated.emit();
       },
       error: (err) => {
         console.error('Erro ao adicionar moeda:', err);
@@ -82,7 +100,7 @@ saveEntry(entry: { year: number; quantity: number | null; condition: string | nu
     });
   }
 
-   getAlbum(id: number): void {
+  getAlbum(id: number): void {
     this.coinsService.getCoinAlbumById(id).subscribe({
       next: (res) => {
         this.albumCoins = this.sortAlbumCoins(res);
@@ -126,7 +144,7 @@ saveEntry(entry: { year: number; quantity: number | null; condition: string | nu
   removeCoins(item: any) {
     const quantidade = item.toRemove || 1;
 
-   if (quantidade > item.quantity) {
+    if (quantidade > item.quantity) {
       this.toastr.error("Você não pode remover mais do que possui!");
       return;
     }
@@ -146,6 +164,7 @@ saveEntry(entry: { year: number; quantity: number | null; condition: string | nu
         if (item.quantity <= 0) {
           this.albumCoins = this.albumCoins.filter(c => c !== item);
         }
+        this.updated.emit();
       },
       error: (err) => {
         console.error('Erro ao remover moeda:', err);
