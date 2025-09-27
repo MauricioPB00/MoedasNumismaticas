@@ -1,52 +1,41 @@
+<!-- album.component.html -->
 <div class="filters">
   <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (input)="applyFilters()">
-
   <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
   <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
 
   <select [(ngModel)]="selectedCondition" (change)="applyFilters()">
-    <option *ngFor="let cond of uniqueConditions" [value]="cond">
-      {{ cond }}
-    </option>
+    <option *ngFor="let cond of uniqueConditions" [value]="cond">{{ cond }}</option>
   </select>
-  
 
   <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
 </div>
-<div class="filters2">
-  <div class="filters2">
-    <label>
-      <input type="checkbox" [(ngModel)]="groupByCoinId" (change)="applyFilters()" />
-      Agrupar por moeda
-    </label>
 
-    <label>
-      <input type="checkbox" [(ngModel)]="showCoins" (ngModelChange)="applyCoinsFilter($event)" />
-      Moedas
-    </label>
-  </div>
+<div class="filters2">
+  <label>
+    <input type="checkbox" [(ngModel)]="groupByCoinId" (change)="applyFilters()" />
+    Agrupar por moeda
+  </label>
+
+  <label>
+    <input type="checkbox" [(ngModel)]="showCoins" (change)="applyCoinsFilter()" />
+    Moedas
+  </label>
 </div>
 
-<div class="album-container" *ngIf="filteredCoins.length > 0; else emptyState">
-  <div class="coin-card" *ngFor="let entry of filteredCoins" (click)="viewCoin(entry.coinId)">
+<div class="album-container" *ngIf="pagedCoins.length > 0; else emptyState">
+  <div class="coin-card" *ngFor="let entry of pagedCoins" (click)="viewCoin(entry.coinId)">
     <div class="coin-images">
-      <img [src]="'/assets/img/imagens/' + (entry.obverse || 'placeholder.png')" (error)="onImgError($event)"
-        alt="Obverse">
-      <img [src]="'/assets/img/imagens/' + (entry.reverse || 'placeholder.png')" (error)="onImgError($event)"
-        alt="Reverse">
+      <img [src]="'/assets/img/imagens/' + (entry.obverse || 'placeholder.png')" (error)="onImgError($event)" alt="Obverse">
+      <img [src]="'/assets/img/imagens/' + (entry.reverse || 'placeholder.png')" (error)="onImgError($event)" alt="Reverse">
     </div>
     <div class="coin-info">
       <h3>{{ entry.coinTitle }}</h3>
       <p>Ano: <span>{{ entry.yearsSummary || entry.year }}</span></p>
       <p>({{ entry.minYear }} - {{ entry.maxYear }})</p>
-
-      <p>Quantidade: {{ entry.quantity }}</p>
-      <p *ngIf="!groupByCoinId">Condição: {{ entry.condition }}</p>
-      <p *ngIf="groupByCoinId">
-        Condições: {{ entry.conditionsSummary || '—' }}
-        <br>
-      </p>
-
+      <p>Quantidade: {{ entry.quantity || entry.quantityTotal }}</p>
+      <p *ngIf="!groupByCoinId">Condição: {{ entry.condition || '—' }}</p>
+      <p *ngIf="groupByCoinId">Condições: {{ entry.conditionsSummary || '—' }}</p>
     </div>
   </div>
 </div>
@@ -54,3 +43,9 @@
 <ng-template #emptyState>
   <p class="empty">Nenhuma moeda encontrada.</p>
 </ng-template>
+
+<div class="pagination" *ngIf="totalPages > 1">
+  <button (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+  <span> Página {{ currentPage }} de {{ totalPages }} </span>
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">Próxima</button>
+</div>

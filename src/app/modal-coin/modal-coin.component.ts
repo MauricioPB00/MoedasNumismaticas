@@ -71,6 +71,9 @@ saveEntry(entry: { year: number; quantity: number | null; condition: string | nu
           localStorage.setItem('jwt', res.token);
         }
         this.toastr.success('Moeda adicionada com sucesso!');
+        this.getAlbum(this.coin.id);
+        entry.quantity = null;
+        entry.condition = null;
       },
       error: (err) => {
         console.error('Erro ao adicionar moeda:', err);

@@ -127,3 +127,32 @@
   color: #333;
   cursor: pointer;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.pagination button {
+  background: #222;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #444;
+  transform: scale(1.05);
+}
+
+.pagination button:disabled {
+  background: #888;
+  cursor: not-allowed;
+}
+

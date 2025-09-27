@@ -138,14 +138,14 @@
         </p>
         <p *ngIf="coin.valueNumeric"><strong>Valor numérico:</strong> {{ coin.valueNumeric }}</p>
       </section>
-      <button (click)="showModal = true">Abrir Modal</button>
+      <h3>Minhas Moedas </h3>
+      <button class="open-modal-btn" (click)="showModal = true">
+        Adicionar ou Remover Moeda
+      </button>
+
     </div>
   </div>
 </div>
-<app-modal-coin
-  [show]="showModal"
-  [coin]="coin"
-  [coinEntries]="coinEntries"
-  [albumCoins]="albumCoins"
+<app-modal-coin [show]="showModal" [coin]="coin" [coinEntries]="coinEntries" [albumCoins]="albumCoins"
   (closed)="showModal = false">
 </app-modal-coin>

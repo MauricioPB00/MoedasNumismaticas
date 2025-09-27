@@ -11,6 +11,8 @@ export class AlbumComponent implements OnInit {
 
   albumCoins: any[] = [];
   filteredCoins: any[] = [];
+  pagedCoins: any[] = [];
+
   loading: boolean = false;
   error: string | null = null;
 
@@ -21,7 +23,11 @@ export class AlbumComponent implements OnInit {
   selectedCondition: string = 'Todas condições';
 
   groupByCoinId: boolean = false;
-  showCoins: boolean = false;
+  showCoins: boolean = true; 
+
+  currentPage = 1;
+  itemsPerPage = 24;
+  totalPages = 0;
 
   constructor(
     private coinsService: CoinsService,
@@ -38,20 +44,21 @@ export class AlbumComponent implements OnInit {
 
     this.coinsService.getAlbumByUser().subscribe({
       next: (res) => {
-        this.albumCoins = res;
-        
+        this.albumCoins = res || [];
+
         const conds = [...new Set(
-          res
+          (this.albumCoins as any[])
             .map((c: any) => c.condition)
-            .filter((c: string | null) => c != null && c.trim() !== '')
+            .filter((c: string | null) => c != null && String(c).trim() !== '')
         )] as string[];
 
-        // 🔹 garante que "Todas condições" sempre vem primeiro
         this.uniqueConditions = ['Todas condições', ...conds];
         this.selectedCondition = 'Todas condições';
-        
-        this.filteredCoins = [...this.albumCoins];
+
+        this.applyFilters();
+
         this.loading = false;
+        console.log('Álbum carregado (raw):', this.albumCoins);
       },
       error: (err) => {
         console.error('Erro ao carregar álbum:', err);
@@ -61,7 +68,6 @@ export class AlbumComponent implements OnInit {
     });
   }
 
-  // 🔹 filtro base (nome, ano, condição)
   private getBaseFilteredCoins(): any[] {
     return this.albumCoins.filter((coin: any) => {
       const matchesName = this.searchName
@@ -88,6 +94,8 @@ export class AlbumComponent implements OnInit {
       this.applyFiltersGroup();
     } else {
       this.filteredCoins = this.getBaseFilteredCoins();
+      this.updatePagination();
+      console.log('Resultado após filtros básicos:', this.filteredCoins.length);
     }
   }
 
@@ -97,6 +105,7 @@ export class AlbumComponent implements OnInit {
     this.maxYear = null;
     this.selectedCondition = 'Todas condições';
     this.showCoins = true;
+    this.groupByCoinId = false;
     this.applyFilters();
   }
 
@@ -110,41 +119,29 @@ export class AlbumComponent implements OnInit {
 
   applyFiltersGroup(): void {
     const coins = this.getBaseFilteredCoins();
+    console.log('filtered (after basic filters):', coins.length);
 
-    // se não agrupando, mostra as moedas normais
-    if (!this.groupByCoinId) {
-      this.filteredCoins = coins;
-      return;
-    }
-
-    // agrupa por coinId
     const map = new Map<number, any>();
 
     coins.forEach(c => {
       const coinId = Number(c.coinId);
       const qty = Number(c.quantity) || 0;
-
-       // normaliza condição
       const cond = (c.condition === null || c.condition === undefined || String(c.condition).trim() === '')
-        ? '—'
+        ? '—' 
         : String(c.condition);
 
       if (!map.has(coinId)) {
-        // cria o grupo inicial
         map.set(coinId, {
           ...c,
           coinId,
           quantity: qty,
           conditions: [{ type: cond, quantity: qty }],
-          years: [c.year] // inicializa com o ano da primeira moeda
+          years: c.year ? [c.year] : []
         });
       } else {
         const group = map.get(coinId);
-
-        // soma quantidade total
         group.quantity = (Number(group.quantity) || 0) + qty;
 
-        // acumula condições
         const idx = group.conditions.findIndex((x: any) => x.type === cond);
         if (idx >= 0) {
           group.conditions[idx].quantity = (Number(group.conditions[idx].quantity) || 0) + qty;
@@ -152,18 +149,14 @@ export class AlbumComponent implements OnInit {
           group.conditions.push({ type: cond, quantity: qty });
         }
 
-        // acumula anos (sem duplicar)
         if (c.year && !group.years.includes(c.year)) {
           group.years.push(c.year);
         }
       }
     });
-    // transforma em array 
-    const grouped = Array.from(map.values()).map(g => {
-      // ordenar conditions por quantidade desc
-      g.conditions.sort((a: any, b: any) => (b.quantity || 0) - (a.quantity || 0));
 
-      // string das condições
+    const grouped = Array.from(map.values()).map(g => {
+      g.conditions.sort((a: any, b: any) => (b.quantity || 0) - (a.quantity || 0));
       g.conditionsSummary = g.conditions
         .map((cond: any) => {
           if (!cond.type || cond.type === '—') {
@@ -172,25 +165,49 @@ export class AlbumComponent implements OnInit {
           return `(${cond.quantity} ${cond.type})`;
         })
         .join(' – ');
-
-        // string dos anos
-      g.yearsSummary = g.years.sort((a: any, b: any) => a - b).join(', ');
-
-       // total
+      g.yearsSummary = (g.years || []).sort((a: any, b: any) => a - b).join(', ');
       g.quantityTotal = Number(g.quantity) || 0;
-
       return g;
     });
-    console.log('grouped result:', grouped);
+
+    console.log('grouped result:', grouped.length);
     this.filteredCoins = grouped;
+    this.updatePagination();
   }
 
-  // 🔹 função chamada pelo novo checkbox
-applyCoinsFilter(value?: boolean): void {
-  if (typeof value === 'boolean') {
-    this.showCoins = value;
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.filteredCoins.length / this.itemsPerPage);
+    if (this.totalPages === 0) {
+      this.currentPage = 1;
+      this.pagedCoins = [];
+      return;
+    }
+    if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
+    if (this.currentPage < 1) this.currentPage = 1;
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.pagedCoins = this.filteredCoins.slice(start, end);
+    console.log(`Página ${this.currentPage}/${this.totalPages} — exibindo ${this.pagedCoins.length} itens`);
   }
-  // chama a função que já aplica todos os filtros / agrupamento
-  this.applyFilters(); // ou this.applyFiltersGroup() se você usa só essa
-}
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
+  }
+
+  applyCoinsFilter(value?: boolean): void {
+    if (typeof value === 'boolean') {
+      this.showCoins = value;
+    }
+    this.applyFilters();
+  }
 }
