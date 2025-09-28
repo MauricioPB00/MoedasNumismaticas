@@ -23,6 +23,7 @@
 </div>
 
 <div class="coins-container">
+  <a (click)="verDetalhes(coin.id)" *ngFor="let coin of paginatedCoins" [routerLink]="['/coin', coin.id]" class="coins-container-a">
   <div class="coin-card" *ngFor="let coin of paginatedCoins">
     <div class="coin-images">
       <img *ngIf="coin.obverse" [src]="'assets/img/imagens/' + coin.obverse" alt="Obverse">
@@ -46,6 +47,7 @@
       </button>
     </div>
   </div>
+  </a>
 </div>
 
 <!-- Controles de Paginação -->

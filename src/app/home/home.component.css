@@ -4,6 +4,25 @@
   gap: 1.5rem;
 }
 
+.coins-container-a {
+  color: inherit;           
+  text-decoration: none;    
+  cursor: pointer;         
+}
+
+.coins-container-a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+.coins-container-a:hover,
+.coins-container-a:focus,
+.coins-container-a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+
 .coin-card {
   display: flex;
   align-items: center;
