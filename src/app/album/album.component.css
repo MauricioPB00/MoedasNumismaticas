@@ -110,24 +110,67 @@
 .filters button:hover {
   background-color: #0056b3;
 }
+
 /* ///////////////////////////////////////////////// */
 
 .filters2 {
-  margin-top: 0.5rem;
-  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1.5rem;
   background-color: #fafafa;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-}
-.filters2 label {
-  font-size: 0.95rem;
-  color: #333;
-  cursor: pointer;
+  padding: 10px 18px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #ddd;
+  ;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  margin-bottom: 16px;
 }
 
+.filters2 label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.filters2 label:hover {
+  color: #EFBF04;
+}
+
+.filters2 input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #777;
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filters2 input[type="checkbox"]:hover {
+  background: #EFBF04;
+}
+
+.filters2 input[type="checkbox"]:checked {
+  background-color: #EFBF04;
+  border-color: #EFBF04;
+  box-shadow: 0 0 4px #EFBF04;
+}
+
+.filters2 input[type="checkbox"]:checked::after {
+  content: "✔";
+  color: #111;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* /////////////////////////////// */
 .pagination {
   display: flex;
   justify-content: center;
@@ -159,17 +202,17 @@
 /* abrir modal */
 
 .icon-inline {
-  background-color: #F0D97C; 
+  background-color: #F0D97C;
   border: none;
-  color: #2d2d2d; 
+  color: #2d2d2d;
   border-radius: 8px;
   padding: 8px 10px;
   cursor: pointer;
   font-size: 18px;
   transition: all 0.2s ease-in-out;
   position: absolute;
-  bottom: 10px; 
-  right: 10px; 
+  bottom: 10px;
+  right: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -178,7 +221,7 @@
 }
 
 .icon-inline:hover {
-  background-color: #ffda44; 
+  background-color: #ffda44;
   transform: scale(1.08);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
@@ -191,5 +234,3 @@
   position: relative;
   overflow: hidden;
 }
-
-
