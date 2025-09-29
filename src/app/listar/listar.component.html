@@ -1,26 +1,39 @@
+<div class="filters">
+  <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (input)="applyFilters()">
+  <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
+  <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
+
+  <select [(ngModel)]="selectedCondition" (change)="applyFilters()">
+    <option value="">Todas as condições</option> <!-- ADICIONADO -->
+    <option *ngFor="let cond of uniqueConditions" [value]="cond">{{ cond }}</option>
+  </select>
+
+  <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
+</div>
+
 <div class="filters2">
   <label>
     <input type="checkbox" name="typeFilter" [checked]="selectedType === 'all'" (change)="setType('all')" />
     Tudo
   </label>
-
   <label>
     <input type="checkbox" name="typeFilter" [checked]="selectedType === 'coin'" (change)="setType('coin')" />
     Moedas
   </label>
-
   <label>
     <input type="checkbox" name="typeFilter" [checked]="selectedType === 'banknote'" (change)="setType('banknote')" />
     Cédulas
   </label>
-
   <label>
     <input type="checkbox" name="typeFilter" [checked]="selectedType === 'repeated'" (change)="setType('repeated')" />
     Repetidas
   </label>
-</div>
-<div class="actions">
-  <button (click)="gerarPDF()">Gerar PDF</button>
+  <div class="actions">
+    <button (click)="gerarPDF()">
+      <i class="fa-solid fa-file-pdf"></i>
+      Gerar PDF
+    </button>
+  </div>
 </div>
 
 <div class="album-container" *ngIf="!loading && albumCoins.length">

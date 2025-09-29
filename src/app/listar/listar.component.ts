@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CoinsService } from '../AuthService/coins.service';
 import { Router } from '@angular/router';
+import { logoBase64 } from 'src/assets/logo';
 
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -19,7 +20,13 @@ export class ListarComponent implements OnInit {
   allAlbumCoins: any[] = [];
   albumCoins: any[] = [];
 
-  selectedType: string = 'all'; // 'all' | 'coin' | 'banknote' | 'repeated'
+  selectedType: string = 'all';
+
+  searchName: string = '';
+  minYear?: number;
+  maxYear?: number;
+  selectedCondition: string = '';
+  uniqueConditions: string[] = [];
 
   constructor(
     private coinsService: CoinsService,
@@ -58,8 +65,18 @@ export class ListarComponent implements OnInit {
         }
 
         this.allAlbumCoins = Object.values(grouped);
-        this.applyFilters();
 
+        this.allAlbumCoins.forEach(c => {
+          c.years.sort((a: any, b: any) => a.year - b.year);
+        });
+
+        this.allAlbumCoins.sort((a, b) => a.years[0].year - b.years[0].year);
+
+        const conds = new Set<string>();
+        this.allAlbumCoins.forEach(c => c.years.forEach((y: any) => y.condition && conds.add(y.condition)));
+        this.uniqueConditions = Array.from(conds);
+
+        this.applyFilters();
         this.loading = false;
       },
       error: (err) => {
@@ -70,90 +87,129 @@ export class ListarComponent implements OnInit {
     });
   }
 
+
   setType(type: string): void {
     this.selectedType = type;
     this.applyFilters();
   }
 
   applyFilters(): void {
-    if (this.selectedType === 'all') {
-      this.albumCoins = [...this.allAlbumCoins];
-      return;
-    }
+    let filtered = [...this.allAlbumCoins];
 
     if (this.selectedType === 'coin' || this.selectedType === 'banknote') {
-      this.albumCoins = this.allAlbumCoins.filter(c => c.category === this.selectedType);
-      return;
-    }
-
-    if (this.selectedType === 'repeated') {
-      // Filtra apenas anos com mais de 1 unidade e diminui 1 do valor
-      this.albumCoins = this.allAlbumCoins
+      filtered = filtered.filter(c => c.category === this.selectedType);
+    } else if (this.selectedType === 'repeated') {
+      filtered = filtered
         .map(c => ({
           ...c,
           years: c.years
             .filter((y: any) => y.quantity > 1)
-            .map((y: any) => ({
-              ...y,
-              quantity: y.quantity - 1 // diminui 1
-            }))
+            .map((y: any) => ({ ...y, quantity: y.quantity - 1 }))
         }))
         .filter(c => c.years.length > 0);
     }
+
+    if (this.searchName) {
+      const term = this.searchName.toLowerCase();
+      filtered = filtered.filter(c => c.title.toLowerCase().includes(term));
+    }
+
+    if (this.minYear !== undefined || this.maxYear !== undefined) {
+      filtered = filtered.map(c => ({
+        ...c,
+        years: c.years.filter((y: any) => {
+          const afterMin = this.minYear ? y.year >= this.minYear : true;
+          const beforeMax = this.maxYear ? y.year <= this.maxYear : true;
+          return afterMin && beforeMax;
+        })
+      })).filter(c => c.years.length > 0);
+    }
+
+    if (this.selectedCondition) {
+      filtered = filtered.map(c => ({
+        ...c,
+        years: c.years.filter((y: any) => y.condition === this.selectedCondition)
+      })).filter(c => c.years.length > 0);
+    }
+
+    this.albumCoins = filtered;
   }
+
+  clearFilters(): void {
+    this.searchName = '';
+    this.minYear = undefined;
+    this.maxYear = undefined;
+    this.selectedCondition = '';
+    this.applyFilters();
+  }
+
   gerarPDF(): void {
-  const content: any[] = [];
-
-  // Título do PDF com base no filtro ativo
-  let titulo = 'Meu Álbum de Moedas';
-  switch (this.selectedType) {
-    case 'coin':
-      titulo = 'Minhas Moedas';
-      break;
-    case 'banknote':
-      titulo = 'Minhas Cédulas';
-      break;
-    case 'repeated':
-      titulo = 'Itens Repetidos';
-      break;
-  }
-
-  content.push({ text: titulo, fontSize: 18, bold: true, margin: [0, 0, 0, 20] });
-
-  // Percorre as moedas ou cédulas filtradas
-  this.albumCoins.forEach(coin => {
-    // Título da moeda/cedula
-    content.push({ text: coin.title, bold: true, fontSize: 14, margin: [0, 5, 0, 5] });
-
-    // Monta tabela com os anos ou datas
-    const tableBody = [
-      ['Ano', 'Quantidade', 'Condição'] // Cabeçalho
-    ];
-
-    coin.years.forEach((y: { year: number; quantity: number; condition: string | null }) => {
-      tableBody.push([
-        y.year.toString(),
-        y.quantity.toString(),
-        y.condition || '-'
-      ]);
-    });
+    const content: any[] = [];
 
     content.push({
-      table: {
-        headerRows: 1,
-        widths: ['*', 'auto', 'auto'],
-        body: tableBody
-      },
-      layout: {
-        fillColor: (rowIndex: number) => rowIndex === 0 ? '#EFBF04' : null
-      },
-      margin: [0, 0, 0, 15]
+      columns: [
+        {
+          image: logoBase64,
+          width: 80
+        },
+        {
+          stack: [
+            { text: 'Álbum Numismático', fontSize: 18, bold: true },
+            { text: 'Organize, catalogue e explore o fascinante mundo das moedas.', fontSize: 10 },
+            { text: 'www.albumnumismatico.com.br', fontSize: 10 }
+          ],
+          margin: [10, 0, 0, 0]
+        }
+      ],
+      margin: [0, 0, 0, 20]
     });
-  });
 
-  // Gera e abre o PDF
-  pdfMake.createPdf({ content }).open();
-}
+    let titulo = 'Meu Álbum de Moedas';
+    switch (this.selectedType) {
+      case 'coin':
+        titulo = 'Minhas Moedas';
+        break;
+      case 'banknote':
+        titulo = 'Minhas Cédulas';
+        break;
+      case 'repeated':
+        titulo = 'Itens Repetidos';
+        break;
+    }
+
+    content.push({ text: titulo, fontSize: 16, bold: true, margin: [0, 0, 0, 15] });
+
+    this.albumCoins.forEach(coin => {
+      content.push({ text: coin.title, bold: true, fontSize: 14, margin: [0, 5, 0, 5] });
+
+      const tableBody = [
+        ['Ano', 'Quantidade', 'Condição']
+      ];
+
+      coin.years.forEach((y: { year: number; quantity: number; condition: string | null }) => {
+        tableBody.push([
+          y.year.toString(),
+          y.quantity.toString(),
+          y.condition || '-'
+        ]);
+      });
+
+      content.push({
+        table: {
+          headerRows: 1,
+          widths: ['*', 'auto', 'auto'],
+          body: tableBody
+        },
+        layout: {
+          fillColor: (rowIndex: number) => rowIndex === 0 ? '#EFBF04' : null
+        },
+        margin: [0, 0, 0, 15]
+      });
+    });
+
+    pdfMake.createPdf({ content }).open();
+  }
+
 
 
 }
