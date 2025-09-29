@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CoinsService } from '../AuthService/coins.service';
 import { Router } from '@angular/router';
 
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+(pdfMake as any).vfs = (pdfFonts as any).vfs;
+
 @Component({
   selector: 'app-listar',
   templateUrl: './listar.component.html',
@@ -97,5 +101,59 @@ export class ListarComponent implements OnInit {
         .filter(c => c.years.length > 0);
     }
   }
+  gerarPDF(): void {
+  const content: any[] = [];
+
+  // Título do PDF com base no filtro ativo
+  let titulo = 'Meu Álbum de Moedas';
+  switch (this.selectedType) {
+    case 'coin':
+      titulo = 'Minhas Moedas';
+      break;
+    case 'banknote':
+      titulo = 'Minhas Cédulas';
+      break;
+    case 'repeated':
+      titulo = 'Itens Repetidos';
+      break;
+  }
+
+  content.push({ text: titulo, fontSize: 18, bold: true, margin: [0, 0, 0, 20] });
+
+  // Percorre as moedas ou cédulas filtradas
+  this.albumCoins.forEach(coin => {
+    // Título da moeda/cedula
+    content.push({ text: coin.title, bold: true, fontSize: 14, margin: [0, 5, 0, 5] });
+
+    // Monta tabela com os anos ou datas
+    const tableBody = [
+      ['Ano', 'Quantidade', 'Condição'] // Cabeçalho
+    ];
+
+    coin.years.forEach((y: { year: number; quantity: number; condition: string | null }) => {
+      tableBody.push([
+        y.year.toString(),
+        y.quantity.toString(),
+        y.condition || '-'
+      ]);
+    });
+
+    content.push({
+      table: {
+        headerRows: 1,
+        widths: ['*', 'auto', 'auto'],
+        body: tableBody
+      },
+      layout: {
+        fillColor: (rowIndex: number) => rowIndex === 0 ? '#EFBF04' : null
+      },
+      margin: [0, 0, 0, 15]
+    });
+  });
+
+  // Gera e abre o PDF
+  pdfMake.createPdf({ content }).open();
+}
+
 
 }

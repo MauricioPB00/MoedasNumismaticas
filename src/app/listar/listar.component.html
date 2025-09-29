@@ -19,7 +19,9 @@
     Repetidas
   </label>
 </div>
-
+<div class="actions">
+  <button (click)="gerarPDF()">Gerar PDF</button>
+</div>
 
 <div class="album-container" *ngIf="!loading && albumCoins.length">
   <div *ngFor="let coin of albumCoins" class="coin-group">
