@@ -1,0 +1,42 @@
+<div class="filters2">
+  <label>
+    <input type="checkbox" name="typeFilter" [checked]="selectedType === 'all'" (change)="setType('all')" />
+    Tudo
+  </label>
+
+  <label>
+    <input type="checkbox" name="typeFilter" [checked]="selectedType === 'coin'" (change)="setType('coin')" />
+    Moedas
+  </label>
+
+  <label>
+    <input type="checkbox" name="typeFilter" [checked]="selectedType === 'banknote'" (change)="setType('banknote')" />
+    Cédulas
+  </label>
+
+  <label>
+    <input type="checkbox" name="typeFilter" [checked]="selectedType === 'repeated'" (change)="setType('repeated')" />
+    Repetidas
+  </label>
+</div>
+
+
+<div class="album-container" *ngIf="!loading && albumCoins.length">
+  <div *ngFor="let coin of albumCoins" class="coin-group">
+    <div class="coin-header">
+      <img [src]="'assets/img/imagens/' + coin.obverse" alt="{{ coin.title }}" class="coin-img">
+      <h2>{{ coin.title }}</h2>
+    </div>
+
+    <div class="coin-years">
+      <div *ngFor="let y of coin.years" class="coin-year">
+        <span class="year">{{ y.year }}</span>
+        <span class="quantity">{{ y.quantity }}x</span>
+        <span class="condition">{{ y.condition || '—' }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading">Carregando...</div>
+<div *ngIf="!loading && !albumCoins.length" class="empty">Nenhum item encontrado.</div>

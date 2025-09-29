@@ -11,6 +11,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ProfileComponent } from './profile/profile.component';
 import { CoinComponent } from './coin/coin.component';
 import { AlbumComponent } from './album/album.component';
+import { ListarComponent } from './listar/listar.component';
 
 enum Permi { admin = 2, operador = 1 }
 
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'coin/:id', component: CoinComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'album', component: AlbumComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
+  { path: 'listar', component: ListarComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], data: { roles: [Permi.admin] } },
   { path: '**', component: HomepageComponent, canActivate: [AuthGuard] },
 ];

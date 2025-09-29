@@ -1,0 +1,186 @@
+.album-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 25px;
+  /* background: #f9f7f3; */
+  border-radius: 16px;
+  font-family: "Poppins", sans-serif;
+}
+
+.coin-group {
+  /* background: linear-gradient(145deg, #ffffff, #f3efe7); */
+  border-bottom: 1px solid #e2d4a8;
+  /* border-radius: 14px; */
+  padding: 20px 24px;
+  /* box-shadow: 0 4px 12px rgba(212, 180, 96, 0.25); */
+  transition: all 0.3s ease;
+}
+
+.coin-group:hover {
+  transform: translateY(-4px);
+  /* box-shadow: 0 8px 20px rgba(212, 180, 96, 0.4); */
+  /* border-color: #c8a94a; */
+}
+
+.coin-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  /* border-bottom: 1px solid #e2d4a8; */
+  padding-bottom: 10px;
+  /* margin-bottom: 14px; */
+}
+
+.coin-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: cover;
+  /* border: 2px solid #d4b460; */
+  /* box-shadow: 0 0 8px rgba(212, 180, 96, 0.4); */
+  /* background: #fff; */
+  /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
+}
+
+.coin-img:hover {
+  transform: scale(1.08);
+  /* box-shadow: 0 0 15px rgba(212, 180, 96, 0.6); */
+}
+
+.coin-header h3 {
+  /* color: #5a4a1d; */
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.coin-header p {
+  /* color: #8b7b45; */
+  font-size: 14px;
+  margin: 0;
+}
+
+.coin-years {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin-top: 10px;
+}
+
+.coin-year {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  /* background: #fff9e6; */
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  border: 1px solid #e8d593; 
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.4);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.coin-year:hover {
+  /* background: #f8e7b9; */
+  transform: translateY(-2px);
+}
+
+.coin-year .year {
+  font-weight: 600;
+  /* color: #b68c2b; */
+}
+
+.coin-year .quantity {
+  /* color: #7c6a2e; */
+  font-weight: 400;
+}
+
+.coin-year .condition {
+  /* color: #5a4a1d; */
+  font-weight: 500;
+}
+
+.loading,
+.empty {
+  text-align: center;
+  /* color: #a89249; */
+  font-size: 16px;
+  margin-top: 30px;
+  font-style: italic;
+}
+
+/* Título opcional no topo */
+.album-container h2 {
+  /* color: #b68c2b; */
+  font-weight: 700;
+  font-size: 24px;
+  margin-bottom: 10px;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  letter-spacing: 1px;
+}
+
+
+
+
+/* ////////////// filtro */
+
+
+.filters2 {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background-color: #fafafa;
+  padding: 10px 18px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #ddd;
+  ;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.filters2 label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.filters2 label:hover {
+  color: #EFBF04;
+}
+
+.filters2 input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #777;
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filters2 input[type="checkbox"]:hover {
+  background: #EFBF04;
+}
+
+.filters2 input[type="checkbox"]:checked {
+  background-color: #EFBF04;
+  border-color: #EFBF04;
+  box-shadow: 0 0 4px #EFBF04;
+}
+
+.filters2 input[type="checkbox"]:checked::after {
+  content: "✔";
+  color: #111;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
