@@ -18,10 +18,16 @@
   </label>
 
   <label>
-    <input type="checkbox" [(ngModel)]="showCoins" (change)="applyCoinsFilter()" />
+    <input type="checkbox" [(ngModel)]="showCoins" (change)="applyFilters()" />
     Moedas
   </label>
+
+  <label>
+    <input type="checkbox" [(ngModel)]="showBanknotes" (change)="applyFilters()" />
+    Cédulas
+  </label>
 </div>
+
 
 <div class="album-container" *ngIf="pagedCoins.length > 0; else emptyState">
   <div class="coin-card" *ngFor="let entry of pagedCoins" (click)="viewCoin(entry.coinId)">
