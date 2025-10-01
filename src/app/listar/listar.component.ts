@@ -45,22 +45,26 @@ export class ListarComponent implements OnInit {
       next: (res) => {
         const coins = res || [];
 
-        const grouped: { [key: number]: any } = {};
-        for (const coin of coins) {
-          if (!grouped[coin.coinId]) {
-            grouped[coin.coinId] = {
-              coinId: coin.coinId,
-              title: coin.coinTitle || coin.title,
-              obverse: coin.obverse,
-              reverse: coin.reverse,
-              category: (coin.category || '').toLowerCase(),
+        const grouped: { [key: string]: any } = {};
+        for (const item of coins) {
+          const key = `${item.type}-${item.id}`;
+
+          if (!grouped[key]) {
+            grouped[key] = {
+              id: item.id,
+              type: item.type,
+              title: item.coinTitle || item.title,
+              obverse: item.obverse,
+              reverse: item.reverse,
+              category: (item.category || '').toLowerCase(),
               years: []
             };
           }
-          grouped[coin.coinId].years.push({
-            year: coin.year,
-            quantity: coin.quantity,
-            condition: coin.condition
+
+          grouped[key].years.push({
+            year: item.year,
+            quantity: item.quantity,
+            condition: item.condition
           });
         }
 
@@ -87,7 +91,6 @@ export class ListarComponent implements OnInit {
     });
   }
 
-
   setType(type: string): void {
     this.selectedType = type;
     this.applyFilters();
@@ -97,7 +100,7 @@ export class ListarComponent implements OnInit {
     let filtered = [...this.allAlbumCoins];
 
     if (this.selectedType === 'coin' || this.selectedType === 'banknote') {
-      filtered = filtered.filter(c => c.category === this.selectedType);
+      filtered = filtered.filter(c => c.type === this.selectedType);
     } else if (this.selectedType === 'repeated') {
       filtered = filtered
         .map(c => ({
@@ -140,6 +143,7 @@ export class ListarComponent implements OnInit {
     this.minYear = undefined;
     this.maxYear = undefined;
     this.selectedCondition = '';
+    this.selectedType = 'all';
     this.applyFilters();
   }
 

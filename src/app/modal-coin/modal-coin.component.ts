@@ -37,7 +37,7 @@ export class ModalCoinComponent {
 
   ngOnInit() {
     const routeId = Number(this.route.snapshot.paramMap.get('id'));
-    
+
     if (this.coin && (this.coin.coinId || this.coin.id)) {
       const coinId = this.coin.coinId ?? this.coin.id;
       this.getAlbum(coinId);
@@ -60,14 +60,13 @@ export class ModalCoinComponent {
     this.closed.emit();
   }
 
-  saveEntry(entry: { year: number; quantity: number | null; condition: string | null }) {
+  saveEntry(entry: { year: number; quantity: number | null; condition: string | null; category: string; }): void {
     if (!this.coin) return;
 
     if (!entry.quantity || entry.quantity <= 0) {
       alert(`Informe uma quantidade válida para o ano ${entry.year}.`);
       return;
     }
-
     const coinId = this.coin.id ?? this.coin.coinId;
 
     if (!coinId) {
@@ -79,7 +78,8 @@ export class ModalCoinComponent {
       coinId,
       year: entry.year,
       quantity: entry.quantity,
-      condition: entry.condition
+      condition: entry.condition,
+      type: this.coin.category,
     };
 
     this.coinsService.addCoin(payload).subscribe({

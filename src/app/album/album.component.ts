@@ -52,8 +52,8 @@ export class AlbumComponent implements OnInit {
         this.albumCoins = res || [];
 
         const conds = [...new Set(
-          (this.albumCoins as any[])
-            .map((c: any) => c.condition)
+          this.albumCoins
+            .map((item: any) => item.condition)
             .filter((c: string | null) => c != null && String(c).trim() !== '')
         )] as string[];
 
@@ -74,25 +74,27 @@ export class AlbumComponent implements OnInit {
   }
 
   private getBaseFilteredCoins(): any[] {
-  return this.albumCoins.filter((coin: any) => {
-    const matchesName = this.searchName
-      ? (coin.coinTitle || '').toLowerCase().includes(this.searchName.toLowerCase())
-      : true;
+    return this.albumCoins.filter((item: any) => {
+      const name = (item.title || '').toLowerCase();
+      const matchesName = this.searchName
+        ? name.includes(this.searchName.toLowerCase())
+        : true;
 
-    const matchesMinYear = this.minYear ? (coin.year ?? 0) >= this.minYear : true;
-    const matchesMaxYear = this.maxYear ? (coin.year ?? 0) <= this.maxYear : true;
+      const matchesMinYear = this.minYear ? (item.year ?? 0) >= this.minYear : true;
+      const matchesMaxYear = this.maxYear ? (item.year ?? 0) <= this.maxYear : true;
 
-    const matchesCondition = this.selectedCondition !== 'Todas condições'
-      ? (coin.condition ?? '') === this.selectedCondition
-      : true;
+      const matchesCondition = this.selectedCondition !== 'Todas condições'
+        ? (item.condition ?? '') === this.selectedCondition
+        : true;
 
-    const matchesCategory =
-      (this.showCoins && coin.category === 'coin') ||
-      (this.showBanknotes && coin.category === 'banknote');
+      const matchesCategory =
+        (this.showCoins && item.category === 'coin') ||
+        (this.showBanknotes && item.category === 'banknote');
 
-    return matchesName && matchesMinYear && matchesMaxYear && matchesCondition && matchesCategory;
-  });
-}
+      return matchesName && matchesMinYear && matchesMaxYear && matchesCondition && matchesCategory;
+    });
+  }
+
 
 
   applyFilters(): void {
@@ -111,8 +113,17 @@ export class AlbumComponent implements OnInit {
     this.maxYear = null;
     this.selectedCondition = 'Todas condições';
     this.showCoins = true;
+    this.showBanknotes = true;
     this.groupByCoinId = false;
     this.applyFilters();
+  }
+
+  viewItem(item: any): void {
+    if (item.category === 'coin') {
+      this.router.navigate(['/coin', item.id]);
+    } else if (item.category === 'banknote') {
+      this.router.navigate(['/banknote', item.id]);
+    }
   }
 
   viewCoin(coinId: number): void {
@@ -123,86 +134,85 @@ export class AlbumComponent implements OnInit {
     (event.target as HTMLImageElement).src = '/assets/images/placeholder.png';
   }
 
-    applyFiltersGroup(): void {
-      const coins = this.getBaseFilteredCoins();
-      console.log('filtered (after basic filters):', coins.length);
+  applyFiltersGroup(): void {
+    const items = this.getBaseFilteredCoins();
+    console.log('filtered (after basic filters):', items.length);
 
-      const map = new Map<number, any>();
+    const map = new Map<string, any>();
 
-      coins.forEach(c => {
-        const coinId = Number(c.coinId);
-        const qty = Number(c.quantity) || 0;
-        const cond = (c.condition === null || c.condition === undefined || String(c.condition).trim() === '')
-          ? '—'
-          : String(c.condition);
+    items.forEach(item => {
+      const key = `${item.category}_${item.id}`;
+      const qty = Number(item.quantity) || 0;
+      const cond = (item.condition === null || item.condition === undefined || String(item.condition).trim() === '')
+        ? '—'
+        : String(item.condition);
 
-        if (!map.has(coinId)) {
-          map.set(coinId, {
-            ...c,
-            coinId,
-            quantity: qty,
-            conditions: [{ type: cond, quantity: qty }],
-            years: c.year ? [c.year] : []
-          });
+      if (!map.has(key)) {
+        map.set(key, {
+          ...item,
+          quantity: qty,
+          conditions: [{ type: cond, quantity: qty }],
+          years: item.year ? [item.year] : []
+        });
+      } else {
+        const group = map.get(key);
+        group.quantity = (Number(group.quantity) || 0) + qty;
+
+        const idx = group.conditions.findIndex((x: any) => x.type === cond);
+        if (idx >= 0) {
+          group.conditions[idx].quantity = (Number(group.conditions[idx].quantity) || 0) + qty;
         } else {
-          const group = map.get(coinId);
-          group.quantity = (Number(group.quantity) || 0) + qty;
-
-          const idx = group.conditions.findIndex((x: any) => x.type === cond);
-          if (idx >= 0) {
-            group.conditions[idx].quantity = (Number(group.conditions[idx].quantity) || 0) + qty;
-          } else {
-            group.conditions.push({ type: cond, quantity: qty });
-          }
-
-          if (c.year && !group.years.includes(c.year)) {
-            group.years.push(c.year);
-          }
+          group.conditions.push({ type: cond, quantity: qty });
         }
-      });
 
-      const grouped = Array.from(map.values()).map(g => {
-        g.conditions.sort((a: any, b: any) => (b.quantity || 0) - (a.quantity || 0));
-        g.conditionsSummary = g.conditions
-          .map((cond: any) => {
-            if (!cond.type || cond.type === '—') {
-              return `(${cond.quantity})`;
-            }
-            return `(${cond.quantity} ${cond.type})`;
-          })
-          .join(' – ');
-        g.yearsSummary = (g.years || []).sort((a: any, b: any) => a - b).join(', ');
-        g.quantityTotal = Number(g.quantity) || 0;
-        return g;
-      });
-
-      console.log('grouped result:', grouped.length);
-      this.filteredCoins = grouped;
-      this.updatePagination();
-    }
-
-    updatePagination(): void {
-      this.totalPages = Math.ceil(this.filteredCoins.length / this.itemsPerPage);
-      if (this.totalPages === 0) {
-        this.currentPage = 1;
-        this.pagedCoins = [];
-        return;
+        if (item.year && !group.years.includes(item.year)) {
+          group.years.push(item.year);
+        }
       }
-      if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
-      if (this.currentPage < 1) this.currentPage = 1;
-      const start = (this.currentPage - 1) * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
-      this.pagedCoins = this.filteredCoins.slice(start, end);
-      console.log(`Página ${this.currentPage}/${this.totalPages} — exibindo ${this.pagedCoins.length} itens`);
-    }
+    });
 
-    applyCoinsFilter(value?: boolean): void {
-      if (typeof value === 'boolean') {
-        this.showCoins = value;
-      }
-      this.applyFilters();
+    const grouped = Array.from(map.values()).map(g => {
+      g.conditions.sort((a: any, b: any) => (b.quantity || 0) - (a.quantity || 0));
+      g.conditionsSummary = g.conditions
+        .map((cond: any) => {
+          if (!cond.type || cond.type === '—') {
+            return `(${cond.quantity})`;
+          }
+          return `(${cond.quantity} ${cond.type})`;
+        })
+        .join(' – ');
+      g.yearsSummary = (g.years || []).sort((a: any, b: any) => a - b).join(', ');
+      g.quantityTotal = Number(g.quantity) || 0;
+      return g;
+    });
+
+    console.log('grouped result:', grouped.length);
+    this.filteredCoins = grouped;
+    this.updatePagination();
+  }
+
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.filteredCoins.length / this.itemsPerPage);
+    if (this.totalPages === 0) {
+      this.currentPage = 1;
+      this.pagedCoins = [];
+      return;
     }
-    
+    if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
+    if (this.currentPage < 1) this.currentPage = 1;
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.pagedCoins = this.filteredCoins.slice(start, end);
+    console.log(`Página ${this.currentPage}/${this.totalPages} — exibindo ${this.pagedCoins.length} itens`);
+  }
+
+  applyCoinsFilter(value?: boolean): void {
+    if (typeof value === 'boolean') {
+      this.showCoins = value;
+    }
+    this.applyFilters();
+  }
+
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
@@ -267,9 +277,4 @@ export class AlbumComponent implements OnInit {
       }
     });
   }
-
-
-
-
-
 }
