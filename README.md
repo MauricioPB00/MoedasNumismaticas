@@ -27,3 +27,8 @@ cria um ng g c login e boa sorte
 
 
 ng serve --proxy-config proxy.config.js
+
+npm install error-ex@1.3.2
+npm ls error-ex
+npm cache verify
+npm install     
