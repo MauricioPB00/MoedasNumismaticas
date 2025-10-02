@@ -31,7 +31,7 @@ export class AlbumComponent implements OnInit {
   totalPages = 0;
 
   showModal = false;
-  coinEntries: { year: number; quantity: number | null; condition: string | null }[] = [];
+  coinEntries: { year: number; quantity: number | null; condition: string | null, id: number, type: string }[] = [];
   coin: any;
 
   constructor(
@@ -122,13 +122,18 @@ export class AlbumComponent implements OnInit {
     if (item.category === 'coin') {
       this.router.navigate(['/coin', item.id]);
     } else if (item.category === 'banknote') {
-      this.router.navigate(['/banknote', item.id]);
+      this.router.navigate(['/coin', item.id]);
     }
   }
 
-  viewCoin(coinId: number): void {
-    this.router.navigate(['/coin', coinId]);
+  viewCoin(id: number, type: 'coin' | 'banknote'): void {
+    if (type === 'coin') {
+      this.router.navigate(['/coin', id]);
+    } else {
+      this.router.navigate(['/coin', id]);
+    }
   }
+
 
   onImgError(event: Event): void {
     (event.target as HTMLImageElement).src = '/assets/images/placeholder.png';
@@ -227,34 +232,46 @@ export class AlbumComponent implements OnInit {
     }
   }
 
-  abrirModal(event: Event, coinId: number): void {
+  abrirModal(event: Event, itemId: number, type: 'coin' | 'banknote'): void {
     event.stopPropagation();
     (event.target as HTMLElement).blur();
 
-    this.coin = this.albumCoins.find(c => c.coinId === coinId);
+    // Encontra o item correto no álbum (coin ou banknote)
+    this.coin = this.albumCoins.find(c => c.id === itemId && c.type === type);
 
+    if (!this.coin) {
+      console.error('Item não encontrado no álbum:', { itemId, type });
+      return;
+    }
+
+    // Cria a lista de anos
     this.coinEntries = [];
     if (this.coin.minYear != null && this.coin.maxYear != null) {
       for (let y = this.coin.minYear; y <= this.coin.maxYear; y++) {
         this.coinEntries.push({
           year: y,
           quantity: null,
-          condition: null
+          condition: null,
+          id: this.coin.id,
+          type: this.coin.type
         });
       }
     } else {
       this.coinEntries.push({
         year: this.coin.year,
         quantity: null,
-        condition: null
+        condition: null,
+        id: this.coin.id,
+        type: this.coin.type
       });
     }
 
     this.showModal = true;
 
-    console.log('Abrir modal para coin:', this.coin);
-    console.log('Coin entries inicializadas:', this.coinEntries);
+    console.log('Abrir modal para item:', this.coin);
+    console.log('Entries inicializadas:', this.coinEntries);
   }
+
 
   refreshAlbum(): void {
     this.coinsService.getAlbumByUser().subscribe({

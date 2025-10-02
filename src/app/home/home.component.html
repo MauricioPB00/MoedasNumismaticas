@@ -11,7 +11,7 @@
   <select [(ngModel)]="selectedCategory" (change)="applyFilters()">
     <option value="">Todas categorias</option>
     <option *ngFor="let cat of uniqueCategories" [value]="cat">
-      {{ cat === 'coin' ? 'Moeda' : cat }}
+      {{ cat === 'coin' ? 'Moeda' : cat === 'banknote' ? 'Cédula' : cat }}
     </option>
   </select>
 
