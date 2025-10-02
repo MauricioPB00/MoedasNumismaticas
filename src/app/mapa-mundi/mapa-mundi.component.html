@@ -1,0 +1,8 @@
+<div class="map-container">
+  <div class="tooltip" *ngIf="tooltipVisible" [ngStyle]="tooltipStyle">
+    <strong>{{ tooltipCountry }}</strong><br />
+    {{ tooltipInfo }}
+  </div>
+
+  <div #svgContainer class="svg-container"></div>
+</div>

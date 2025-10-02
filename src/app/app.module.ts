@@ -30,6 +30,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { AlbumComponent } from './album/album.component';
 import { ModalCoinComponent } from './modal-coin/modal-coin.component';
 import { ListarComponent } from './listar/listar.component';
+import { MapaMundiComponent } from './mapa-mundi/mapa-mundi.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { ListarComponent } from './listar/listar.component';
     AlbumComponent,
     ModalCoinComponent,
     ListarComponent,
+    MapaMundiComponent,
   ],
   imports: [
     BrowserModule,
