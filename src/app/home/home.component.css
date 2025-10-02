@@ -5,9 +5,9 @@
 }
 
 .coins-container-a {
-  color: inherit;           
-  text-decoration: none;    
-  cursor: pointer;         
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .coins-container-a:visited {
@@ -41,13 +41,19 @@
 .coin-images {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
   gap: 0.5rem;
-  margin-right: 1rem;
+  margin-right: 2rem;
+  min-width: 300px;
+  height: 140px;
+  overflow: hidden;
 }
 
 .coin-images img {
-  max-width: 120px;
-  height: auto;
+  width: 130px;
+  height: 120px;
+  background-color: #ffffff;
 }
 
 .coin-info {
@@ -159,10 +165,10 @@
 }
 
 .btn button {
-  background: #EFBF04; 
-  color: #fff; 
+  background: #EFBF04;
+  color: #fff;
   border: none;
-  border-radius: 50%; 
+  border-radius: 50%;
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -178,13 +184,13 @@
 }
 
 .btn button:hover {
-  background: #2c7a7b; 
-  transform: scale(1.1); 
+  background: #2c7a7b;
+  transform: scale(1.1);
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
 }
 
 .btn button:active {
-  transform: scale(0.95); 
+  transform: scale(0.95);
 }
 
 button.btn-limpar {

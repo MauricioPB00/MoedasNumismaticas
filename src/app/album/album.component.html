@@ -30,7 +30,7 @@
 
 
 <div class="album-container" *ngIf="pagedCoins.length > 0; else emptyState">
-  <div class="coin-card" *ngFor="let entry of pagedCoins" (click)="viewCoin(entry.coinId)">
+  <div class="coin-card" *ngFor="let entry of pagedCoins" (click)="viewCoin(entry.id, entry.type)">
     <div class="coin-images">
       <img [src]="'/assets/img/imagens/' + (entry.obverse || 'placeholder.png')" (error)="onImgError($event)"
         alt="Obverse">
@@ -38,18 +38,19 @@
         alt="Reverse">
     </div>
     <div class="coin-info">
-      <h3>{{ entry.coinTitle }}</h3>
+      <h3>{{ entry.title }}</h3>
       <p>Ano: <span>{{ entry.yearsSummary || entry.year }}</span></p>
       <p>({{ entry.minYear }} - {{ entry.maxYear }})</p>
       <p>Quantidade: {{ entry.quantity || entry.quantityTotal }}</p>
       <p *ngIf="!groupByCoinId">Condição: {{ entry.condition || '—' }}</p>
       <p *ngIf="groupByCoinId">Condições: {{ entry.conditionsSummary || '—' }}</p>
     </div>
-    <button class="icon-inline" (click)="abrirModal($event, entry.coinId)">
+    <button class="icon-inline" (click)="abrirModal($event, entry.id, entry.type)">
       <i class="fas fa-edit"></i>
     </button>
   </div>
 </div>
+
 
 <ng-template #emptyState>
   <p class="empty">Nenhuma moeda encontrada.</p>

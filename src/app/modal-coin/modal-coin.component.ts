@@ -143,14 +143,14 @@ export class ModalCoinComponent {
 
   removeCoins(item: any) {
     const quantidade = item.toRemove || 1;
-
+    const coinId = this.coin.id ?? this.coin.coinId;
+    
     if (quantidade > item.quantity) {
       this.toastr.error("Você não pode remover mais do que possui!");
       return;
     }
-
     const payload = {
-      coinId: item.coinId,
+      coinId: coinId,
       year: item.year,
       condition: item.condition,
       quantity: item.toRemove
