@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as svgPanZoom from 'svg-pan-zoom';
+import { CoinsService } from '../AuthService/coins.service';
 
-interface CountryData {
-  code: string; // Ex: 'BR', 'US', 'FR'
+export interface CountryData {
+  code: string;
   name: string;
   coins: number;
+  banknotes: number;
 }
 
 @Component({
@@ -14,92 +16,122 @@ interface CountryData {
   styleUrls: ['./mapa-mundi.component.css']
 })
 export class MapaMundiComponent implements OnInit {
-
   @ViewChild('svgContainer', { static: true }) svgContainer!: ElementRef<HTMLDivElement>;
 
   tooltipVisible = false;
   tooltipCountry = '';
-  tooltipInfo: string = '';
+  tooltipInfo = '';
   tooltipStyle: any = {};
 
-  userCountries: CountryData[] = [
-    { code: 'BR', name: 'Brasil', coins: 12 },
-    { code: 'US', name: 'Estados Unidos', coins: 7 },
-    { code: 'IT', name: 'Itália', coins: 3 },
-    { code: 'JP', name: 'Japão', coins: 5 },
-    { code: 'FR', name: 'França', coins: 2 },
-  ];
+  albumCoins: any[] = [];
+  userCountries: CountryData[] = [];
+  searchTerm: string = '';
+  highlightedCountryCode: string | null = null;
 
-  constructor(private http: HttpClient) { }
+  countryCodeMap: Record<string, string> = {
+    'Brasil': 'br',
+    'Estados Unidos': 'US',
+    'Itália': 'IT',
+    'Japão': 'JP',
+    'França': 'FR',
+    'Reino Unido': 'GB',
+    'Alemanha': 'DE',
+    'Argentina': 'AR',
+    'Canadá': 'CA',
+    'México': 'MX',
+    'Espanha': 'ES',
+    'Portugal': 'PT',
+  };
+
+  constructor(private http: HttpClient, private coinsService: CoinsService) { }
 
   ngOnInit(): void {
     this.http.get('assets/svg/mapa-mundi.svg', { responseType: 'text' })
       .subscribe(svgText => this.insertAndSetupSvg(svgText));
+
+    this.getAlbumMap();
   }
 
   private insertAndSetupSvg(svgText: string) {
-    // Injeta o SVG
-    this.svgContainer.nativeElement.innerHTML = svgText;
-    const svgEl = this.svgContainer.nativeElement.querySelector('svg') as SVGSVGElement;
+    const svgContainer = this.svgContainer.nativeElement;
+    svgContainer.innerHTML = svgText;
 
+    const svgEl = svgContainer.querySelector('svg') as SVGSVGElement;
     if (!svgEl) {
-      console.error('SVG não encontrado no arquivo.');
+      console.error('SVG não encontrado.');
       return;
     }
 
-    // Responsivo
     svgEl.setAttribute('width', '100%');
     svgEl.setAttribute('height', '100%');
     svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
-    // Remove apenas as bolinhas pretas (_)
     svgEl.querySelectorAll<SVGElement>('circle[id$="_"]').forEach(el => el.remove());
-
-    // Aplica cor padrão a todos os países
     svgEl.querySelectorAll<SVGElement>('path').forEach(el => {
-      el.setAttribute('fill', '#c0c0c0'); // cinza padrão
-      el.setAttribute('stroke', '#fff');  // borda branca
+      el.setAttribute('fill', '#d1d1d1');
+      el.setAttribute('stroke', '#ffffff');
       el.setAttribute('stroke-width', '0.5');
     });
 
-    // Pinta países do usuário e adiciona eventos
-    this.userCountries.forEach(country => {
-      const el = svgEl.querySelector<SVGElement>(`#${country.code}`);
-      if (el) {
-        el.setAttribute('fill', '#00b894'); // verde
-        el.setAttribute('stroke', '#222');  // borda mais escura
-        el.style.transition = 'fill 0.25s ease';
+    if (this.userCountries.length > 0) {
+      this.paintUserCountries(svgEl);
+    }
 
-        el.addEventListener('mouseenter', (e: MouseEvent) => this.showTooltip(e, country));
-        el.addEventListener('mousemove', (e: MouseEvent) => this.moveTooltip(e));
-        el.addEventListener('mouseleave', () => this.hideTooltip());
-      } else {
-        console.warn(`ID do país não encontrado no SVG: ${country.code}`);
-      }
-    });
-
-    // Zoom e Pan
     (svgPanZoom as any)(svgEl, {
       zoomEnabled: true,
       controlIconsEnabled: true,
       fit: true,
       center: true,
       minZoom: 1,
-      maxZoom: 20
+      maxZoom: 10
     });
   }
-  // Tooltip
+
+  private paintUserCountries(svgEl: SVGSVGElement) {
+    this.userCountries.forEach(country => {
+      if (!country.code) return;
+
+      const el = svgEl.querySelector<SVGElement>(`#${country.code}`);
+
+      if (el) {
+        const paths = el.tagName.toLowerCase() === 'g'
+          ? el.querySelectorAll<SVGPathElement>('path')
+          : [el as SVGPathElement];
+
+        paths.forEach(path => {
+          if (this.highlightedCountryCode === country.code) {
+            path.setAttribute('fill', '#c0392b');
+          } else {
+            path.setAttribute('fill', '#EFBF04');
+          }
+          path.setAttribute('stroke', '#000');
+          path.setAttribute('stroke-width', '0.5');
+          path.style.transition = 'fill 0.25s ease';
+        });
+
+        el.addEventListener('mouseenter', (e: MouseEvent) => this.showTooltip(e, country));
+        el.addEventListener('mousemove', (e: MouseEvent) => this.moveTooltip(e));
+        el.addEventListener('mouseleave', () => this.hideTooltip());
+
+      } else {
+        console.warn(`País não encontrado no SVG: ${country.code} (${country.name})`);
+      }
+    });
+  }
+
   showTooltip(event: MouseEvent, country: CountryData) {
     this.tooltipVisible = true;
     this.tooltipCountry = country.name;
-    this.tooltipInfo = `${country.coins} moeda${country.coins > 1 ? 's' : ''}`;
+    this.tooltipInfo = `${country.coins} moeda${country.coins !== 1 ? 's' : ''}, ${country.banknotes} cédula${country.banknotes !== 1 ? 's' : ''}`;
     this.moveTooltip(event);
   }
 
   moveTooltip(event: MouseEvent) {
+    const offset = 10;
     this.tooltipStyle = {
-      top: event.pageY + 12 + 'px',
-      left: event.pageX + 12 + 'px'
+      left: event.clientX + offset + 'px',
+      top: event.clientY + offset + 'px',
+      position: 'fixed'
     };
   }
 
@@ -107,9 +139,100 @@ export class MapaMundiComponent implements OnInit {
     this.tooltipVisible = false;
   }
 
-  openCountryPage(country: CountryData) {
-    alert(`Abrir página do país: ${country.name}`);
-    // Exemplo real:
-    // this.router.navigate(['/pais', country.code.toLowerCase()]);
+  getAlbumMap() {
+    this.coinsService.getAlbumByUserMap().subscribe({
+      next: (res) => {
+        this.albumCoins = res || [];
+        const grouped: Record<string, { coins: number, banknotes: number }> = {};
+
+        this.albumCoins.forEach(item => {
+          const issuer = item.issuer || 'Desconhecido';
+          if (!grouped[issuer]) grouped[issuer] = { coins: 0, banknotes: 0 };
+          if (item.category === 'coin') grouped[issuer].coins += item.quantity || 1;
+          else if (item.category === 'banknote') grouped[issuer].banknotes += item.quantity || 1;
+        });
+
+        this.userCountries = Object.entries(grouped).map(([issuer, totals]) => ({
+          name: issuer,
+          code: (this.countryCodeMap[issuer] || '').toLowerCase(),
+          coins: totals.coins,
+          banknotes: totals.banknotes
+        }));
+
+        const svgEl = this.svgContainer.nativeElement.querySelector('svg');
+        if (svgEl) this.paintUserCountries(svgEl as SVGSVGElement);
+      },
+      error: err => console.error('Erro ao carregar mapa do álbum:', err)
+    });
   }
+  onSearchChange() {
+    const svgEl = this.svgContainer.nativeElement.querySelector('svg');
+    if (!svgEl) return;
+
+    if (this.highlightedCountryCode) {
+      const prevEl = svgEl.querySelector<SVGElement>(`#${this.highlightedCountryCode}`);
+      if (prevEl) {
+        const paths = prevEl.tagName.toLowerCase() === 'g'
+          ? prevEl.querySelectorAll<SVGPathElement>('path')
+          : [prevEl as SVGPathElement];
+
+        paths.forEach(path => {
+          const countryData = this.userCountries.find(c => c.code === this.highlightedCountryCode);
+          if (countryData && (countryData.coins > 0 || countryData.banknotes > 0)) {
+            path.setAttribute('fill', '#EFBF04'); 
+          } else {
+            path.setAttribute('fill', '#d1d1d1'); 
+          }
+          path.setAttribute('stroke', '#000');
+          path.setAttribute('stroke-width', '0.5');
+        });
+      }
+    }
+
+    if (!this.searchTerm || this.searchTerm.trim() === '') {
+      this.highlightedCountryCode = null;
+      return;
+    }
+
+    const found = this.userCountries.find(c =>
+      c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+    if (found) {
+      this.highlightedCountryCode = found.code;
+
+      const el = svgEl.querySelector<SVGElement>(`#${found.code}`);
+      if (el) {
+        const paths = el.tagName.toLowerCase() === 'g'
+          ? el.querySelectorAll<SVGPathElement>('path')
+          : [el as SVGPathElement];
+
+        paths.forEach(path => {
+          path.setAttribute('fill', '#e74c3c'); 
+          path.setAttribute('stroke', '#000');
+          path.setAttribute('stroke-width', '0.5');
+        });
+      }
+    }
+  }
+  clearFilters() {
+    this.searchTerm = '';
+
+    const svgEl = this.svgContainer.nativeElement.querySelector('svg') as SVGSVGElement;
+    if (!svgEl) return;
+
+    this.userCountries.forEach(country => {
+      const el = svgEl.querySelector<SVGElement>(`#${country.code}`);
+      if (el) {
+        const paths = el.tagName.toLowerCase() === 'g'
+          ? el.querySelectorAll<SVGPathElement>('path')
+          : [el as SVGPathElement];
+
+        paths.forEach(path => {
+          path.setAttribute('fill', '#EFBF04'); 
+        });
+      }
+    });
+  }
+
+
 }

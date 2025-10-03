@@ -41,6 +41,16 @@ export class CoinsService {
     return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/album/me`, httpOptions);
   }
 
+  getAlbumByUserMap(): Observable<any> {
+    const token = localStorage.getItem('jwt');
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Authorization": `Bearer ${token}`
+      })
+    };
+    return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/album/me/map`, httpOptions);
+  }
+
   getCoinAlbumById(id: number): Observable<any> {
     const token = localStorage.getItem('jwt');
     const httpOptions = {

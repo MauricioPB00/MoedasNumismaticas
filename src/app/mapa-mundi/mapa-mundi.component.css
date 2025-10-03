@@ -1,25 +1,194 @@
 .map-container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  background-color: #111;
-  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  max-width: 100vw;
+  height: calc(100% - 80px);
+  margin: 0 auto;
+  gap: 20px;
+  box-sizing: border-box;
+  padding: 15px 10px 0px 0px;
+}
+
+.map-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 100%;
 }
 
 .svg-container {
   width: 100%;
-  height: 100%;
+  flex: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #dcdcdc;
+  min-height: 400px;
+}
+
+.country-list-container {
+  width: 300px;
+  flex-shrink: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 15px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.country-list-container h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #333;
+}
+
+.country-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.country-table th,
+.country-table td {
+  padding: 8px 6px;
+  text-align: left;
+}
+
+.country-table th {
+  background-color: #EFBF04;
+  color: #fff;
+  font-weight: 600;
+}
+
+.country-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.country-table tbody tr:hover {
+  background-color: #f0f8ff;
+  cursor: pointer;
 }
 
 .tooltip {
-  position: absolute;
+  position: fixed;
+  padding: 6px 12px;
   background-color: rgba(0, 0, 0, 0.85);
   color: #fff;
-  padding: 6px 10px;
+  font-size: 0.9rem;
   border-radius: 6px;
-  font-size: 14px;
   pointer-events: none;
-  z-index: 10;
+  z-index: 1000;
   white-space: nowrap;
-  box-shadow: 0 0 8px rgba(0,0,0,0.4);
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.legend {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  padding: 10px 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.legend h4 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.legend-color {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  margin-right: 8px;
+  border: 1px solid #aaa;
+}
+
+.legend-color.green {
+  background-color: #EFBF04;
+}
+
+.legend-color.red {
+  background-color: #e74c3c;
+}
+
+.legend-color.gray {
+  background-color: #d1d1d1;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f3f3f3;
+  border-bottom: 1px solid #ddd;
+  top: 0;
+  z-index: 1;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.filters input[type="text"],
+.filters input[type="number"],
+.filters select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.filters input[type="text"]:focus,
+.filters input[type="number"]:focus,
+.filters select:focus {
+  border-color: #EFBF04;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.filters button {
+  padding: 0.5rem 1rem;
+  background-color: #EFBF04;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.filters button:hover {
+  background-color: #b69203;
+}
+
+@media (max-width: 1024px) {
+  .map-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .country-list-container {
+    width: 100%;
+    max-height: 200px;
+  }
+
+  .svg-container {
+    min-height: 300px;
+  }
 }

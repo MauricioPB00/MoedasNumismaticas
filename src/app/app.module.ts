@@ -31,6 +31,7 @@ import { AlbumComponent } from './album/album.component';
 import { ModalCoinComponent } from './modal-coin/modal-coin.component';
 import { ListarComponent } from './listar/listar.component';
 import { MapaMundiComponent } from './mapa-mundi/mapa-mundi.component';
+import { FilterCountryPipe } from './models/filter-country.pipe';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { MapaMundiComponent } from './mapa-mundi/mapa-mundi.component';
     ModalCoinComponent,
     ListarComponent,
     MapaMundiComponent,
+    FilterCountryPipe,
   ],
   imports: [
     BrowserModule,

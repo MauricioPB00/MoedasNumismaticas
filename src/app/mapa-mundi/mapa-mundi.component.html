@@ -1,8 +1,49 @@
+<div class="filters">
+  <input type="text" placeholder="Buscar país..." [(ngModel)]="searchTerm" (input)="onSearchChange()"
+    class="search-input" />
+  <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
+</div>
+
 <div class="map-container">
-  <div class="tooltip" *ngIf="tooltipVisible" [ngStyle]="tooltipStyle">
-    <strong>{{ tooltipCountry }}</strong><br />
-    {{ tooltipInfo }}
+  <div class="map-area">
+    <div class="legend">
+      <h4>Legenda</h4>
+      <div class="legend-item">
+        <div class="legend-color green"></div> País conquistado
+      </div>
+      <div class="legend-item">
+        <div class="legend-color red"></div> País pesquisado
+      </div>
+      <div class="legend-item">
+        <div class="legend-color gray"></div> País sem itens
+      </div>
+    </div>
+
+    <div #svgContainer class="svg-container"></div>
+
+    <div class="tooltip" *ngIf="tooltipVisible" [ngStyle]="tooltipStyle">
+      {{ tooltipCountry }}: {{ tooltipInfo }}
+    </div>
   </div>
 
-  <div #svgContainer class="svg-container"></div>
+  <div class="country-list-container">
+    <h2>Países e itens numismáticos</h2>
+    <table class="country-table">
+      <thead>
+        <tr>
+          <th>País</th>
+          <th>Moedas</th>
+          <th>Cédulas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let country of userCountries | filterCountry:searchTerm">
+          <td>{{ country.name }}</td>
+          <td>{{ country.coins }}</td>
+          <td>{{ country.banknotes }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
