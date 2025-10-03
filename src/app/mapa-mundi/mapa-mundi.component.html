@@ -1,7 +1,13 @@
 <div class="filters">
-  <input type="text" placeholder="Buscar país..." [(ngModel)]="searchTerm" (input)="onSearchChange()"
-    class="search-input" />
+  <div class="filters">
+  <select [(ngModel)]="selectedCountryCode" (change)="onSelectChange()" class="search-input">
+    <option value="">Todos os países</option>
+    <option *ngFor="let country of availableCountries" [value]="country.code">
+      {{ country.name }}
+    </option>
+  </select>
   <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
+</div>
 </div>
 
 <div class="map-container">

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as svgPanZoom from 'svg-pan-zoom';
 import { CoinsService } from '../AuthService/coins.service';
+import { AVAILABLE_COUNTRIES, Country } from '../models/countries';
 
 export interface CountryData {
   code: string;
@@ -27,6 +28,11 @@ export class MapaMundiComponent implements OnInit {
   userCountries: CountryData[] = [];
   searchTerm: string = '';
   highlightedCountryCode: string | null = null;
+
+  selectedCountryCode: string = '';
+
+  availableCountries: Country[] = AVAILABLE_COUNTRIES;
+
 
   countryCodeMap: Record<string, string> = {
     'Brasil': 'br',
@@ -165,74 +171,84 @@ export class MapaMundiComponent implements OnInit {
       error: err => console.error('Erro ao carregar mapa do álbum:', err)
     });
   }
-  onSearchChange() {
-    const svgEl = this.svgContainer.nativeElement.querySelector('svg');
-    if (!svgEl) return;
+  onSelectChange() {
+  const svgEl = this.svgContainer.nativeElement.querySelector('svg');
+  if (!svgEl) return;
 
-    if (this.highlightedCountryCode) {
-      const prevEl = svgEl.querySelector<SVGElement>(`#${this.highlightedCountryCode}`);
-      if (prevEl) {
-        const paths = prevEl.tagName.toLowerCase() === 'g'
-          ? prevEl.querySelectorAll<SVGPathElement>('path')
-          : [prevEl as SVGPathElement];
+  // Resetar todos os países do SVG
+  svgEl.querySelectorAll<SVGPathElement>('path').forEach(path => {
+    path.setAttribute('fill', '#d1d1d1');
+    path.setAttribute('stroke', '#fff');
+    path.setAttribute('stroke-width', '0.5');
+  });
 
-        paths.forEach(path => {
-          const countryData = this.userCountries.find(c => c.code === this.highlightedCountryCode);
-          if (countryData && (countryData.coins > 0 || countryData.banknotes > 0)) {
-            path.setAttribute('fill', '#EFBF04'); 
-          } else {
-            path.setAttribute('fill', '#d1d1d1'); 
-          }
-          path.setAttribute('stroke', '#000');
-          path.setAttribute('stroke-width', '0.5');
-        });
-      }
-    }
+  // Pinta os países do usuário
+  this.userCountries.forEach(country => {
+    const el = svgEl.querySelector<SVGElement>(`#${country.code}`);
+    if (!el) return;
 
-    if (!this.searchTerm || this.searchTerm.trim() === '') {
-      this.highlightedCountryCode = null;
-      return;
-    }
+    const paths = el.tagName.toLowerCase() === 'g'
+      ? Array.from(el.querySelectorAll<SVGPathElement>('path'))
+      : [el as SVGPathElement];
 
-    const found = this.userCountries.find(c =>
-      c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-    if (found) {
-      this.highlightedCountryCode = found.code;
-
-      const el = svgEl.querySelector<SVGElement>(`#${found.code}`);
-      if (el) {
-        const paths = el.tagName.toLowerCase() === 'g'
-          ? el.querySelectorAll<SVGPathElement>('path')
-          : [el as SVGPathElement];
-
-        paths.forEach(path => {
-          path.setAttribute('fill', '#e74c3c'); 
-          path.setAttribute('stroke', '#000');
-          path.setAttribute('stroke-width', '0.5');
-        });
-      }
-    }
-  }
-  clearFilters() {
-    this.searchTerm = '';
-
-    const svgEl = this.svgContainer.nativeElement.querySelector('svg') as SVGSVGElement;
-    if (!svgEl) return;
-
-    this.userCountries.forEach(country => {
-      const el = svgEl.querySelector<SVGElement>(`#${country.code}`);
-      if (el) {
-        const paths = el.tagName.toLowerCase() === 'g'
-          ? el.querySelectorAll<SVGPathElement>('path')
-          : [el as SVGPathElement];
-
-        paths.forEach(path => {
-          path.setAttribute('fill', '#EFBF04'); 
-        });
-      }
+    paths.forEach(path => {
+      path.setAttribute('fill', '#EFBF04');
+      path.setAttribute('stroke', '#000');
+      path.setAttribute('stroke-width', '0.5');
     });
+  });
+
+  // Se tiver um país selecionado no select, pinta em vermelho
+  if (!this.selectedCountryCode) {
+    this.highlightedCountryCode = null;
+    return;
   }
+
+  this.highlightedCountryCode = this.selectedCountryCode;
+  const selectedEl = svgEl.querySelector<SVGElement>(`#${this.selectedCountryCode}`);
+  if (!selectedEl) return;
+
+  const selectedPaths = selectedEl.tagName.toLowerCase() === 'g'
+    ? Array.from(selectedEl.querySelectorAll<SVGPathElement>('path'))
+    : [selectedEl as SVGPathElement];
+
+  selectedPaths.forEach(path => {
+    path.setAttribute('fill', '#e74c3c'); // vermelho
+    path.setAttribute('stroke', '#000');
+    path.setAttribute('stroke-width', '0.5');
+  });
+}
+
+  clearFilters() {
+  this.selectedCountryCode = '';
+  this.highlightedCountryCode = null;
+
+  const svgEl = this.svgContainer.nativeElement.querySelector('svg') as SVGSVGElement;
+  if (!svgEl) return;
+
+  svgEl.querySelectorAll<SVGPathElement>('path').forEach(path => {
+    path.setAttribute('fill', '#d1d1d1');
+    path.setAttribute('stroke', '#fff');
+    path.setAttribute('stroke-width', '0.5');
+  });
+
+  this.userCountries.forEach(country => {
+    const el = svgEl.querySelector<SVGElement>(`#${country.code}`);
+    if (el) {
+      const paths = el.tagName.toLowerCase() === 'g'
+        ? el.querySelectorAll<SVGPathElement>('path')
+        : [el as SVGPathElement];
+
+      paths.forEach(path => {
+        path.setAttribute('fill', '#EFBF04'); 
+        path.setAttribute('stroke', '#000');
+        path.setAttribute('stroke-width', '0.5');
+      });
+    }
+  });
+}
+
+
 
 
 }
