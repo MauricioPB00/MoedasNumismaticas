@@ -76,8 +76,18 @@ export class CoinComponent {
   getPrice(prices: any[], grade: string): string {
     if (!prices || !prices.length) return '-';
 
-    const priceObj = prices.find(p => p.grade === grade);
-    if (!priceObj || !priceObj.price) return '-';
+    const gradeMap: Record<string, string> = {
+      'FE': 'FDC',
+      'SOB/FE': 'S/FDC'
+    };
+
+    const normalizedGrade = gradeMap[grade] || grade;
+
+    const priceObj = prices.find(
+      p => p.grade?.toUpperCase().trim() === normalizedGrade.toUpperCase().trim()
+    );
+
+    if (!priceObj || priceObj.price == null) return '-';
 
     const value = parseFloat(priceObj.price);
     if (isNaN(value)) return '-';
@@ -85,6 +95,7 @@ export class CoinComponent {
     const valorEmReais = value * 7.5;
     return valorEmReais.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
+
 
   shouldDisplayRow(info: any): boolean {
     if (!info) return false;
