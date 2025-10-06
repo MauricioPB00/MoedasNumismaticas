@@ -1,4 +1,3 @@
-/* Container principal */
 .coin-detail {
   max-width: 1400px;
   margin: 2rem auto;
@@ -10,7 +9,6 @@
   color: #333;
 }
 
-/* Título */
 .coin-title {
   font-size: 2rem;
   font-weight: 600;
@@ -38,7 +36,6 @@
   margin-right: 4px;
 }
 
-/* Layout geral */
 .coin-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -46,7 +43,6 @@
   align-items: start;
 }
 
-/* Coluna de imagens */
 .coin-images {
   display: flex;
   flex-direction: column;
@@ -81,14 +77,11 @@
 
 .coin-edge-img {
   max-width: 220px;
-  /* ajusta como quiser */
   width: 100%;
   height: auto;
-  /* mantém proporção */
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   object-fit: contain;
-  /* garante que a imagem não estique */
   transition: transform 0.3s ease;
 }
 
@@ -110,10 +103,9 @@
   margin: 0.3rem 0;
 }
 
-/* Coluna de informações detalhadas */
 .coin-info {
   background: #f7f9fc;
-  padding: 1.5rem;
+  padding: 0rem 1.5rem 1.5rem 1.5rem;
   border-radius: 12px;
   border: 1px solid #e0e6ed;
   box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -141,7 +133,6 @@
   color: #2c3e50;
 }
 
-/* Listas de mints e related types */
 .coin-info ul {
   list-style: none;
   padding-left: 0;
@@ -169,12 +160,11 @@
 }
 
 
-/* BOTAO ADICIONAR */
 
 .open-modal-btn {
   position: sticky;
   top: 10px;
-  background-color: #f0d97c;
+  background-color: #EFBF04;
   border: none;
   color: #222;
   font-weight: 600;
@@ -187,7 +177,185 @@
 
 
 .open-modal-btn:hover {
-  background: linear-gradient(135deg, #e6b800, #cc9900);
+  background: linear-gradient(135deg, #9e7f04, #EFBF04)!important;
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(0,0,0,0.3);
 }
+
+
+/* /////////////////// tabela quantidade ////////////// */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #fafafa;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.table thead {
+  background: linear-gradient(135deg, #243b55, #141e30);
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.table th {
+  padding: 0.9rem 1rem;
+  text-align: center;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(255,255,255,0.15);
+}
+
+.table td {
+  padding: 0.85rem 1rem;
+  text-align: center;
+  color: #333;
+  border-bottom: 1px solid #e5e5e5;
+  background-color: #fff;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.table tbody tr:nth-child(even) td {
+  background-color: #f8f8f8;
+}
+
+.table tbody tr:hover td {
+  background-color: #f1f6ff;
+  transform: scale(1.01);
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+
+.coin-table-wrapper {
+  margin-top: 1.5rem;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+/* ===== TABELA ===== */
+.coin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #101010;
+  border-radius: 10px;
+}
+
+.coin-table thead {
+  background: linear-gradient(90deg, #0072ff, #00c6ff);
+}
+
+.coin-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.coin-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #333;
+  color: #ddd;
+}
+
+.coin-table tbody tr:hover {
+  background: rgba(0, 114, 255, 0.1);
+  transition: 0.2s;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 1024px) {
+  .coin-layout {
+    grid-template-columns: 1fr; /* Colunas empilham */
+    gap: 1.5rem;
+  }
+
+  .coin-images,
+  .coin-info {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .coin-detail {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .coin-title {
+    font-size: 1.5rem;
+  }
+
+  .coin-title .meta {
+    font-size: 0.8rem;
+  }
+
+  .coin-img,
+  .coin-edge-img {
+    max-width: 100%;
+  }
+
+  .coin-info {
+    padding: 1rem;
+  }
+
+  .open-modal-btn {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+.table th,
+  .table td {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.75rem; /* um pouco menor, mas legível */
+  }
+
+  .table {
+    min-width: 400px; /* reduz a largura mínima no tablet */
+  }
+}
+
+
+@media (max-width: 480px) {
+  .coin-title {
+    font-size: 1.3rem;
+  }
+
+  .coin-info h3 {
+    font-size: 1rem;
+  }
+
+  .open-modal-btn {
+    font-size: 0.85rem;
+    padding: 8px;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.6rem 0.1rem;
+    font-size: 0.7rem; /* diminui levemente no celular */
+  }
+
+  .table {
+    min-width: 300px; /* mantém scroll horizontal */
+  }
+}
+
+
+   

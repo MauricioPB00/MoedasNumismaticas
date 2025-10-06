@@ -73,4 +73,33 @@ export class CoinComponent {
     this.coin.edgeImg = null;
   }
 
+  getPrice(prices: any[], grade: string): string {
+    if (!prices || !prices.length) return '-';
+
+    const priceObj = prices.find(p => p.grade === grade);
+    if (!priceObj || !priceObj.price) return '-';
+
+    const value = parseFloat(priceObj.price);
+    if (isNaN(value)) return '-';
+
+    const valorEmReais = value * 7.5;
+    return valorEmReais.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  shouldDisplayRow(info: any): boolean {
+    if (!info) return false;
+
+    const hasMintage = info.mintage && info.mintage !== '-';
+
+    const hasValidPrice =
+      info.prices &&
+      info.prices.some(
+        (p: any) => p && p.price && p.price !== '-' && p.price !== ''
+      );
+
+    return hasMintage || hasValidPrice;
+  }
+
+
+
 }

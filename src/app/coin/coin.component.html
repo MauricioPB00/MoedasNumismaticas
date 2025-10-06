@@ -61,10 +61,49 @@
           </div>
         </div>
       </div>
+      <div *ngIf="coin.banknoteInfo?.length">
+        <h3>Informações de Tiragem e Preços</h3>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Tiragem</th>
+                <th>R/BC</th>
+                <th>BC</th>
+                <th>MBC</th>
+                <th>SOB</th>
+                <th>SOB/FE</th>
+                <th>FE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let info of coin.banknoteInfo">
+                <tr *ngIf="shouldDisplayRow(info)">
+                  <td data-label="Data">{{ info.year_info || '-' }}</td>
+                  <td data-label="Tiragem">{{ info.mintage || '-' }}</td>
+                  <td data-label="R/BC">{{ getPrice(info.prices, 'R/BC') }}</td>
+                  <td data-label="BC">{{ getPrice(info.prices, 'BC') }}</td>
+                  <td data-label="MBC">{{ getPrice(info.prices, 'MBC') }}</td>
+                  <td data-label="SOB">{{ getPrice(info.prices, 'SOB') }}</td>
+                  <td data-label="SOB/FE">{{ getPrice(info.prices, 'S/FDC') }}</td>
+                  <td data-label="FE">{{ getPrice(info.prices, 'FE') }}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+
     <!-- Coluna direita: dados detalhados -->
     <div class="coin-info">
       <!-- Dados principais -->
+      <h3>Minhas Moedas </h3>
+      <button class="open-modal-btn" (click)="showModal = true">
+        Adicionar ou Remover Moeda
+      </button>
+
       <section class="section">
         <h3>Dados principais</h3>
         <p *ngIf="formatValue(coin)"><strong>Valor:</strong> {{ formatValue(coin) }}</p>
@@ -138,11 +177,6 @@
         </p>
         <p *ngIf="coin.valueNumeric"><strong>Valor numérico:</strong> {{ coin.valueNumeric }}</p>
       </section>
-      <h3>Minhas Moedas </h3>
-      <button class="open-modal-btn" (click)="showModal = true">
-        Adicionar ou Remover Moeda
-      </button>
-
     </div>
   </div>
 </div>
