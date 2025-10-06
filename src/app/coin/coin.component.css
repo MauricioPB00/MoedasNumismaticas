@@ -172,14 +172,14 @@
   padding: 12px;
   width: 100%;
   z-index: 10;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 
 .open-modal-btn:hover {
-  background: linear-gradient(135deg, #9e7f04, #EFBF04)!important;
+  background: linear-gradient(135deg, #9e7f04, #EFBF04) !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -193,7 +193,7 @@
   background: #fafafa;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
@@ -209,7 +209,7 @@
   padding: 0.9rem 1rem;
   text-align: center;
   font-weight: 600;
-  border-bottom: 2px solid rgba(255,255,255,0.15);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
 }
 
 .table td {
@@ -279,23 +279,18 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
+
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 1024px) {
   .coin-layout {
-    grid-template-columns: 1fr; /* Colunas empilham */
+    grid-template-columns: 1fr;
     gap: 1.5rem;
-  }
-
-  .coin-images,
-  .coin-info {
-    padding: 1rem;
   }
 }
 
 @media (max-width: 768px) {
   .coin-detail {
     padding: 1rem;
-    margin: 1rem;
   }
 
   .coin-title {
@@ -320,14 +315,14 @@
     font-size: 0.9rem;
   }
 
-.table th,
+  .table th,
   .table td {
     padding: 0.5rem 0.6rem;
-    font-size: 0.75rem; /* um pouco menor, mas legível */
+    font-size: 0.75rem;
   }
 
   .table {
-    min-width: 400px; /* reduz a largura mínima no tablet */
+    min-width: 400px;
   }
 }
 
@@ -349,13 +344,10 @@
   .table th,
   .table td {
     padding: 0.6rem 0.1rem;
-    font-size: 0.7rem; /* diminui levemente no celular */
+    font-size: 0.7rem;
   }
 
   .table {
-    min-width: 300px; /* mantém scroll horizontal */
+    min-width: 300px;
   }
 }
-
-
-   
