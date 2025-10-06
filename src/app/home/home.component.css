@@ -40,20 +40,41 @@
 
 .coin-images {
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
   margin-right: 2rem;
-  min-width: 300px;
+  min-width: 280px;
   height: 140px;
   overflow: hidden;
+  position: relative;
+}
+.coin-images img {
+  max-width: 100%;
+  max-width: 240px;
+  max-height: 100%;
+  border-radius: 6px;
+  object-fit: contain;
+  background-color: #ffffff;
+  transition: transform 0.2s ease;
 }
 
-.coin-images img {
-  width: 130px;
+.coin-images img:is([src*="obv"], [src*="rev"]) {
+  width: auto;
   height: 120px;
-  background-color: #ffffff;
+}
+
+.coin-images img[src*="cedula"],
+.coin-images img[src*="nota"],
+.coin-images img[src*="banknote"] {
+  width: 100%;
+  height: auto;
+  max-height: 120px;
+  object-fit: contain;
+}
+
+.coin-images img:hover {
+  transform: scale(1.05);
 }
 
 .coin-info {
