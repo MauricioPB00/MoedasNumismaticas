@@ -3,7 +3,9 @@
     <nav id="horizontal-bar" class="d-flex align-items-center" [ngStyle]="{'background-color': sidebarColor}">
         <ul class="horizontal-menu list-unstyled d-flex">
             <li><a href="/home"><i class="fa fa-home"></i><span></span></a></li>
-            <li><a href="/profile"><i class="fa fa-user"></i><span></span></a></li>
+            <li *ngIf="loginService.hasRole('ROLE_ADMIN')">
+                <a routerLink="/profile"><i class="fa fa-user"></i></a>
+            </li>
             <li><a href="/settings"><i class="fa fa-cog"></i><span></span></a></li>
             <li><a href="/help"><i class="fa fa-question-circle"></i><span></span></a></li>
             <div class="checkboxDiv">

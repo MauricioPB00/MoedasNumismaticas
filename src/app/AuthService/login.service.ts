@@ -41,10 +41,12 @@ export class LoginService {
               permi: data.permi,
               id: data.id,
               email: data.email,
-              name: data.nome
+              name: data.nome,
+              roles: data.roles
             }
             localStorage.setItem('jwt', data.token);
             localStorage.setItem('ControleUsuarioPermi', JSON.stringify(data.permi));
+            localStorage.setItem('ControleUsuarioRoles', JSON.stringify(data.roles));
             localStorage.setItem('ControleUsuario', JSON.stringify(userData));
             localStorage.setItem('ControleUsuarioIP', JSON.stringify(data.ip));
           }
@@ -79,4 +81,9 @@ export class LoginService {
     }
     return throwError(errorMessage);
   };
+
+  hasRole(role: string): boolean {
+    const roles = JSON.parse(localStorage.getItem('ControleUsuarioRoles') || '[]');
+    return roles.includes(role);
+  }
 }

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SIDEBAR_COLOR } from '../../../color';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../AuthService/user.service';
+import { LoginService } from '../AuthService/login.service'; // ajuste o caminho se necessário
 
 
 @Component({
@@ -30,15 +31,19 @@ export class SideBarComponent implements OnInit, AfterViewInit {
   name: string | undefined;
   isDarkMode: boolean = false;
   photo: string | null = null;
+  permi: number | null = null;
 
   constructor(
     private router: Router,
     private http: HttpClient,
     private userService: UserService,
+    public loginService: LoginService,
   ) {
     const savedMode = localStorage.getItem('darkMode');
     if (savedMode) {
       this.isDarkMode = JSON.parse(savedMode);
+    const storedPermi = localStorage.getItem('ControleUsuarioPermi');
+    this.permi = storedPermi ? Number(JSON.parse(storedPermi)) : null;
     }
   }
 
@@ -61,6 +66,10 @@ export class SideBarComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.applyDarkMode();
+  }
+
+  hasAdminAccess(): boolean {
+    return this.permi === 2;
   }
 
   toggleSidebar(): void {
