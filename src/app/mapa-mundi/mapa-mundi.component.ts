@@ -33,22 +33,6 @@ export class MapaMundiComponent implements OnInit {
 
   availableCountries: Country[] = AVAILABLE_COUNTRIES;
 
-
-  countryCodeMap: Record<string, string> = {
-    'Brasil': 'br',
-    'Estados Unidos': 'US',
-    'Itália': 'IT',
-    'Japão': 'JP',
-    'França': 'FR',
-    'Reino Unido': 'GB',
-    'Alemanha': 'DE',
-    'Argentina': 'AR',
-    'Canadá': 'CA',
-    'México': 'MX',
-    'Espanha': 'ES',
-    'Portugal': 'PT',
-  };
-
   constructor(private http: HttpClient, private coinsService: CoinsService) { }
 
   ngOnInit(): void {
@@ -146,31 +130,34 @@ export class MapaMundiComponent implements OnInit {
   }
 
   getAlbumMap() {
-    this.coinsService.getAlbumByUserMap().subscribe({
-      next: (res) => {
-        this.albumCoins = res || [];
-        const grouped: Record<string, { coins: number, banknotes: number }> = {};
+  this.coinsService.getAlbumByUserMap().subscribe({
+    next: (res) => {
+      this.albumCoins = res || [];
+      const grouped: Record<string, { coins: number, banknotes: number }> = {};
 
-        this.albumCoins.forEach(item => {
-          const issuer = item.issuer || 'Desconhecido';
-          if (!grouped[issuer]) grouped[issuer] = { coins: 0, banknotes: 0 };
-          if (item.category === 'coin') grouped[issuer].coins += item.quantity || 1;
-          else if (item.category === 'banknote') grouped[issuer].banknotes += item.quantity || 1;
-        });
+      this.albumCoins.forEach(item => {
+        const issuer = item.issuer || 'Desconhecido';
+        if (!grouped[issuer]) grouped[issuer] = { coins: 0, banknotes: 0 };
+        if (item.category === 'coin') grouped[issuer].coins += item.quantity || 1;
+        else if (item.category === 'banknote') grouped[issuer].banknotes += item.quantity || 1;
+      });
 
-        this.userCountries = Object.entries(grouped).map(([issuer, totals]) => ({
+      this.userCountries = Object.entries(grouped).map(([issuer, totals]) => {
+        const country = AVAILABLE_COUNTRIES.find(c => c.name === issuer);
+        return {
           name: issuer,
-          code: (this.countryCodeMap[issuer] || '').toLowerCase(),
+          code: country ? country.code.toLowerCase() : '',
           coins: totals.coins,
           banknotes: totals.banknotes
-        }));
+        };
+      });
 
-        const svgEl = this.svgContainer.nativeElement.querySelector('svg');
-        if (svgEl) this.paintUserCountries(svgEl as SVGSVGElement);
-      },
-      error: err => console.error('Erro ao carregar mapa do álbum:', err)
-    });
-  }
+      const svgEl = this.svgContainer.nativeElement.querySelector('svg');
+      if (svgEl) this.paintUserCountries(svgEl as SVGSVGElement);
+    },
+    error: err => console.error('Erro ao carregar mapa do álbum:', err)
+  });
+}
   onSelectChange() {
   const svgEl = this.svgContainer.nativeElement.querySelector('svg');
   if (!svgEl) return;
