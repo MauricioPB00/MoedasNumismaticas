@@ -57,11 +57,105 @@ export class MapaMundiComponent implements OnInit {
     svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
     svgEl.querySelectorAll<SVGElement>('circle[id$="_"]').forEach(el => el.remove());
-    svgEl.querySelectorAll<SVGElement>('path').forEach(el => {
-      el.setAttribute('fill', '#d1d1d1');
-      el.setAttribute('stroke', '#ffffff');
-      el.setAttribute('stroke-width', '0.5');
-    });
+
+    let defs = svgEl.querySelector('defs');
+    if (!defs) {
+      defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      svgEl.insertBefore(defs, svgEl.firstChild);
+    }
+    const defsEl = defs as SVGDefsElement;
+
+    const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+    gradient.setAttribute('id', 'oceanGradient');
+    gradient.setAttribute('x1', '0%');
+    gradient.setAttribute('y1', '100%'); 
+    gradient.setAttribute('x2', '0%');
+    gradient.setAttribute('y2', '0%');  
+
+    const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop1.setAttribute('offset', '0%');
+    stop1.setAttribute('stop-color', '#0a4e8a'); 
+
+    const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop2.setAttribute('offset', '50%');
+    stop2.setAttribute('stop-color', '#1f74c0'); 
+
+    const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop3.setAttribute('offset', '100%');
+    stop3.setAttribute('stop-color', '#7fc9f9'); 
+
+    gradient.appendChild(stop1);
+    gradient.appendChild(stop2);
+    gradient.appendChild(stop3);
+    defsEl.appendChild(gradient);
+
+    const oceanPath = svgEl.querySelector('#ocean, .oceanxx') as SVGPathElement;
+    if (oceanPath) {
+      oceanPath.setAttribute('fill', 'url(#oceanGradient)');
+      oceanPath.setAttribute('stroke', '#0d3b66');
+      oceanPath.setAttribute('stroke-width', '0.3');
+    }
+
+    const useGlobalGradient = false;
+
+    if (useGlobalGradient) {
+      const countryGradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      countryGradient.setAttribute('id', 'countryGradient');
+      countryGradient.setAttribute('x1', '0%');
+      countryGradient.setAttribute('y1', '100%');
+      countryGradient.setAttribute('x2', '0%');
+      countryGradient.setAttribute('y2', '0%');
+
+      const cStop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      cStop1.setAttribute('offset', '0%');
+      cStop1.setAttribute('stop-color', '#0e8116ff'); 
+
+      const cStop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      cStop2.setAttribute('offset', '100%');
+      cStop2.setAttribute('stop-color', '#55d85bff'); 
+
+      countryGradient.appendChild(cStop1);
+      countryGradient.appendChild(cStop2);
+      defsEl.appendChild(countryGradient);
+
+      svgEl.querySelectorAll<SVGElement>('path:not(#ocean):not(.oceanxx)').forEach(el => {
+        el.setAttribute('fill', 'url(#countryGradient)');
+        el.setAttribute('stroke', '#ffffff');
+        el.setAttribute('stroke-width', '0.5');
+      });
+
+    } else {
+
+      svgEl.querySelectorAll<SVGElement>('path:not(#ocean):not(.oceanxx)').forEach((el, i) => {
+        const gradId = `countryGradient${i}`;
+        const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+        grad.setAttribute('id', gradId);
+        grad.setAttribute('x1', '0%');
+        grad.setAttribute('y1', '100%'); 
+        grad.setAttribute('x2', '0%');
+        grad.setAttribute('y2', '0%');  
+
+        const lightness = 35 + Math.random() * 15;
+        const color1 = `hsl(120, 50%, ${lightness - 10}%)`; 
+        const color2 = `hsl(120, 60%, ${lightness + 15}%)`;
+
+        const s1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+        s1.setAttribute('offset', '0%');
+        s1.setAttribute('stop-color', color1);
+
+        const s2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+        s2.setAttribute('offset', '100%');
+        s2.setAttribute('stop-color', color2);
+
+        grad.appendChild(s1);
+        grad.appendChild(s2);
+        defsEl.appendChild(grad);
+
+        el.setAttribute('fill', `url(#${gradId})`);
+        el.setAttribute('stroke', '#ffffff');
+        el.setAttribute('stroke-width', '0.5');
+      });
+    }
 
     if (this.userCountries.length > 0) {
       this.paintUserCountries(svgEl);
@@ -130,112 +224,127 @@ export class MapaMundiComponent implements OnInit {
   }
 
   getAlbumMap() {
-  this.coinsService.getAlbumByUserMap().subscribe({
-    next: (res) => {
-      this.albumCoins = res || [];
-      const grouped: Record<string, { coins: number, banknotes: number }> = {};
+    this.coinsService.getAlbumByUserMap().subscribe({
+      next: (res) => {
+        this.albumCoins = res || [];
+        const grouped: Record<string, { coins: number, banknotes: number }> = {};
 
-      this.albumCoins.forEach(item => {
-        const issuer = item.issuer || 'Desconhecido';
-        if (!grouped[issuer]) grouped[issuer] = { coins: 0, banknotes: 0 };
-        if (item.category === 'coin') grouped[issuer].coins += item.quantity || 1;
-        else if (item.category === 'banknote') grouped[issuer].banknotes += item.quantity || 1;
-      });
+        this.albumCoins.forEach(item => {
+          const issuer = item.issuer || 'Desconhecido';
+          if (!grouped[issuer]) grouped[issuer] = { coins: 0, banknotes: 0 };
+          if (item.category === 'coin') grouped[issuer].coins += item.quantity || 1;
+          else if (item.category === 'banknote') grouped[issuer].banknotes += item.quantity || 1;
+        });
 
-      this.userCountries = Object.entries(grouped).map(([issuer, totals]) => {
-        const country = AVAILABLE_COUNTRIES.find(c => c.name === issuer);
-        return {
-          name: issuer,
-          code: country ? country.code.toLowerCase() : '',
-          coins: totals.coins,
-          banknotes: totals.banknotes
-        };
-      });
+        this.userCountries = Object.entries(grouped).map(([issuer, totals]) => {
+          const country = AVAILABLE_COUNTRIES.find(c => c.name === issuer);
+          return {
+            name: issuer,
+            code: country ? country.code.toLowerCase() : '',
+            coins: totals.coins,
+            banknotes: totals.banknotes
+          };
+        });
 
-      const svgEl = this.svgContainer.nativeElement.querySelector('svg');
-      if (svgEl) this.paintUserCountries(svgEl as SVGSVGElement);
-    },
-    error: err => console.error('Erro ao carregar mapa do álbum:', err)
-  });
-}
+        const svgEl = this.svgContainer.nativeElement.querySelector('svg');
+        if (svgEl) this.paintUserCountries(svgEl as SVGSVGElement);
+      },
+      error: err => console.error('Erro ao carregar mapa do álbum:', err)
+    });
+  }
   onSelectChange() {
-  const svgEl = this.svgContainer.nativeElement.querySelector('svg');
-  if (!svgEl) return;
+    const svgEl = this.svgContainer.nativeElement.querySelector('svg');
+    if (!svgEl) return;
 
-  // Resetar todos os países do SVG
-  svgEl.querySelectorAll<SVGPathElement>('path').forEach(path => {
-    path.setAttribute('fill', '#d1d1d1');
-    path.setAttribute('stroke', '#fff');
-    path.setAttribute('stroke-width', '0.5');
-  });
+    if (this.highlightedCountryCode) {
+      const prevEl = svgEl.querySelector<SVGElement>(`#${this.highlightedCountryCode}`);
+      if (prevEl) {
+        const paths = prevEl.tagName.toLowerCase() === 'g'
+          ? Array.from(prevEl.querySelectorAll<SVGPathElement>('path'))
+          : [prevEl as SVGPathElement];
 
-  // Pinta os países do usuário
-  this.userCountries.forEach(country => {
-    const el = svgEl.querySelector<SVGElement>(`#${country.code}`);
-    if (!el) return;
+        paths.forEach(path => {
+          const isUserCountry = this.userCountries.some(c => c.code === this.highlightedCountryCode);
 
-    const paths = el.tagName.toLowerCase() === 'g'
-      ? Array.from(el.querySelectorAll<SVGPathElement>('path'))
-      : [el as SVGPathElement];
+          if (isUserCountry) {
+            path.setAttribute('fill', '#EFBF04');
+            path.setAttribute('stroke', '#ffffffff');
+          } else {
+            const originalFill = path.getAttribute('data-original-fill');
+            if (originalFill) {
+              path.setAttribute('fill', originalFill);
+            } else {
+              path.setAttribute('fill', '#ffffffff');
+            }
+            path.setAttribute('stroke', '#ffffffff');
+          }
+          path.setAttribute('stroke-width', '0.5');
+        });
+      }
+    }
 
-    paths.forEach(path => {
-      path.setAttribute('fill', '#EFBF04');
-      path.setAttribute('stroke', '#000');
+    this.highlightedCountryCode = this.selectedCountryCode;
+
+    if (!this.selectedCountryCode) return;
+
+    const selectedEl = svgEl.querySelector<SVGElement>(`#${this.selectedCountryCode}`);
+    if (!selectedEl) return;
+
+    const selectedPaths = selectedEl.tagName.toLowerCase() === 'g'
+      ? Array.from(selectedEl.querySelectorAll<SVGPathElement>('path'))
+      : [selectedEl as SVGPathElement];
+
+    selectedPaths.forEach(path => {
+      if (!path.getAttribute('data-original-fill')) {
+        path.setAttribute('data-original-fill', path.getAttribute('fill') || '');
+      }
+
+      path.setAttribute('fill', '#e74c3c');
+      path.setAttribute('stroke', '#fffdfdff');
       path.setAttribute('stroke-width', '0.5');
     });
-  });
-
-  // Se tiver um país selecionado no select, pinta em vermelho
-  if (!this.selectedCountryCode) {
-    this.highlightedCountryCode = null;
-    return;
   }
 
-  this.highlightedCountryCode = this.selectedCountryCode;
-  const selectedEl = svgEl.querySelector<SVGElement>(`#${this.selectedCountryCode}`);
-  if (!selectedEl) return;
-
-  const selectedPaths = selectedEl.tagName.toLowerCase() === 'g'
-    ? Array.from(selectedEl.querySelectorAll<SVGPathElement>('path'))
-    : [selectedEl as SVGPathElement];
-
-  selectedPaths.forEach(path => {
-    path.setAttribute('fill', '#e74c3c'); // vermelho
-    path.setAttribute('stroke', '#000');
-    path.setAttribute('stroke-width', '0.5');
-  });
-}
-
   clearFilters() {
-  this.selectedCountryCode = '';
-  this.highlightedCountryCode = null;
+    this.selectedCountryCode = '';
+    this.highlightedCountryCode = null;
 
-  const svgEl = this.svgContainer.nativeElement.querySelector('svg') as SVGSVGElement;
-  if (!svgEl) return;
+    const svgEl = this.svgContainer.nativeElement.querySelector('svg') as SVGSVGElement;
+    if (!svgEl) return;
 
-  svgEl.querySelectorAll<SVGPathElement>('path').forEach(path => {
-    path.setAttribute('fill', '#d1d1d1');
-    path.setAttribute('stroke', '#fff');
-    path.setAttribute('stroke-width', '0.5');
-  });
+    svgEl.querySelectorAll<SVGPathElement>('path:not(#ocean):not(.oceanxx)').forEach(path => {
+      const original = path.getAttribute('data-original-fill');
 
-  this.userCountries.forEach(country => {
-    const el = svgEl.querySelector<SVGElement>(`#${country.code}`);
-    if (el) {
+      if (original && original.trim() !== '') {
+        path.setAttribute('fill', original);
+      } else {
+        const current = path.getAttribute('fill') || '';
+        if (!current.startsWith('url(')) {
+          path.setAttribute('fill', '#d1d1d1');
+        }
+      }
+
+      path.setAttribute('stroke', '#fff');
+      path.setAttribute('stroke-width', '0.5');
+    });
+
+    this.userCountries.forEach(country => {
+      const el = svgEl.querySelector<SVGElement>(`#${country.code}`);
+      if (!el) return;
+
       const paths = el.tagName.toLowerCase() === 'g'
-        ? el.querySelectorAll<SVGPathElement>('path')
+        ? Array.from(el.querySelectorAll<SVGPathElement>('path'))
         : [el as SVGPathElement];
 
       paths.forEach(path => {
-        path.setAttribute('fill', '#EFBF04'); 
-        path.setAttribute('stroke', '#000');
+        if (!path.getAttribute('data-original-fill')) {
+          path.setAttribute('data-original-fill', path.getAttribute('fill') || '');
+        }
+
+        path.setAttribute('fill', '#EFBF04');
+        path.setAttribute('stroke', '#ffffffff');
         path.setAttribute('stroke-width', '0.5');
       });
-    }
-  });
-}
-
-
-
-
+    });
+  }
 }

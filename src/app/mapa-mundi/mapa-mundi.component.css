@@ -24,7 +24,7 @@
   height: 100%;
   border-radius: 12px;
   overflow: auto;
-  background: #dcdcdc;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -139,7 +139,7 @@
 }
 
 .legend-color.gray {
-  background-color: #d1d1d1;
+  background-color: #19c403;
 }
 
 .filters {
