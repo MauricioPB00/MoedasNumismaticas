@@ -1,81 +1,113 @@
-.collection-container {
-  text-align: center;
-  padding: 20px;
-}
-
-.title {
-  margin-bottom: 20px;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-/* Tabs */
 .tabs {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 
 .tabs button {
-  padding: 8px 20px;
-  background: #2c2c2c;
+  background: none;
   border: none;
-  color: white;
-  font-weight: 600;
-  border-radius: 20px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  color: #666;
+  border-bottom: 3px solid transparent;
+  border-radius: 4px 4px 0 0;
 }
 
 .tabs button.active {
-  background: #4caf50;
-  color: white;
+  color: #007bff;
+  border-bottom-color: #007bff;
+  font-weight: bold;
 }
 
 .tabs button:hover {
-  background: #3d3d3d;
+  color: #0056b3;
 }
 
-/* Grid */
+.tab-content {
+  border-radius: 0 0 8px 8px;
+  margin-bottom: 1rem;
+  animation: fadeSlide 0.2s ease;
+  overflow-x: auto;
+}
+/* /////////////// TAB 2 ////////////// */
+
+.tabs2 {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tabs2 button {
+  background: none;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #666;
+  border-bottom: 3px solid transparent;
+  border-radius: 4px 4px 0 0;
+}
+
+.tabs2 button.active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+  font-weight: bold;
+}
+
+.tabs2 button:hover {
+  color: #0056b3;
+}
+
+.tab2-content {
+  border-radius: 0 0 8px 8px;
+  margin-bottom: 1rem;
+  animation: fadeSlide 0.2s ease;
+  overflow-x: auto;
+}
+
+
+/* Grid de moedas e cédulas */
 .album-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 100px);
+  grid-template-columns: repeat(11, 1fr); /* 8 por linha */
   gap: 16px;
   justify-content: center;
-  margin-top: 25px;
 }
 
 .coin-card {
   background: #1c1c1c;
   border-radius: 10px;
-  /* padding: 10px; */
   text-align: center;
   transition: all 0.3s ease;
 }
 
 .coin-card img {
-  width: 90px;
+  width: 100%;
   height: 90px;
-  object-fit: contain;
   border-radius: 8px;
   transition: all 0.3s ease;
 }
 
-/* Possuídas */
 .coin-card.owned img {
   opacity: 1;
   filter: none;
   transform: scale(1.05);
 }
 
-/* Faltando */
 .coin-card.missing img {
   opacity: 0.3;
   filter: grayscale(100%);
 }
 
-/* Hover */
 .coin-card:hover {
   transform: scale(1.07);
 }
@@ -91,7 +123,7 @@
   color: #aaa;
 }
 
-/* Barra de progresso */
+/* Progress bar */
 .progress-bar {
   position: relative;
   width: 80%;
@@ -111,11 +143,66 @@
 
 .progress-text {
   position: absolute;
-  top: 0;
+  top: 4px;
   left: 0;
   right: 0;
   color: white;
   font-size: 14px;
   font-weight: bold;
   text-shadow: 0 1px 2px black;
+  text-align: center;
+}
+
+/* /////// FILTRO /////// */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f3f3f3;
+  border-bottom: 1px solid #ddd;
+  top: 0;
+  z-index: 1;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.filters input[type="text"],
+.filters input[type="number"],
+.filters select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.filters input[type="text"]:focus,
+.filters input[type="number"]:focus,
+.filters select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.filters button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.filters button:hover {
+  background-color: #0056b3;
+}
+
+button.btn-limpar {
+  background-color: #EFBF04 !important;
+  color: #000 !important;
+  border-radius: 6px !important;
 }

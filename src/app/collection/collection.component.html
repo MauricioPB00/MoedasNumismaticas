@@ -1,44 +1,63 @@
-<div class="collection-container">
-  <h2 class="title">Minha Coleção</h2>
+<div class="filters">
+  <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
+  <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
+  <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
+</div>
 
-  <!-- Tabs -->
-  <div class="tabs">
-    <button [class.active]="activeTab === 'coins'" (click)="activeTab = 'coins'">
-      🪙 Moedas
-    </button>
-    <button [class.active]="activeTab === 'banknotes'" (click)="activeTab = 'banknotes'">
-      💵 Cédulas
-    </button>
+<!-- Abas de países -->
+<div class="tabs country-tabs">
+  <button *ngFor="let country of countries"
+          [class.active]="activeCountry === country"
+          (click)="activeCountry = country">
+    {{ country }}
+  </button>
+</div>
+
+<!-- Conteúdo por país -->
+<div class="tab-content">
+
+  <!-- Abas de moedas e cédulas -->
+  <div class="tabs2 category-tabs">
+    <button [class.active]="activeTab === 'coins'" (click)="activeTab = 'coins'">🪙 Moedas</button>
+    <button [class.active]="activeTab === 'banknotes'" (click)="activeTab = 'banknotes'">💵 Cédulas</button>
   </div>
 
-  <!-- Progresso -->
-  <div class="progress-bar">
-    <div class="progress-fill" [style.width.%]="getProgressPercent(activeTab)"></div>
-    <span class="progress-text">
-      {{ getProgress(activeTab) }} — {{ getProgressPercent(activeTab) }}%
-    </span>
-  </div>
+  <!-- Moedas -->
+  <div class="tab-content" *ngIf="activeTab === 'coins'">
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="getProgressPercentByCountry(activeCountry, 'coins')"></div>
+      <span class="progress-text">
+        {{ getProgressByCountry(activeCountry, 'coins') }} — {{ getProgressPercentByCountry(activeCountry, 'coins') }}%
+      </span>
+    </div>
 
-  <!-- Grid -->
-  <div class="album-grid" *ngIf="activeTab === 'coins'">
-    <div *ngFor="let coin of coins"
-         class="coin-card"
-         [class.owned]="userHasCoin(coin)"
-         [class.missing]="!userHasCoin(coin)">
-      <img [src]="'assets/img/imagens/' + coin.obverse" alt="{{ coin.title }}">
-      <p class="coin-title">{{ coin.title }}</p>
-      <p class="coin-year">{{ coin.min_year }} - {{ coin.max_year }}</p>
+    <div class="album-grid">
+      <div *ngFor="let coin of filteredCoinsByCountry(activeCountry)" class="coin-card"
+           [class.owned]="userHasCoin(coin)" [class.missing]="!userHasCoin(coin)">
+        <img [src]="'assets/img/imagens/' + coin.obverse" alt="{{ coin.title }}">
+        <p class="coin-title">{{ coin.title }}</p>
+        <p class="coin-year">{{ coin.min_year }} - {{ coin.max_year }}</p>
+      </div>
     </div>
   </div>
 
-  <div class="album-grid" *ngIf="activeTab === 'banknotes'">
-    <div *ngFor="let note of banknotes"
-         class="coin-card"
-         [class.owned]="userHasBanknote(note)"
-         [class.missing]="!userHasBanknote(note)">
-      <img [src]="'assets/img/imagens/' + note.obverse" alt="{{ note.title }}">
-      <p class="coin-title">{{ note.title }}</p>
-      <p class="coin-year">{{ note.min_year }} - {{ note.max_year }}</p>
+  <!-- Cédulas -->
+  <div class="tab-content" *ngIf="activeTab === 'banknotes'">
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="getProgressPercentByCountry(activeCountry, 'banknotes')"></div>
+      <span class="progress-text">
+        {{ getProgressByCountry(activeCountry, 'banknotes') }} — {{ getProgressPercentByCountry(activeCountry, 'banknotes') }}%
+      </span>
+    </div>
+
+    <div class="album-grid">
+      <div *ngFor="let note of filteredBanknotesByCountry(activeCountry)" class="coin-card"
+           [class.owned]="userHasBanknote(note)" [class.missing]="!userHasBanknote(note)">
+        <img [src]="'assets/img/imagens/' + note.obverse" alt="{{ note.title }}">
+        <p class="coin-title">{{ note.title }}</p>
+        <p class="coin-year">{{ note.min_year }} - {{ note.max_year }}</p>
+      </div>
     </div>
   </div>
+
 </div>
