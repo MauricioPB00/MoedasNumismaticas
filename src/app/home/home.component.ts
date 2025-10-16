@@ -21,6 +21,10 @@ export class HomeComponent implements OnInit {
   coinsLoaded = false;
   queryParamsInitialized = false;
   initialFiltersApplied = false;
+  
+  coin: any;
+  coinEntries: { year: number; quantity: number | null; condition: string | null, id: number, type: string }[] = [];
+  showModal = false;
 
   constructor(
     private coinService: CoinService,
@@ -193,5 +197,37 @@ export class HomeComponent implements OnInit {
         page: this.currentPage
       }
     });
+  }
+
+  abrirModal(event: Event, itemId: number, type: 'coin' | 'banknote'): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const element = event.target as HTMLElement;
+    element.blur();
+
+    this.coin = this.coins.find(c => c.id === itemId && c.type === type);
+
+    if (!this.coin) {
+      console.error('Item não encontrado no álbum:', { itemId, type });
+      return;
+    }
+
+    this.coinEntries = [];
+    const minYear = this.coin.min_year ?? this.coin.minYear ?? null;
+    const maxYear = this.coin.max_year ?? this.coin.maxYear ?? null;
+    const singleYear = this.coin.year ?? null;
+
+    if (minYear != null && maxYear != null) {
+      for (let y = minYear; y <= maxYear; y++) {
+        this.coinEntries.push({ year: y, quantity: null, condition: null, id: this.coin.id, type: this.coin.type });
+      }
+    } else if (singleYear != null) {
+      this.coinEntries.push({ year: singleYear, quantity: null, condition: null, id: this.coin.id, type: this.coin.type });
+    }
+
+    this.showModal = true;
+
+    console.log('Abrindo modal para:', this.coin);
   }
 }

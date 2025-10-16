@@ -42,7 +42,10 @@
       </div>
 
       <div class="btn">
-        <button type="button" (click)="verDetalhes(coin.id); $event.preventDefault(); $event.stopPropagation();">
+        <button type="button" (click)="verDetalhes(coin.id); $event.stopPropagation(); $event.preventDefault();">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+        <button type="button" class="icon-inline" (click)="abrirModal($event, coin.id, coin.type)">
           <i class="fa-solid fa-plus"></i>
         </button>
       </div>
@@ -50,7 +53,6 @@
   </a>
 </div>
 
-<!-- Controles de Paginação -->
 <div class="pagination">
   <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
 
@@ -58,3 +60,7 @@
 
   <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Próxima</button>
 </div>
+
+<app-modal-coin *ngIf="showModal" [show]="showModal" [coin]="coin" [coinEntries]="coinEntries"
+  (closed)="showModal = false">
+</app-modal-coin>
