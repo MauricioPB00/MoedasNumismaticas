@@ -3,8 +3,7 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
+  margin-top: 5px;
 }
 
 .tabs button {
@@ -31,7 +30,6 @@
 
 .tab-content {
   border-radius: 0 0 8px 8px;
-  margin-bottom: 1rem;
   animation: fadeSlide 0.2s ease;
   overflow-x: auto;
 }
@@ -74,13 +72,22 @@
   overflow-x: auto;
 }
 
+.scroll-container {
+  height: 690px; 
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
 
-/* Grid de moedas e cédulas */
 .album-grid {
   display: grid;
-  grid-template-columns: repeat(11, 1fr); /* 8 por linha */
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 16px;
   justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .coin-card {

@@ -2,16 +2,28 @@ import { Component, OnInit } from '@angular/core';
 import { CoinsService } from '../AuthService/coins.service';
 import { CoinService } from '../AuthService/coin.service';
 
+interface Coin {
+  id?: number;
+  title?: string;
+  category?: 'coin' | 'banknote' | string;
+  issuer?: string;
+  year?: number;
+  min_year?: number;
+  max_year?: number;
+  obverse?: string;
+  [key: string]: any;
+}
+
 @Component({
   selector: 'app-collection',
   templateUrl: './collection.component.html',
   styleUrls: ['./collection.component.css']
 })
 export class CollectionComponent implements OnInit {
-  coins: any[] = [];
-  banknotes: any[] = [];
-  albumCoins: any[] = [];
-  albumBanknotes: any[] = [];
+  coins: Coin[] = [];
+  banknotes: Coin[] = [];
+  albumCoins: Coin[] = [];
+  albumBanknotes: Coin[] = [];
   ownedCoinIds: Set<string> = new Set();
   ownedBanknoteIds: Set<string> = new Set();
 
@@ -21,10 +33,19 @@ export class CollectionComponent implements OnInit {
   countries: string[] = [];
   activeCountry: string = '';
   activeTab: 'coins' | 'banknotes' = 'coins';
+  sortOrder: 'asc' | 'desc' = 'asc';
+  pageSize = 50;
+
+  pagination: {
+    [country: string]: {
+      coins: { page: number; loaded: Coin[] };
+      banknotes: { page: number; loaded: Coin[] };
+    }
+  } = {};
 
   constructor(
     private coinsService: CoinsService,
-    private coinService: CoinService,
+    private coinService: CoinService
   ) {}
 
   ngOnInit(): void {
@@ -32,19 +53,16 @@ export class CollectionComponent implements OnInit {
     this.loadAll();
   }
 
-  // --- ALBUM DO USUÁRIO ---
-  getAlbum() {
+  // --- Album do usuário ---
+  getAlbum(): void {
     this.coinsService.getAlbumByUser().subscribe({
-      next: (res) => {
+      next: (res: Coin[]) => {
         const album = res || [];
-        this.albumCoins = album.filter((a: any) => a.category === 'coin');
-        this.albumBanknotes = album.filter((a: any) => a.category === 'banknote');
+        this.albumCoins = album.filter(a => a.category === 'coin');
+        this.albumBanknotes = album.filter(a => a.category === 'banknote');
 
         this.ownedCoinIds = new Set(this.albumCoins.map(a => String(a.id)));
         this.ownedBanknoteIds = new Set(this.albumBanknotes.map(a => String(a.id)));
-
-        console.log('💿 Álbum moedas:', this.albumCoins);
-        console.log('💵 Álbum cédulas:', this.albumBanknotes);
 
         this.applyFilters();
       },
@@ -52,10 +70,10 @@ export class CollectionComponent implements OnInit {
     });
   }
 
-  // --- TODAS AS MOEDAS E CÉDULAS ---
-  loadAll() {
+  // --- Todas moedas e cédulas ---
+  loadAll(): void {
     this.coinService.getCoins().subscribe({
-      next: (data) => {
+      next: (data: Coin[]) => {
         const all = data.map(coin => ({
           ...coin,
           categoryDisplay: coin.category === 'coin' ? 'Moeda' : 'Cédula',
@@ -65,55 +83,96 @@ export class CollectionComponent implements OnInit {
         this.coins = all.filter(c => c.category === 'coin');
         this.banknotes = all.filter(c => c.category === 'banknote');
 
-        // Obter lista de países únicos
-        this.countries = Array.from(new Set(all.map(c => c.issuer))).sort();
+        // Lista de países
+        this.countries = Array.from(
+          new Set(all.map(c => c.issuer).filter((issuer): issuer is string => !!issuer))
+        ).sort();
+
         this.activeCountry = this.countries[0] || '';
 
-        console.log('🪙 Todas as moedas:', this.coins.length);
-        console.log('💵 Todas as cédulas:', this.banknotes.length);
-        console.log('🌎 Países:', this.countries);
-
-        this.applyFilters();
+        // Inicializa paginação
+        this.countries.forEach(c => {
+          this.pagination[c] = {
+            coins: { page: 1, loaded: [] },
+            banknotes: { page: 1, loaded: [] }
+          };
+          this.loadMore(c, 'coins');
+          this.loadMore(c, 'banknotes');
+        });
       },
       error: (err) => console.error('Erro ao carregar moedas/cédulas:', err)
     });
   }
 
-  // --- VERIFICA SE O USUÁRIO POSSUI ---
-  userHasCoin(coin: any): boolean {
+  // --- Verifica se o usuário possui ---
+  userHasCoin(coin: Coin): boolean {
     return this.ownedCoinIds.has(String(coin.id));
   }
 
-  userHasBanknote(banknote: any): boolean {
+  userHasBanknote(banknote: Coin): boolean {
     return this.ownedBanknoteIds.has(String(banknote.id));
   }
 
-  // --- FILTRAGEM ---
-  applyFilters() {
+  // --- Filtragem e ordenação ---
+  applyFilters(): void {
+    // Reinicia a paginação ao aplicar filtros
+    this.countries.forEach(c => {
+      this.pagination[c].coins = { page: 1, loaded: [] };
+      this.pagination[c].banknotes = { page: 1, loaded: [] };
+      this.loadMore(c, 'coins');
+      this.loadMore(c, 'banknotes');
+    });
+  }
+
+  private getYearValue(c: Coin): number {
+    return c.year ?? c.min_year ?? c.max_year ?? 0;
+  }
+
+  filteredCoinsByCountry(country: string): Coin[] {
     const minY = this.minYear ?? -Infinity;
     const maxY = this.maxYear ?? Infinity;
-
-    this.coins = this.coins.map(c => ({ ...c })); // evita referência
-    this.banknotes = this.banknotes.map(c => ({ ...c }));
+    return this.coins
+      .filter(c => c.issuer === country && this.getYearValue(c) >= minY && this.getYearValue(c) <= maxY)
+      .sort((a, b) =>
+        this.sortOrder === 'asc' ? this.getYearValue(a) - this.getYearValue(b) : this.getYearValue(b) - this.getYearValue(a)
+      );
   }
 
-  filteredCoinsByCountry(country: string) {
-    return this.coins.filter(c => 
-      c.issuer === country &&
-      (c.year ?? c.min_year ?? c.max_year) >= (this.minYear ?? -Infinity) &&
-      (c.year ?? c.min_year ?? c.max_year) <= (this.maxYear ?? Infinity)
-    );
+  filteredBanknotesByCountry(country: string): Coin[] {
+    const minY = this.minYear ?? -Infinity;
+    const maxY = this.maxYear ?? Infinity;
+    return this.banknotes
+      .filter(c => c.issuer === country && this.getYearValue(c) >= minY && this.getYearValue(c) <= maxY)
+      .sort((a, b) =>
+        this.sortOrder === 'asc' ? this.getYearValue(a) - this.getYearValue(b) : this.getYearValue(b) - this.getYearValue(a)
+      );
   }
 
-  filteredBanknotesByCountry(country: string) {
-    return this.banknotes.filter(c => 
-      c.issuer === country &&
-      (c.year ?? c.min_year ?? c.max_year) >= (this.minYear ?? -Infinity) &&
-      (c.year ?? c.min_year ?? c.max_year) <= (this.maxYear ?? Infinity)
-    );
-  }
+loadMore(country: string, type: 'coins' | 'banknotes') {
+  const allItems = type === 'coins' ? this.filteredCoinsByCountry(country) : this.filteredBanknotesByCountry(country);
+  const page = this.pagination[country][type].page;
+  const start = (page - 1) * this.pageSize;
+  const end = start + this.pageSize;
+  const nextItems = allItems.slice(start, end);
 
-  // --- PROGRESSO POR PAÍS ---
+  if (nextItems.length > 0) {
+    this.pagination[country][type].loaded.push(...nextItems);
+    this.pagination[country][type].page += 1;
+  }
+}
+
+
+onScroll(event: any, country: string, type: 'coins' | 'banknotes') {
+  const div = event.target;
+  // debug
+  // console.log('scrollTop:', div.scrollTop, 'clientHeight:', div.clientHeight, 'scrollHeight:', div.scrollHeight);
+  if (div.scrollTop + div.clientHeight >= div.scrollHeight - 50) {
+    this.loadMore(country, type);
+  }
+}
+
+
+  // --- Progresso ---
   getProgressByCountry(country: string, type: 'coins' | 'banknotes'): string {
     const all = type === 'coins' ? this.filteredCoinsByCountry(country) : this.filteredBanknotesByCountry(country);
     const owned = all.filter(c => type === 'coins' ? this.userHasCoin(c) : this.userHasBanknote(c)).length;
@@ -127,8 +186,15 @@ export class CollectionComponent implements OnInit {
     return Math.round((owned / all.length) * 100);
   }
 
-  clearFilters() {
+  // --- Filtros e ordenação ---
+  clearFilters(): void {
     this.minYear = undefined;
     this.maxYear = undefined;
+    this.applyFilters();
+  }
+
+  toggleSortOrder(): void {
+    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    this.applyFilters();
   }
 }

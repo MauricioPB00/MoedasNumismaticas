@@ -1,6 +1,9 @@
 <div class="filters">
   <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
   <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
+    <button class="btn-ordenar" (click)="toggleSortOrder()">
+    Ano: {{ sortOrder === 'asc' ? 'Crescente' : 'Decrescente' }}
+  </button>
   <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
 </div>
 
@@ -13,51 +16,51 @@
   </button>
 </div>
 
-<!-- Conteúdo por país -->
 <div class="tab-content">
-
-  <!-- Abas de moedas e cédulas -->
   <div class="tabs2 category-tabs">
     <button [class.active]="activeTab === 'coins'" (click)="activeTab = 'coins'">🪙 Moedas</button>
     <button [class.active]="activeTab === 'banknotes'" (click)="activeTab = 'banknotes'">💵 Cédulas</button>
   </div>
-
-  <!-- Moedas -->
-  <div class="tab-content" *ngIf="activeTab === 'coins'">
-    <div class="progress-bar">
-      <div class="progress-fill" [style.width.%]="getProgressPercentByCountry(activeCountry, 'coins')"></div>
-      <span class="progress-text">
-        {{ getProgressByCountry(activeCountry, 'coins') }} — {{ getProgressPercentByCountry(activeCountry, 'coins') }}%
-      </span>
-    </div>
-
-    <div class="album-grid">
-      <div *ngFor="let coin of filteredCoinsByCountry(activeCountry)" class="coin-card"
-           [class.owned]="userHasCoin(coin)" [class.missing]="!userHasCoin(coin)">
-        <img [src]="'assets/img/imagens/' + coin.obverse" alt="{{ coin.title }}">
-        <p class="coin-title">{{ coin.title }}</p>
-        <p class="coin-year">{{ coin.min_year }} - {{ coin.max_year }}</p>
-      </div>
-    </div>
+<div *ngIf="activeTab === 'coins'" class="progress-container">
+  <div class="progress-bar">
+    <div class="progress-fill" [style.width.%]="getProgressPercentByCountry(activeCountry, 'coins')"></div>
+    <span class="progress-text">
+      {{ getProgressByCountry(activeCountry, 'coins') }} — {{ getProgressPercentByCountry(activeCountry, 'coins') }}%
+    </span>
   </div>
+</div>
 
-  <!-- Cédulas -->
-  <div class="tab-content" *ngIf="activeTab === 'banknotes'">
-    <div class="progress-bar">
-      <div class="progress-fill" [style.width.%]="getProgressPercentByCountry(activeCountry, 'banknotes')"></div>
-      <span class="progress-text">
-        {{ getProgressByCountry(activeCountry, 'banknotes') }} — {{ getProgressPercentByCountry(activeCountry, 'banknotes') }}%
-      </span>
-    </div>
-
-    <div class="album-grid">
-      <div *ngFor="let note of filteredBanknotesByCountry(activeCountry)" class="coin-card"
-           [class.owned]="userHasBanknote(note)" [class.missing]="!userHasBanknote(note)">
-        <img [src]="'assets/img/imagens/' + note.obverse" alt="{{ note.title }}">
-        <p class="coin-title">{{ note.title }}</p>
-        <p class="coin-year">{{ note.min_year }} - {{ note.max_year }}</p>
-      </div>
-    </div>
+<div class="album-grid scroll-container"
+     *ngIf="activeTab === 'coins'"
+     (scroll)="onScroll($event, activeCountry, 'coins')">
+  <div *ngFor="let coin of pagination[activeCountry]?.coins?.loaded || []" class="coin-card"
+       [class.owned]="userHasCoin(coin)" [class.missing]="!userHasCoin(coin)">
+    <img [src]="'assets/img/imagens/' + coin.obverse" alt="{{ coin.title }}">
+    <p class="coin-title">{{ coin.title }}</p>
+    <p class="coin-year">{{ coin.min_year }} - {{ coin.max_year }}</p>
   </div>
+</div>
+
+<div *ngIf="activeTab === 'banknotes'" class="progress-container">
+  <div class="progress-bar">
+    <div class="progress-fill" [style.width.%]="getProgressPercentByCountry(activeCountry, 'banknotes')"></div>
+    <span class="progress-text">
+      {{ getProgressByCountry(activeCountry, 'banknotes') }} — {{ getProgressPercentByCountry(activeCountry, 'banknotes') }}%
+    </span>
+  </div>
+</div>
+
+<div class="album-grid scroll-container"
+     *ngIf="activeTab === 'banknotes'"
+     (scroll)="onScroll($event, activeCountry, 'banknotes')">
+  <div *ngFor="let note of pagination[activeCountry]?.banknotes?.loaded || []" class="coin-card"
+       [class.owned]="userHasBanknote(note)" [class.missing]="!userHasBanknote(note)">
+    <img [src]="'assets/img/imagens/' + note.obverse" alt="{{ note.title }}">
+    <p class="coin-title">{{ note.title }}</p>
+    <p class="coin-year">{{ note.min_year }} - {{ note.max_year }}</p>
+  </div>
+</div>
+
+
 
 </div>

@@ -33,6 +33,7 @@ import { ListarComponent } from './listar/listar.component';
 import { MapaMundiComponent } from './mapa-mundi/mapa-mundi.component';
 import { FilterCountryPipe } from './models/filter-country.pipe';
 import { CollectionComponent } from './collection/collection.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,7 @@ import { CollectionComponent } from './collection/collection.component';
     ReactiveFormsModule,
     MatTabsModule,
     MatDialogModule,
-
+    InfiniteScrollModule,
   ],
   providers: [LoginService],
   bootstrap: [AppComponent]

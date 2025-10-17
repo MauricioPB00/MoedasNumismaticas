@@ -11,6 +11,6 @@ export class CoinService {
   constructor(private http: HttpClient) { }
 
   getCoins(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_CONFIG.baseUrl}/coin/list`);
+    return this.http.get<any[]>(`${API_CONFIG.baseUrl}/coin/list/collection`);
   }
 }
