@@ -1,0 +1,32 @@
+<div class="half-modal" *ngIf="show">
+  <div class="half-modal-content">
+    <button class="close-btn" (click)="closeModal()">×</button>
+    <div class="modal-flex">
+      <div class="album-value">
+        <h2>Valor do Álbum</h2>
+        <div class="value-item">
+          <h3>Moedas</h3>
+          <span class="value">R$ {{ totalMoedas | number:'1.2-2' }}</span>
+        </div>
+        <div class="value-item">
+          <h3>Cédulas</h3>
+          <span class="value">R$ {{ totalCedulas | number:'1.2-2' }}</span>
+        </div>
+        <div class="value-item total">
+          <h3>Total</h3>
+          <span class="value total-value">R$ {{ totalGeral | number:'1.2-2' }}</span>
+        </div>
+        <div *ngIf="totalsByCountry && (totalsByCountry | keyvalue).length">
+          <div *ngFor="let entry of totalsByCountry | keyvalue" class="value-item country">
+            <h3>{{ entry.key }}</h3>
+            <span class="value">R$ {{ entry.value | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="album-chart">
+        <h2>Distribuição do Álbum por País</h2>
+        <canvas #pieChartCanvas></canvas>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,151 @@
+.half-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.half-modal-content {
+  background: #fff;
+  width: 90%;
+  max-width: 1400px;
+  height: 80%;
+  padding: 30px 20px;
+  border-radius: 12px;
+  position: relative;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.close-btn:hover {
+  color: #EFBF04;
+}
+
+.modal-flex {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+}
+
+.album-chart {
+  flex: 1.5;
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.album-chart canvas {
+  width: 500px !important;
+  height: 500px !important;
+}
+
+
+.album-value {
+  flex: 1;
+  background: #f5f5f5;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border: 1px solid #ddd;
+}
+
+.album-value h2 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #333;
+}
+
+.value-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 1rem;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 8px;
+}
+
+.value-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 1rem;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 8px;
+}
+
+.value-item h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.value-item .value {
+  font-weight: bold;
+  color: #333;
+}
+
+.value-item.total {
+  background: #efbf04;
+  border-color: #d9a903;
+}
+
+.value-item.total h3,
+.value-item.total .total-value {
+  color: #fff;
+  font-weight: bold;
+}
+
+.value-item.country {
+  background: #b4b3ad;
+  border-color: #cccac2;
+}
+
+.value-item.country h3,
+.value-item.country .value {
+  color: #fff;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .modal-flex {
+    flex-direction: column;
+  }
+
+  .album-chart canvas {
+    width: 250px !important;
+    height: 250px !important;
+  }
+}

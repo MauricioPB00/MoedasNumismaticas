@@ -41,6 +41,8 @@ export class AlbumComponent implements OnInit {
   selectedIssuer: string = '';
   uniqueIssuers: string[] = [];
 
+  showPriceModal = false;
+
   constructor(
     private coinsService: CoinsService,
     private router: Router,
@@ -113,9 +115,9 @@ export class AlbumComponent implements OnInit {
 
   applyFilters(): void {
     if (this.groupByCoinId) {
-      this.applyFiltersGroup(); 
+      this.applyFiltersGroup();
     } else if (this.groupByYear) {
-      this.applyFiltersGroupByYear(); 
+      this.applyFiltersGroupByYear();
     } else {
       this.filteredCoins = this.getBaseFilteredCoins();
     }
@@ -374,6 +376,9 @@ export class AlbumComponent implements OnInit {
     console.log('Entries inicializadas:', this.coinEntries);
   }
 
+  openModalPrice() {
+  this.showPriceModal = true;
+}
 
   refreshAlbum(): void {
     this.coinsService.getAlbumByUser().subscribe({

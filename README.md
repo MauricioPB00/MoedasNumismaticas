@@ -32,3 +32,6 @@ npm install error-ex@1.3.2
 npm ls error-ex
 npm cache verify
 npm install     
+
+biblioteca para o grafico 
+npm install chart.js
