@@ -22,17 +22,24 @@ export class AlbumComponent implements OnInit {
   uniqueConditions: string[] = [];
   selectedCondition: string = 'Todas condições';
 
+  groupByYear: boolean = false;
   groupByCoinId: boolean = false;
+
   showCoins: boolean = true;
   showBanknotes: boolean = true;
 
   currentPage = 1;
-  itemsPerPage = 24;
+  itemsPerPage = 28;
   totalPages = 0;
 
   showModal = false;
   coinEntries: { year: number; quantity: number | null; condition: string | null, id: number, type: string }[] = [];
   coin: any;
+
+  sortOrder: 'asc' | 'desc' = 'asc';
+
+  selectedIssuer: string = '';
+  uniqueIssuers: string[] = [];
 
   constructor(
     private coinsService: CoinsService,
@@ -59,6 +66,13 @@ export class AlbumComponent implements OnInit {
 
         this.uniqueConditions = ['Todas condições', ...conds];
         this.selectedCondition = 'Todas condições';
+
+        this.uniqueIssuers = Array.from(
+          new Set(this.albumCoins
+            .map((item: any) => item.issuer)
+            .filter(Boolean))
+        ).sort();
+        this.selectedIssuer = '';
 
         this.applyFilters();
 
@@ -91,20 +105,111 @@ export class AlbumComponent implements OnInit {
         (this.showCoins && item.category === 'coin') ||
         (this.showBanknotes && item.category === 'banknote');
 
-      return matchesName && matchesMinYear && matchesMaxYear && matchesCondition && matchesCategory;
+      const matchesIssuer = this.selectedIssuer ? item.issuer === this.selectedIssuer : true;
+
+      return matchesName && matchesMinYear && matchesMaxYear && matchesCondition && matchesCategory && matchesIssuer;
     });
+  }
+
+  applyFilters(): void {
+    if (this.groupByCoinId) {
+      this.applyFiltersGroup(); 
+    } else if (this.groupByYear) {
+      this.applyFiltersGroupByYear(); 
+    } else {
+      this.filteredCoins = this.getBaseFilteredCoins();
+    }
+
+    if (this.sortOrder === 'asc') {
+      this.filteredCoins.sort((a, b) => (a.year || 0) - (b.year || 0));
+    } else {
+      this.filteredCoins.sort((a, b) => (b.year || 0) - (a.year || 0));
+    }
+
+    this.updatePagination();
+
+    console.log('Resultado após filtros:', this.filteredCoins.length);
   }
 
 
 
-  applyFilters(): void {
+  applyFiltersGroupByYear(): void {
+    const items = this.getBaseFilteredCoins();
+    console.log('filtered (after basic filters):', items.length);
+
+    const map = new Map<string, any>();
+
+    items.forEach(item => {
+      const key = `${item.category}_${item.id}_${item.year}`;
+      const qty = Number(item.quantity) || 0;
+      const cond = (item.condition === null || item.condition === undefined || String(item.condition).trim() === '')
+        ? '—'
+        : String(item.condition).trim();
+
+      if (!map.has(key)) {
+        map.set(key, {
+          ...item,
+          quantity: qty,
+          conditions: [{ type: cond, quantity: qty }],
+          years: [item.year]
+        });
+      } else {
+        const group = map.get(key);
+        group.quantity = (Number(group.quantity) || 0) + qty;
+
+        const idx = group.conditions.findIndex((x: any) => x.type === cond);
+        if (idx >= 0) {
+          group.conditions[idx].quantity += qty;
+        } else {
+          group.conditions.push({ type: cond, quantity: qty });
+        }
+      }
+    });
+
+    const grouped = Array.from(map.values()).map(g => {
+      g.conditions.sort((a: any, b: any) => (b.quantity || 0) - (a.quantity || 0));
+
+      g.conditionsSummary = g.conditions
+        .map((cond: any) => {
+          if (!cond.type || cond.type === '—') {
+            return `(${cond.quantity})`;
+          }
+          return `(${cond.quantity} ${cond.type})`;
+        })
+        .join(' – ');
+
+      g.yearsSummary = (g.years || []).sort((a: any, b: any) => a - b).join(', ');
+      g.quantityTotal = Number(g.quantity) || 0;
+
+      g.condition = g.conditionsSummary;
+
+      return g;
+    });
+
+    console.log('grouped by year result:', grouped.length);
+    this.filteredCoins = grouped;
+    this.updatePagination();
+  }
+
+
+
+  toggleGroupByCoinId(): void {
     if (this.groupByCoinId) {
-      this.applyFiltersGroup();
-    } else {
-      this.filteredCoins = this.getBaseFilteredCoins();
-      this.updatePagination();
-      console.log('Resultado após filtros básicos:', this.filteredCoins.length);
+      this.groupByYear = false;
     }
+    this.applyFilters();
+  }
+
+  toggleGroupByYear(): void {
+    if (this.groupByYear) {
+      this.groupByCoinId = false;
+    }
+    this.applyFilters();
+  }
+
+  toggleSortOrder(): void {
+    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    this.applyFilters();
   }
 
   clearFilters(): void {
@@ -133,7 +238,6 @@ export class AlbumComponent implements OnInit {
       this.router.navigate(['/coin', id]);
     }
   }
-
 
   onImgError(event: Event): void {
     (event.target as HTMLImageElement).src = '/assets/images/placeholder.png';
@@ -236,7 +340,6 @@ export class AlbumComponent implements OnInit {
     event.stopPropagation();
     (event.target as HTMLElement).blur();
 
-    // Encontra o item correto no álbum (coin ou banknote)
     this.coin = this.albumCoins.find(c => c.id === itemId && c.type === type);
 
     if (!this.coin) {
@@ -244,7 +347,6 @@ export class AlbumComponent implements OnInit {
       return;
     }
 
-    // Cria a lista de anos
     this.coinEntries = [];
     if (this.coin.minYear != null && this.coin.maxYear != null) {
       for (let y = this.coin.minYear; y <= this.coin.maxYear; y++) {

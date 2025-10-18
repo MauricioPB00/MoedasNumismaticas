@@ -1,4 +1,3 @@
-<!-- album.component.html -->
 <div class="filters">
   <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (input)="applyFilters()">
   <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
@@ -8,13 +7,27 @@
     <option *ngFor="let cond of uniqueConditions" [value]="cond">{{ cond }}</option>
   </select>
 
+  <select [(ngModel)]="selectedIssuer" (change)="applyFilters()">
+    <option value="">Todos os países</option>
+    <option *ngFor="let country of uniqueIssuers" [value]="country">{{ country }}</option>
+  </select>
+
+  <button class="btn-ordenar" (click)="toggleSortOrder()">
+    Ordenar {{ sortOrder === 'asc' ? '↑' : '↓' }}
+  </button>
+
   <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
 </div>
 
 <div class="filters2">
   <label>
-    <input type="checkbox" [(ngModel)]="groupByCoinId" (change)="applyFilters()" />
+    <input type="checkbox" [(ngModel)]="groupByCoinId" (change)="toggleGroupByCoinId()" />
     Agrupar por moeda
+  </label>
+
+  <label>
+    <input type="checkbox" [(ngModel)]="groupByYear" (change)="toggleGroupByYear()" />
+    Agrupar por ano
   </label>
 
   <label>
@@ -27,7 +40,6 @@
     Cédulas
   </label>
 </div>
-
 
 <div class="album-container" *ngIf="pagedCoins.length > 0; else emptyState">
   <div class="coin-card" *ngFor="let entry of pagedCoins" (click)="viewCoin(entry.id, entry.type)">
@@ -50,7 +62,6 @@
     </button>
   </div>
 </div>
-
 
 <ng-template #emptyState>
   <p class="empty">Nenhuma moeda encontrada.</p>
