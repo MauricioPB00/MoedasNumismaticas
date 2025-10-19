@@ -29,7 +29,6 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ProfileComponent } from './profile/profile.component';
 import { AlbumComponent } from './album/album.component';
 import { ModalCoinComponent } from './modal-coin/modal-coin.component';
-import { ListarComponent } from './listar/listar.component';
 import { MapaMundiComponent } from './mapa-mundi/mapa-mundi.component';
 import { FilterCountryPipe } from './models/filter-country.pipe';
 import { CollectionComponent } from './collection/collection.component';
@@ -52,7 +51,6 @@ import { ModalPriceComponent } from './modal-price/modal-price.component';
     CoinComponent,
     AlbumComponent,
     ModalCoinComponent,
-    ListarComponent,
     MapaMundiComponent,
     FilterCountryPipe,
     CollectionComponent,
