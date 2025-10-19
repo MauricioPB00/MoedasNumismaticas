@@ -2,6 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CoinsService } from '../AuthService/coins.service';
 import { Router } from '@angular/router';
 
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+(pdfMake as any).vfs = (pdfFonts as any).vfs;
+
+import { logoBase64 } from 'src/assets/logo';
+
 @Component({
   selector: 'app-album',
   templateUrl: './album.component.html',
@@ -42,6 +48,9 @@ export class AlbumComponent implements OnInit {
   uniqueIssuers: string[] = [];
 
   showPriceModal = false;
+
+  showModalPDF: boolean = false;
+  selectedPDFType: 'all' | 'coins' | 'banknotes' | 'repeated' = 'all';
 
   constructor(
     private coinsService: CoinsService,
@@ -377,8 +386,107 @@ export class AlbumComponent implements OnInit {
   }
 
   openModalPrice() {
-  this.showPriceModal = true;
-}
+    this.showPriceModal = true;
+  }
+
+  openModalPDF(): void {
+    this.showModalPDF = true;
+  }
+
+  closeModalPDF(): void {
+    this.showModalPDF = false;
+  }
+
+  gerarPDF(): void {
+    const content: any[] = [];
+
+    content.push({
+      columns: [
+        {
+          image: logoBase64,
+          width: 80
+        },
+        {
+          stack: [
+            { text: 'Álbum Numismático', fontSize: 18, bold: true },
+            { text: 'Organize, catalogue e explore o fascinante mundo das moedas.', fontSize: 10 },
+            { text: 'www.albumnumismatico.com.br', fontSize: 10 }
+          ],
+          margin: [10, 0, 0, 0]
+        }
+      ],
+      margin: [0, 0, 0, 20]
+    });
+
+    let titulo = 'Meu Álbum de Moedas';
+    switch (this.selectedPDFType) {
+      case 'coins': titulo = 'Minhas Moedas'; break;
+      case 'banknotes': titulo = 'Minhas Cédulas'; break;
+      case 'repeated': titulo = 'Itens Repetidos'; break;
+    }
+
+    let itemsToPrint: any[] = this.albumCoins;
+
+    // Filtrar conforme tipo selecionado
+    if (this.selectedPDFType === 'coins') {
+      itemsToPrint = itemsToPrint.filter(i => i.category === 'coin');
+    } else if (this.selectedPDFType === 'banknotes') {
+      itemsToPrint = itemsToPrint.filter(i => i.category === 'banknote');
+    } else if (this.selectedPDFType === 'repeated') {
+      itemsToPrint = itemsToPrint.filter(i => i.quantity > 1).map(i => ({ ...i, quantity: i.quantity - 1 }));
+    }
+
+    // Função para adicionar seção
+    const addSection = (title: string, items: any[]) => {
+      if (!items.length) return;
+
+      content.push({ text: title, fontSize: 16, bold: true, margin: [0, 0, 0, 15] });
+
+      items.forEach(item => {
+        content.push({ text: item.title, bold: true, fontSize: 14, margin: [0, 5, 0, 5] });
+
+        const tableBody = [['Ano', 'Quantidade', 'Condição']];
+
+        // Garante que item.years é um array
+        const years = item.years ?? [{ year: item.year, quantity: item.quantity, condition: item.condition }];
+
+        years.forEach((y: { year: number; quantity: number; condition: string | null }) => {
+          tableBody.push([
+            y.year?.toString() ?? '-',
+            y.quantity?.toString() ?? '0',
+            y.condition || '-'
+          ]);
+        });
+
+        content.push({
+          table: { headerRows: 1, widths: ['*', 'auto', 'auto'], body: tableBody },
+          layout: { fillColor: (rowIndex: number) => rowIndex === 0 ? '#EFBF04' : null },
+          margin: [0, 0, 0, 15]
+        });
+      });
+
+    };
+
+    // Se for "Tudo", separar moedas e cédulas
+    if (this.selectedPDFType === 'all') {
+      const coins = itemsToPrint.filter(i => i.category === 'coin');
+      const banknotes = itemsToPrint.filter(i => i.category === 'banknote');
+
+      addSection('Minhas Moedas', coins);
+      addSection('Minhas Cédulas', banknotes);
+    } else {
+      // Título conforme tipo
+      let titulo = 'Meu Álbum de Moedas';
+      if (this.selectedPDFType === 'coins') titulo = 'Minhas Moedas';
+      if (this.selectedPDFType === 'banknotes') titulo = 'Minhas Cédulas';
+      if (this.selectedPDFType === 'repeated') titulo = 'Itens Repetidos';
+
+      addSection(titulo, itemsToPrint);
+    }
+
+    pdfMake.createPdf({ content }).open();
+  }
+
 
   refreshAlbum(): void {
     this.coinsService.getAlbumByUser().subscribe({

@@ -42,9 +42,11 @@
     </label>
   </div>
 
-  <button class="btn-album-value" (click)="openModalPrice()">
-    Valor do Álbum
-  </button>
+  <div class="buttons-right">
+    <button class="btn-album-value" (click)="openModalPrice()">Valor do Álbum</button>
+    <button class="btn-album-pdf" (click)="openModalPDF()">Gerar PDF</button>
+  </div>
+
 </div>
 
 
@@ -86,3 +88,25 @@
 
 <app-modal-price *ngIf="showPriceModal" [show]="showPriceModal" (closed)="showPriceModal = false">
 </app-modal-price>
+
+<div class="modal-pdf" *ngIf="showModalPDF">
+  <div class="modal-content">
+    <button class="close-btn" (click)="closeModalPDF()">×</button>
+    <h3>Gerar PDF</h3>
+
+    <label>
+      <input type="radio" name="pdfType" [(ngModel)]="selectedPDFType" value="all" /> Tudo
+    </label>
+    <label>
+      <input type="radio" name="pdfType" [(ngModel)]="selectedPDFType" value="coins" /> Moedas
+    </label>
+    <label>
+      <input type="radio" name="pdfType" [(ngModel)]="selectedPDFType" value="banknotes" /> Cédulas
+    </label>
+    <label>
+      <input type="radio" name="pdfType" [(ngModel)]="selectedPDFType" value="repeated" /> Repetidas
+    </label>
+
+    <button (click)="gerarPDF(); closeModalPDF()">Gerar PDF</button>
+  </div>
+</div>
