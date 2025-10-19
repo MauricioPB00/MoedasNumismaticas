@@ -54,6 +54,8 @@ export class AlbumComponent implements OnInit {
 
   selectedPDFCountry: string = 'all';
 
+  showOnlyRepeated: boolean = false;
+
   constructor(
     private coinsService: CoinsService,
     private router: Router,
@@ -133,6 +135,14 @@ export class AlbumComponent implements OnInit {
       this.filteredCoins = this.getBaseFilteredCoins();
     }
 
+    if (this.showOnlyRepeated) {
+      this.filteredCoins = this.filteredCoins
+        .filter((item: any) => (item.quantityTotal || item.quantity || 0) >= 2)
+        .map((item: any) => ({
+          ...item,
+          quantityDisplay: (item.quantityTotal || item.quantity) - 1
+        }));
+    }
     if (this.sortOrder === 'asc') {
       this.filteredCoins.sort((a, b) => (a.year || 0) - (b.year || 0));
     } else {
@@ -140,11 +150,7 @@ export class AlbumComponent implements OnInit {
     }
 
     this.updatePagination();
-
-    console.log('Resultado após filtros:', this.filteredCoins.length);
   }
-
-
 
   applyFiltersGroupByYear(): void {
     const items = this.getBaseFilteredCoins();
@@ -209,6 +215,7 @@ export class AlbumComponent implements OnInit {
   toggleGroupByCoinId(): void {
     if (this.groupByCoinId) {
       this.groupByYear = false;
+      this.showOnlyRepeated = false;
     }
     this.applyFilters();
   }
@@ -222,6 +229,14 @@ export class AlbumComponent implements OnInit {
 
   toggleSortOrder(): void {
     this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    this.applyFilters();
+  }
+
+  onRepeatedChange() {
+    if (this.showOnlyRepeated) {
+      this.groupByYear = true;
+      this.groupByCoinId = false;
+    }
     this.applyFilters();
   }
 

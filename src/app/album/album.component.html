@@ -40,6 +40,11 @@
       <input type="checkbox" [(ngModel)]="showBanknotes" (change)="applyFilters()" />
       Cédulas
     </label>
+
+    <label>
+      <input type="checkbox" [(ngModel)]="showOnlyRepeated" (change)="onRepeatedChange()" />
+      Repetidas
+    </label>
   </div>
 
   <div class="buttons-right">
@@ -62,7 +67,16 @@
       <h3>{{ entry.title }}</h3>
       <p>Ano: <span>{{ entry.yearsSummary || entry.year }}</span></p>
       <p>({{ entry.minYear }} - {{ entry.maxYear }})</p>
-      <p>Quantidade: {{ entry.quantity || entry.quantityTotal }}</p>
+      <p>
+        Quantidade:
+        <span *ngIf="!showOnlyRepeated">
+          {{ entry.quantity || entry.quantityTotal }}
+        </span>
+        <span *ngIf="showOnlyRepeated">
+          {{ (entry.quantity || entry.quantityTotal) - 1 }}
+        </span>
+      </p>
+
       <p *ngIf="!groupByCoinId">Condição: {{ entry.condition || '—' }}</p>
       <p *ngIf="groupByCoinId">Condições: {{ entry.conditionsSummary || '—' }}</p>
     </div>
