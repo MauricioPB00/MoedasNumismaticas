@@ -52,6 +52,8 @@ export class AlbumComponent implements OnInit {
   showModalPDF: boolean = false;
   selectedPDFType: 'all' | 'coins' | 'banknotes' | 'repeated' = 'all';
 
+  selectedPDFCountry: string = 'all';
+
   constructor(
     private coinsService: CoinsService,
     private router: Router,
@@ -402,10 +404,7 @@ export class AlbumComponent implements OnInit {
 
     content.push({
       columns: [
-        {
-          image: logoBase64,
-          width: 80
-        },
+        { image: logoBase64, width: 80 },
         {
           stack: [
             { text: 'Álbum Numismático', fontSize: 18, bold: true },
@@ -418,39 +417,35 @@ export class AlbumComponent implements OnInit {
       margin: [0, 0, 0, 20]
     });
 
-    let titulo = 'Meu Álbum de Moedas';
-    switch (this.selectedPDFType) {
-      case 'coins': titulo = 'Minhas Moedas'; break;
-      case 'banknotes': titulo = 'Minhas Cédulas'; break;
-      case 'repeated': titulo = 'Itens Repetidos'; break;
-    }
-
     let itemsToPrint: any[] = this.albumCoins;
 
-    // Filtrar conforme tipo selecionado
     if (this.selectedPDFType === 'coins') {
       itemsToPrint = itemsToPrint.filter(i => i.category === 'coin');
     } else if (this.selectedPDFType === 'banknotes') {
       itemsToPrint = itemsToPrint.filter(i => i.category === 'banknote');
     } else if (this.selectedPDFType === 'repeated') {
-      itemsToPrint = itemsToPrint.filter(i => i.quantity > 1).map(i => ({ ...i, quantity: i.quantity - 1 }));
+      itemsToPrint = itemsToPrint.filter(i => i.quantity > 1)
+        .map(i => ({ ...i, quantity: i.quantity - 1 }));
     }
 
-    // Função para adicionar seção
+    if (this.selectedPDFCountry && this.selectedPDFCountry !== 'all') {
+      itemsToPrint = itemsToPrint.filter(i => i.issuer === this.selectedPDFCountry);
+    }
+
     const addSection = (title: string, items: any[]) => {
       if (!items.length) return;
 
-      content.push({ text: title, fontSize: 16, bold: true, margin: [0, 0, 0, 15] });
+      content.push({ text: title, fontSize: 16, bold: true, color: '#444', margin: [0, 5, 0, 10] });
 
       items.forEach(item => {
-        content.push({ text: item.title, bold: true, fontSize: 14, margin: [0, 5, 0, 5] });
+        content.push({ text: item.title, bold: true, fontSize: 14, margin: [0, 2, 0, 5] });
 
         const tableBody = [['Ano', 'Quantidade', 'Condição']];
+        const years = item.years && item.years.length
+          ? item.years
+          : [{ year: item.year ?? '-', quantity: item.quantity ?? 1, condition: item.condition ?? '-' }];
 
-        // Garante que item.years é um array
-        const years = item.years ?? [{ year: item.year, quantity: item.quantity, condition: item.condition }];
-
-        years.forEach((y: { year: number; quantity: number; condition: string | null }) => {
+        years.forEach((y: { year: number | string; quantity: number | string; condition: string | null }) => {
           tableBody.push([
             y.year?.toString() ?? '-',
             y.quantity?.toString() ?? '0',
@@ -464,25 +459,27 @@ export class AlbumComponent implements OnInit {
           margin: [0, 0, 0, 15]
         });
       });
-
     };
 
-    // Se for "Tudo", separar moedas e cédulas
-    if (this.selectedPDFType === 'all') {
-      const coins = itemsToPrint.filter(i => i.category === 'coin');
-      const banknotes = itemsToPrint.filter(i => i.category === 'banknote');
+    const countries = Array.from(new Set(itemsToPrint.map(i => i.issuer || 'Desconhecido')));
 
-      addSection('Minhas Moedas', coins);
-      addSection('Minhas Cédulas', banknotes);
-    } else {
-      // Título conforme tipo
-      let titulo = 'Meu Álbum de Moedas';
-      if (this.selectedPDFType === 'coins') titulo = 'Minhas Moedas';
-      if (this.selectedPDFType === 'banknotes') titulo = 'Minhas Cédulas';
-      if (this.selectedPDFType === 'repeated') titulo = 'Itens Repetidos';
+    countries.forEach(country => {
+      const itemsByCountry = itemsToPrint.filter(i => i.issuer === country);
 
-      addSection(titulo, itemsToPrint);
-    }
+      content.push({ text: country, fontSize: 20, bold: true, color: '#EFBF04', margin: [0, 10, 0, 10] });
+
+      if (this.selectedPDFType === 'all') {
+        const coins = itemsByCountry.filter(i => i.category === 'coin');
+        const banknotes = itemsByCountry.filter(i => i.category === 'banknote');
+
+        addSection('Minhas Moedas', coins);
+        addSection('Minhas Cédulas', banknotes);
+      } else {
+        const titulo = this.selectedPDFType === 'coins' ? 'Moedas' :
+          this.selectedPDFType === 'banknotes' ? 'Cédulas' : 'Itens Repetidos';
+        addSection(titulo, itemsByCountry);
+      }
+    });
 
     pdfMake.createPdf({ content }).open();
   }

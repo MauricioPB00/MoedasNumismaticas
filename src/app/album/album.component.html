@@ -93,7 +93,11 @@
   <div class="modal-content">
     <button class="close-btn" (click)="closeModalPDF()">×</button>
     <h3>Gerar PDF</h3>
-
+    <label>Selecionar País:</label>
+    <select [(ngModel)]="selectedPDFCountry">
+      <option value="all">Todos</option>
+      <option *ngFor="let country of uniqueIssuers" [value]="country">{{ country }}</option>
+    </select>
     <label>
       <input type="radio" name="pdfType" [(ngModel)]="selectedPDFType" value="all" /> Tudo
     </label>

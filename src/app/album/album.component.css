@@ -116,6 +116,7 @@ button.btn-limpar {
   color: #000 !important;
   border-radius: 6px !important;
 }
+
 /* ///////////////////////////////////////////////// */
 .filters2 {
   display: flex;
@@ -131,7 +132,7 @@ button.btn-limpar {
 
 .checkboxes-left {
   display: flex;
-  gap: 15px; 
+  gap: 15px;
 }
 
 .checkboxes-left label {
@@ -176,6 +177,7 @@ button.btn-limpar {
   align-items: center;
   justify-content: center;
 }
+
 /* /////////////////////////////// */
 .pagination {
   display: flex;
@@ -244,7 +246,8 @@ button.btn-limpar {
 /* ////////////// BOTAO MODAL ///////////////// */
 .buttons-right {
   display: flex;
-  gap: 10px; /* espaçamento entre os botões */
+  gap: 10px;
+  /* espaçamento entre os botões */
 }
 
 .btn-album-value,
@@ -285,46 +288,129 @@ button.btn-limpar {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
 }
 
 .modal-pdf .modal-content {
   background: #fff;
-  padding: 20px 25px;
-  border-radius: 8px;
-  width: 300px;
+  padding: 25px 30px;
+  border-radius: 12px;
+  width: 350px;
+  max-width: 90%;
   text-align: left;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: slideDown 0.3s ease-out;
 }
 
 .modal-pdf .close-btn {
-  float: right;
-  font-size: 20px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  font-size: 22px;
+  font-weight: bold;
   border: none;
-  background: transparent;
+  background: #eee;
+  border-radius: 50%;
   cursor: pointer;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.modal-pdf .close-btn:hover {
+  background: #efbf04;
+  color: #fff;
 }
 
 .modal-pdf h3 {
   margin-top: 0;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
 }
 
 .modal-pdf label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+}
+
+.modal-pdf select {
+  width: 100%;
+  padding: 6px 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.modal-pdf select:focus {
+  border-color: #efbf04;
+}
+
+.modal-pdf input[type="radio"] {
+  margin-right: 6px;
+  accent-color: #efbf04;
 }
 
 .modal-pdf button {
   margin-top: 15px;
+  width: 100%;
   background: #efbf04;
   border: none;
-  padding: 8px 12px;
+  padding: 10px 0;
   color: #fff;
-  font-weight: bold;
-  border-radius: 4px;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.modal-pdf button:hover {
+  background: #d9a504;
+  transform: translateY(-1px);
+}
+
+.modal-pdf button:active {
+  transform: translateY(1px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
