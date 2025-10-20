@@ -13,4 +13,8 @@ export class CoinService {
   getCoins(): Observable<any[]> {
     return this.http.get<any[]>(`${API_CONFIG.baseUrl}/coin/list/collection`);
   }
+  
+  getCoinsPdf(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_CONFIG.baseUrl}/coin/list/collection/pdf`);
+  }
 }

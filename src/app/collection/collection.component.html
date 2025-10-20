@@ -5,6 +5,9 @@
     Ano: {{ sortOrder === 'asc' ? 'Crescente' : 'Decrescente' }}
   </button>
   <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
+  <button (click)="generateMissingYearsPDF()">
+     <i class="fa-solid fa-file-pdf"></i> Faltantes 
+  </button>
 </div>
 
 <div class="tabs country-tabs">
@@ -33,7 +36,7 @@
     <div *ngFor="let coin of pagination[activeCountry]?.coins?.loaded || []" class="coin-card"
       [class.owned]="userHasCoin(coin)" [class.missing]="!userHasCoin(coin)">
       <img [src]="'assets/img/imagens/' + coin.obverse" alt="{{ coin.title }}">
-      <p class="coin-title">{{ coin.title }}</p>
+      <p class="coin-title">{{ coin['titleDisplay']  }}</p>
       <p class="coin-year">{{ coin.min_year }} - {{ coin.max_year }}</p>
     </div>
   </div>
@@ -53,7 +56,7 @@
     <div *ngFor="let note of pagination[activeCountry]?.banknotes?.loaded || []" class="coin-card"
       [class.owned]="userHasBanknote(note)" [class.missing]="!userHasBanknote(note)">
       <img [src]="'assets/img/imagens/' + note.obverse" alt="{{ note.title }}">
-      <p class="coin-title">{{ note.title }}</p>
+      <p class="coin-title">{{ note['titleDisplay']  }}</p>
       <p class="coin-year">{{ note.min_year }} - {{ note.max_year }}</p>
     </div>
   </div>

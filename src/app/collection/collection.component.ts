@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CoinsService } from '../AuthService/coins.service';
 import { CoinService } from '../AuthService/coin.service';
 
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+(pdfMake as any).vfs = (pdfFonts as any).vfs;
+import { logoBase64 } from 'src/assets/logo';
+
 interface Coin {
   id?: number;
   title?: string;
@@ -70,12 +75,16 @@ export class CollectionComponent implements OnInit {
   }
 
   loadAll(): void {
-    this.coinService.getCoins().subscribe({
+    this.coinService.getCoinsPdf().subscribe({
       next: (data: Coin[]) => {
         const all = data.map(coin => ({
           ...coin,
           categoryDisplay: coin.category === 'coin' ? 'Moeda' : 'Cédula',
-          showBrazilFlag: coin.issuer === 'Brasil'
+          showBrazilFlag: coin.issuer === 'Brasil',
+          titleDisplay: coin.title
+            ?.replace(/\s*\(.*?\)\s*/g, '') 
+            .split('-')[0]                  
+            .trim()
         }));
 
         this.coins = all.filter(c => c.category === 'coin');
@@ -203,5 +212,133 @@ export class CollectionComponent implements OnInit {
   toggleSortOrder(): void {
     this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
     this.applyFilters();
+  }
+
+  generateMissingYearsPDF(): void {
+    if (!this.activeCountry) {
+      alert('Selecione um país (tab) primeiro.');
+      return;
+    }
+
+    const allItems = this.activeTab === 'coins'
+      ? this.filteredCoinsByCountry(this.activeCountry)
+      : this.filteredBanknotesByCountry(this.activeCountry);
+
+    const ownedRanges: { id: number, start: number, end: number }[] = [];
+    (this.albumCoins || []).forEach(a => {
+      if (a.id != null) {
+        const start = a.min_year ?? a.year ?? a.max_year ?? 0;
+        const end = a.max_year ?? a.year ?? a.min_year ?? start;
+        ownedRanges.push({ id: a.id, start, end });
+      }
+    });
+    (this.albumBanknotes || []).forEach(a => {
+      if (a.id != null) {
+        const start = a.min_year ?? a.year ?? a.max_year ?? 0;
+        const end = a.max_year ?? a.year ?? a.min_year ?? start;
+        ownedRanges.push({ id: a.id, start, end });
+      }
+    });
+
+    const globalMin = this.minYear ?? Math.min(...allItems.map(i => i.min_year ?? i.year ?? Number.MAX_SAFE_INTEGER));
+    const globalMax = this.maxYear ?? Math.max(...allItems.map(i => i.max_year ?? i.year ?? 0));
+
+    const entries: { title: string, years: { year: number, owned: boolean }[] }[] = [];
+
+    allItems.forEach(item => {
+      const start = Math.max(item.min_year ?? item.year ?? globalMin, globalMin);
+      const end = Math.min(item.max_year ?? item.year ?? globalMax, globalMax);
+
+      const years: { year: number, owned: boolean }[] = [];
+      for (let y = start; y <= end; y++) {
+        const owned = ownedRanges.some(r => r.id === item.id && y >= r.start && y <= r.end);
+        years.push({ year: y, owned });
+      }
+
+      if (years.length) {
+        entries.push({ title: item.title || `${item.id}`, years });
+      }
+    });
+
+    const body: any[] = [
+      [{ text: 'Item', style: 'tableHeader' }, { text: 'Anos', style: 'tableHeader' }]
+    ];
+
+    entries.forEach(e => {
+      const maxPerLine = 10;
+      const yearRows: any[] = [];
+
+      for (let i = 0; i < e.years.length; i += maxPerLine) {
+        const slice = e.years.slice(i, i + maxPerLine);
+        const yearCells = slice.map(y => ({
+          text: `[${y.year}]`,
+          fillColor: y.owned ? '#ffe066' : null,
+          margin: [1, 1, 1, 1],
+          fontSize: 9,
+          alignment: 'center'
+        }));
+
+        while (yearCells.length < maxPerLine) {
+          yearCells.push({
+            text: '',
+            fillColor: null,
+            margin: [1, 1, 1, 1],
+            fontSize: 9,
+            alignment: 'center'
+          });
+        }
+        yearRows.push(yearCells);
+      }
+      body.push([
+        { text: e.title, style: 'itemTitle' },
+        {
+          table: { body: yearRows, widths: Array(maxPerLine).fill('auto') },
+          layout: { hLineWidth: () => 0, vLineWidth: () => 0 }
+        }
+      ]);
+    });
+    const docDefinition: any = {
+      pageSize: 'A4',
+      pageMargins: [20, 70, 20, 30],
+      header: () => {
+        return {
+          stack: [
+            {
+              image: logoBase64,
+              width: 30,
+              alignment: 'center',
+              margin: [0, 0, 0, 5]
+            },
+            { text: 'Álbum Numismático', fontSize: 14, bold: true, alignment: 'center' },
+            { text: 'Organize, catalogue e explore o fascinante mundo das moedas.', fontSize: 8, alignment: 'center' },
+            { text: 'www.albumnumismatico.com.br', fontSize: 8, alignment: 'center' }
+          ],
+          margin: [0, 5, 0, 10]
+        };
+      },
+      content: [
+        { text: this.activeCountry, style: 'header' },
+        { text: this.activeTab === 'coins' ? 'Moedas' : 'Cédulas', style: 'subheader' },
+        {
+          table: { headerRows: 1, widths: ['30%', '70%'], body },
+          layout: {
+            fillColor: (rowIndex: number) => rowIndex === 0 ? '#efbf04' : null,
+            hLineWidth: () => 0.5,
+            vLineWidth: () => 0.5,
+            hLineColor: () => '#ddd',
+            vLineColor: () => '#ddd'
+          },
+          margin: [0, 8, 0, 0]
+        }
+      ],
+      styles: {
+        header: { fontSize: 18, bold: true, margin: [0, 0, 0, 6] },
+        subheader: { fontSize: 13, bold: true, margin: [0, 0, 0, 10] },
+        tableHeader: { bold: true, color: '#111' },
+        itemTitle: { fontSize: 11, margin: [0, 3, 0, 3] },
+        yearsText: { fontSize: 10, margin: [0, 3, 0, 3] }
+      }
+    };
+    pdfMake.createPdf(docDefinition).open();
   }
 }
