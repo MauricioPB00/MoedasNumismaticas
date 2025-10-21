@@ -23,7 +23,7 @@ export const AVAILABLE_COUNTRIES: Country[] = [
   { name: 'Belize', code: 'bz' },
   { name: 'Benin', code: 'bj' },
   { name: 'Butão', code: 'bt' },
-  { name: 'Bolívia', code: 'bo' },
+  { name: 'Bolivia', code: 'bo' },
   { name: 'Bósnia e Herzegovina', code: 'ba' },
   { name: 'Botsuana', code: 'bw' },
   { name: 'Brasil', code: 'br' },
