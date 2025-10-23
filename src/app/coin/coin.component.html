@@ -25,7 +25,7 @@
         <p *ngIf="coin.reverseDescription"><strong>Reverso:</strong> {{ coin.reverseDescription }}</p>
       </div>
       <div class="more-info">
-        <ng-container *ngFor="let side of ['reverse', 'obverse', 'edge']">
+        <!-- <ng-container *ngFor="let side of ['reverse', 'obverse', 'edge']">
           <ng-container *ngIf="coin[side]">
             <h3>{{ side | titlecase }}</h3>
             <p *ngIf="coin[side].description">
@@ -41,7 +41,7 @@
               </span>
             </p>
           </ng-container>
-        </ng-container>
+        </ng-container> -->
         <div *ngIf="coin">
           <h2>{{ coin.title || ('Moeda #' + (coin.id || '')) }}</h2>
           <div class="more-info">
