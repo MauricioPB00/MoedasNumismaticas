@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PasswordResetService } from '../AuthService/password-reset.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from "ngx-spinner";
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -20,7 +19,6 @@ export class ResetPasswordComponent implements OnInit {
     private fb: FormBuilder,
     private passwordResetService: PasswordResetService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private router: Router
   ) {}
 
@@ -47,19 +45,16 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
 
-    this.spinner.show();
     const { password } = this.resetForm.value;
 
     this.passwordResetService.resetPassword(this.token, password).pipe(take(1)).subscribe({
       next: () => {
         this.toastr.success('Senha redefinida com sucesso!');
-        this.spinner.hide();
         this.router.navigateByUrl('/login');
       },
       error: (err) => {
         const msg = err?.error?.error || 'Erro ao redefinir senha';
         this.toastr.error(msg);
-        this.spinner.hide();
       }
     });
   }

@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserService } from '../AuthService/user.service';
 import { take } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from "ngx-spinner";
+import { LoadingService } from '../shared/loading.service';
 
 @Component({
   selector: 'app-settings',
@@ -21,7 +21,7 @@ export class SettingsComponent implements OnInit {
     private http: HttpClient,
     private userService: UserService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
@@ -36,6 +36,7 @@ export class SettingsComponent implements OnInit {
   }
 
   togglePhoto() {
+    this.loadingService.show();
     this.showPhoto = !this.showPhoto;
 
     if (this.showPhoto) {
@@ -44,15 +45,18 @@ export class SettingsComponent implements OnInit {
       this.userService.getUserInfo().subscribe({
         next: (res: any) => {
           this.user = res; // traz name, email e photo
+          this.loadingService.hide();
         },
         error: (err) => {
           console.error('Erro ao carregar informações do usuário', err);
+          this.loadingService.hide();
         }
       });
     }
   }
 
   onFileSelected(event: any) {
+    this.loadingService.show();
     this.selectedFile = event.target.files[0];
     if (this.selectedFile) {
       const reader = new FileReader();
@@ -61,9 +65,11 @@ export class SettingsComponent implements OnInit {
       };
       reader.readAsDataURL(this.selectedFile);
     }
+    this.loadingService.hide();
   }
 
   onSubmit() {
+    this.loadingService.show();
     if (!this.user) {
       this.toastr.error('Erro, usuário não encontrado.');
       return;
@@ -75,15 +81,18 @@ export class SettingsComponent implements OnInit {
         }
         this.toastr.success('Dados atualizados com sucesso!');
         this.showForm = false;
+        this.loadingService.hide();
       },
       error: (err) => {
         console.error('Erro ao atualizar usuário:', err);
         this.toastr.error('Preencha todos os campos corretamente.');
+        this.loadingService.hide();
       }
     });
   }
 
   onSubmitPhoto() {
+    this.loadingService.show();
     if (!this.selectedFile) return;
 
     this.userService.uploadPhoto(this.selectedFile).subscribe({
@@ -91,14 +100,14 @@ export class SettingsComponent implements OnInit {
         this.user.photo = res.photo; // retorna o nome salvo
         this.previewUrl = null;      // exibir a foto do banco
         this.selectedFile = null;
+        this.loadingService.hide();
         this.toastr.success('Foto atualizada com sucesso!');
       },
       error: (err) => {
         console.error('Erro ao salvar foto:', err);
+        this.loadingService.hide();
         this.toastr.error('Erro ao salvar foto.');
       }
     });
   }
-
-
 }

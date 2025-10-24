@@ -8,6 +8,8 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
 import { logoBase64 } from 'src/assets/logo';
 
+import { LoadingService } from '../shared/loading.service';
+
 @Component({
   selector: 'app-album',
   templateUrl: './album.component.html',
@@ -59,6 +61,7 @@ export class AlbumComponent implements OnInit {
   constructor(
     private coinsService: CoinsService,
     private router: Router,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit(): void {
@@ -66,6 +69,7 @@ export class AlbumComponent implements OnInit {
   }
 
   getAlbum(): void {
+    this.loadingService.show();
     this.loading = true;
     this.error = null;
 
@@ -93,11 +97,13 @@ export class AlbumComponent implements OnInit {
 
         this.loading = false;
         console.log('Álbum carregado (raw):', this.albumCoins);
+        this.loadingService.hide();
       },
       error: (err) => {
         console.error('Erro ao carregar álbum:', err);
         this.error = 'Erro ao carregar álbum.';
         this.loading = false;
+        this.loadingService.hide();
       }
     });
   }

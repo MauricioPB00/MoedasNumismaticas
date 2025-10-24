@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CoinsService } from '../AuthService/coins.service';
 import { ToastrService } from 'ngx-toastr';
-
+import { LoadingService } from '../shared/loading.service';
 
 @Component({
   selector: 'app-modal-coin',
@@ -32,10 +32,12 @@ export class ModalCoinComponent {
     private route: ActivatedRoute,
     private http: HttpClient,
     private coinsService: CoinsService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
+    this.loadingService.show();
     const routeId = Number(this.route.snapshot.paramMap.get('id'));
 
     if (this.coin && (this.coin.coinId || this.coin.id)) {
@@ -48,7 +50,7 @@ export class ModalCoinComponent {
       this.getAlbum(routeId);
       return;
     }
-
+    
     console.warn('Nenhum CoinId válido encontrado. O modal não irá carregar o álbum.');
   }
 
@@ -61,6 +63,7 @@ export class ModalCoinComponent {
   }
 
   saveEntry(entry: { year: number; quantity: number | null; condition: string | null; category: string; }): void {
+    this.loadingService.show();
     if (!this.coin) return;
 
     if (!entry.quantity || entry.quantity <= 0) {
@@ -87,6 +90,7 @@ export class ModalCoinComponent {
         if (res.token) {
           localStorage.setItem('jwt', res.token);
         }
+        this.loadingService.hide();
         this.toastr.success('Moeda adicionada com sucesso!');
         this.getAlbum(coinId);
         entry.quantity = null;
@@ -94,6 +98,7 @@ export class ModalCoinComponent {
         this.updated.emit();
       },
       error: (err) => {
+        this.loadingService.hide();
         console.error('Erro ao adicionar moeda:', err);
         this.toastr.error('Erro ao adicionar moeda.');
       }
@@ -118,6 +123,7 @@ export class ModalCoinComponent {
         console.error('Erro ao carregar álbum:', err);
       }
     });
+    this.loadingService.hide();
   }
 
   private sortAlbumCoins(coins: any[]): any[] {
@@ -142,6 +148,7 @@ export class ModalCoinComponent {
   }
 
   removeCoins(item: any) {
+    this.loadingService.show();
     const quantidade = item.toRemove || 1;
     const coinId = this.coin.id ?? this.coin.coinId;
     
@@ -159,7 +166,7 @@ export class ModalCoinComponent {
     this.coinsService.removeCoin(payload).subscribe({
       next: (res) => {
         this.toastr.success(`${quantidade} moeda(s) removida(s)!`);
-
+        this.loadingService.hide();
         item.quantity -= quantidade;
         if (item.quantity <= 0) {
           this.albumCoins = this.albumCoins.filter(c => c !== item);
@@ -169,6 +176,7 @@ export class ModalCoinComponent {
       error: (err) => {
         console.error('Erro ao remover moeda:', err);
         this.toastr.error('Erro ao remover moeda.');
+        this.loadingService.hide();
       }
     });
   }

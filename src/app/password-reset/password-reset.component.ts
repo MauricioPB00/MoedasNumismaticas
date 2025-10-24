@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { PasswordResetService } from '../AuthService/password-reset.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from "ngx-spinner";
 import { take } from 'rxjs/operators';
+import { LoadingService } from '../shared/loading.service';
 
 @Component({
   selector: 'app-password-reset',
@@ -20,19 +20,20 @@ export class PasswordResetComponent {
     private http: HttpClient,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private loadingService: LoadingService,
   ) {}
 
   sendResetEmail() {
+    this.loadingService.show();
     this.passwordResetService.forgotPassword(this.email).pipe(take(1)).subscribe(
           data => {
             this.toastr.success('Email enviado ! confira sua caixa de entrada');
-            this.spinner.hide();
+            this.loadingService.hide();
           },
           error => {
             const msg = error?.error?.message || 'Erro ao tentar encontrar o Email. Verifique os dados.';
             this.toastr.error(msg);
-            this.spinner.hide();
+            this.loadingService.hide();
           }
         )
       } 

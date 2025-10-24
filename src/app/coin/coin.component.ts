@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CoinsService } from '../AuthService/coins.service';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingService } from '../shared/loading.service';
 
 @Component({
   selector: 'app-coin',
@@ -26,12 +27,14 @@ export class CoinComponent {
     private route: ActivatedRoute,
     private http: HttpClient,
     private coinsService: CoinsService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
+      this.loadingService.show();
       this.loadCoin(id);
     }
 
@@ -62,8 +65,10 @@ export class CoinComponent {
       },
       error: (err) => {
         console.error('Erro ao carregar moeda:', err);
+        this.loadingService.hide();
       }
     });
+    this.loadingService.hide();
   }
 
   formatValue(coin: any): string | null {
@@ -74,6 +79,7 @@ export class CoinComponent {
   }
 
   getPrice(prices: any[], grade: string): string {
+    this.loadingService.show();
     if (!prices || !prices.length) return '-';
 
     const gradeMap: Record<string, string> = {
@@ -93,6 +99,7 @@ export class CoinComponent {
     if (isNaN(value)) return '-';
 
     const valorEmReais = value * 7.5;
+    this.loadingService.hide();
     return valorEmReais.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 

@@ -7,6 +7,8 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 (pdfMake as any).vfs = (pdfFonts as any).vfs;
 import { logoBase64 } from 'src/assets/logo';
 
+import { LoadingService } from '../shared/loading.service';
+
 interface Coin {
   id?: number;
   title?: string;
@@ -50,15 +52,19 @@ export class CollectionComponent implements OnInit {
 
   constructor(
     private coinsService: CoinsService,
-    private coinService: CoinService
+    private coinService: CoinService,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit(): void {
+    this.loadingService.show();
     this.getAlbum();
     this.loadAll();
+    this.loadingService.hide();
   }
 
   getAlbum(): void {
+    this.loadingService.show();
     this.coinsService.getAlbumByUser().subscribe({
       next: (res: Coin[]) => {
         const album = res || [];
@@ -72,9 +78,11 @@ export class CollectionComponent implements OnInit {
       },
       error: (err) => console.error('Erro ao carregar álbum:', err)
     });
+    this.loadingService.hide();
   }
 
   loadAll(): void {
+    this.loadingService.show();
     this.coinService.getCoinsPdf().subscribe({
       next: (data: Coin[]) => {
         const all = data.map(coin => ({
@@ -107,6 +115,7 @@ export class CollectionComponent implements OnInit {
       },
       error: (err) => console.error('Erro ao carregar moedas/cédulas:', err)
     });
+    this.loadingService.hide();
   }
 
   userHasCoin(coin: Coin): boolean {
@@ -118,6 +127,7 @@ export class CollectionComponent implements OnInit {
   }
 
   applyFilters(): void {
+    this.loadingService.show();
     this.countries.forEach(country => {
       this.pagination[country].coins = { page: 1, loaded: [] };
       this.pagination[country].banknotes = { page: 1, loaded: [] };
@@ -143,6 +153,7 @@ export class CollectionComponent implements OnInit {
         }
       }
     });
+    this.loadingService.hide();
   }
 
   private getYearValue(c: Coin): number {
@@ -184,10 +195,12 @@ export class CollectionComponent implements OnInit {
 
 
   onScroll(event: any, country: string, type: 'coins' | 'banknotes') {
+    this.loadingService.show();
     const div = event.target;
     if (div.scrollTop + div.clientHeight >= div.scrollHeight - 50) {
       this.loadMore(country, type);
     }
+    this.loadingService.hide();
   }
 
   getProgressByCountry(country: string, type: 'coins' | 'banknotes'): string {

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CoinsService } from '../AuthService/coins.service';
 import { Chart, registerables } from 'chart.js';
+import { LoadingService } from '../shared/loading.service';
 
 Chart.register(...registerables);
 
@@ -25,7 +26,10 @@ export class ModalPriceComponent implements AfterViewInit {
   pieChart!: Chart;
   @ViewChild('pieChartCanvas') pieChartCanvas!: ElementRef<HTMLCanvasElement>;
 
-  constructor(private coinsService: CoinsService) { }
+  constructor(
+    private coinsService: CoinsService,
+    private loadingService: LoadingService,
+  ) { }
 
   ngAfterViewInit(): void {
     this.getAlbum();
@@ -36,6 +40,7 @@ export class ModalPriceComponent implements AfterViewInit {
   }
 
   getAlbum(): void {
+    this.loadingService.show();
     this.coinsService.getAlbumByUser().subscribe({
       next: (res) => {
         this.albumCoins = res || [];
@@ -45,11 +50,14 @@ export class ModalPriceComponent implements AfterViewInit {
       },
       error: (err) => {
         console.error('Erro ao carregar álbum:', err);
+        this.loadingService.hide();
       }
     });
+    this.loadingService.hide();
   }
 
   calculateValues(): void {
+    this.loadingService.show();
     this.totalMoedas = 0;
     this.totalCedulas = 0;
     this.totalGeral = 0;
@@ -67,6 +75,7 @@ export class ModalPriceComponent implements AfterViewInit {
       this.totalsByCountry[issuer] = (this.totalsByCountry[issuer] || 0) + totalValue;
     });
     this.totalGeral = this.totalMoedas + this.totalCedulas;
+    this.loadingService.hide();
   }
 
   calculateCountryData(): void {
@@ -75,6 +84,7 @@ export class ModalPriceComponent implements AfterViewInit {
   }
 
   createOrUpdateChart(): void {
+    this.loadingService.show();
     if (!this.pieChartCanvas) return;
 
     const backgroundColors = this.countryLabels.map(() => this.getRandomColor());
@@ -107,6 +117,7 @@ export class ModalPriceComponent implements AfterViewInit {
         }
       });
     }
+    this.loadingService.hide();
   }
 
   getRandomColor(): string {

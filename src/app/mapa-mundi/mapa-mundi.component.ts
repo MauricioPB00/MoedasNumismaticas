@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import * as svgPanZoom from 'svg-pan-zoom';
 import { CoinsService } from '../AuthService/coins.service';
 import { AVAILABLE_COUNTRIES, Country } from '../models/countries';
+import { LoadingService } from '../shared/loading.service';
 
 export interface CountryData {
   code: string;
@@ -33,16 +34,23 @@ export class MapaMundiComponent implements OnInit {
 
   availableCountries: Country[] = AVAILABLE_COUNTRIES;
 
-  constructor(private http: HttpClient, private coinsService: CoinsService) { }
+  constructor(
+    private http: HttpClient, 
+    private coinsService: CoinsService,
+    private loadingService: LoadingService,
+  ) { }
 
   ngOnInit(): void {
+    this.loadingService.show();
     this.http.get('assets/svg/mapa-mundi.svg', { responseType: 'text' })
       .subscribe(svgText => this.insertAndSetupSvg(svgText));
 
     this.getAlbumMap();
+    this.loadingService.hide();
   }
 
   private insertAndSetupSvg(svgText: string) {
+    this.loadingService.show();
     const svgContainer = this.svgContainer.nativeElement;
     svgContainer.innerHTML = svgText;
 
@@ -169,6 +177,7 @@ export class MapaMundiComponent implements OnInit {
       minZoom: 1,
       maxZoom: 10
     });
+    this.loadingService.hide();
   }
 
   private paintUserCountries(svgEl: SVGSVGElement) {
@@ -224,11 +233,12 @@ export class MapaMundiComponent implements OnInit {
   }
 
   getAlbumMap() {
+    this.loadingService.show();
     this.coinsService.getAlbumByUserMap().subscribe({
       next: (res) => {
         this.albumCoins = res || [];
         const grouped: Record<string, { coins: number, banknotes: number }> = {};
-
+        this.loadingService.show();
         this.albumCoins.forEach(item => {
           const issuer = item.issuer || 'Desconhecido';
           if (!grouped[issuer]) grouped[issuer] = { coins: 0, banknotes: 0 };
@@ -248,9 +258,11 @@ export class MapaMundiComponent implements OnInit {
 
         const svgEl = this.svgContainer.nativeElement.querySelector('svg');
         if (svgEl) this.paintUserCountries(svgEl as SVGSVGElement);
+        this.loadingService.hide();
       },
       error: err => console.error('Erro ao carregar mapa do álbum:', err)
     });
+    this.loadingService.hide();
   }
   onSelectChange() {
     const svgEl = this.svgContainer.nativeElement.querySelector('svg');

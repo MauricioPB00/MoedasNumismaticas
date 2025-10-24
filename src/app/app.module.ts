@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { LoginService } from './AuthService/login.service';
 
 import { HttpClientModule } from '@angular/common/http';
-import { NgxSpinnerModule } from "ngx-spinner";
 import { ToastrModule } from 'ngx-toastr';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { HomeComponent } from './home/home.component';
@@ -63,7 +62,6 @@ import { SpinnerCoinComponent } from './shared/spinner-coin/spinner-coin.compone
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    NgxSpinnerModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     ModalModule.forRoot(),
