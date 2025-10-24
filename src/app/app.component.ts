@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { LoadingService } from './shared/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,10 @@ import { filter } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   isLoginRoute: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    public loadingService: LoadingService,
+  ) {}
 
   ngOnInit() {
     this.router.events

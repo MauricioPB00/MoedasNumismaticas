@@ -7,7 +7,8 @@ import { RegisterService } from '../AuthService/register.service';
 import { take } from 'rxjs/operators';
 
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from "ngx-spinner";
+
+import { LoadingService } from '../shared/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,7 @@ export class LoginComponent {
     private loginService: LoginService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private loading: LoadingService,
   ) { }
 
   signUpData = {
@@ -58,23 +59,23 @@ export class LoginComponent {
   }
 
   logar() {
-    // this.spinner.show();
+    this.loading.show();
     if (this.isLoginValid()) {
       this.loginService.login(this.dados.email, this.dados.password).pipe(take(1)).subscribe(
         data => {
           this.toastr.success('Logado com sucesso')
           this.router.navigateByUrl('/home');
-          this.spinner.hide();
+          this.loading.hide();
         },
         error => {
           const msg =  'Email ou senha incorreto';
           //this.showAlert(error.error); 
           this.toastr.error(msg);
-          this.spinner.hide();
+          this.loading.hide();
         })
     } else {
       this.toastr.error('Preencha todos os campos corretamente antes de se cadastrar.');
-      this.spinner.hide();
+      this.loading.hide();
     }
   }
 
@@ -97,25 +98,24 @@ export class LoginComponent {
 
   onSignUp() {
     console.log('Sign Up Data:', this.signUpData);
-    this.spinner.show();
-
+    this.loading.show();
     if (this.isSingUpValid()) {
       this.registerService.postRegister(this.signUpData).pipe(take(1)).subscribe(
         data => {
           this.toastr.success('Cadastrado com sucesso');
           this.isSignUpMode = false;
-          this.spinner.hide();
+          this.loading.hide();
         },
         error => {
           // Aqui exibimos o erro de forma amigável
           const msg = error?.error?.message || 'Erro ao tentar cadastrar. Verifique os dados.';
           this.toastr.error(msg);
-          this.spinner.hide();
+          this.loading.hide();
         }
       )
     } else {
       this.toastr.error('Preencha todos os campos corretamente antes de se cadastrar.');
-      this.spinner.hide();
+      this.loading.hide();
     }
   }
 

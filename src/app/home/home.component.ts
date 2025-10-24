@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CoinService } from '../AuthService/coin.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LoadingService } from '../shared/loading.service';
 
 @Component({
   selector: 'app-home',
@@ -29,10 +30,12 @@ export class HomeComponent implements OnInit {
   constructor(
     private coinService: CoinService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private loading: LoadingService,
   ) { }
 
   ngOnInit(): void {
+    this.loading.show();
     this.route.queryParams.subscribe(params => {
       this.queryParamsInitialized = true;
 
@@ -52,9 +55,11 @@ export class HomeComponent implements OnInit {
       this.applyFiltersIfReady();
     });
     this.loadCoins();
+    this.loading.hide();
   }
 
   loadCoins() {
+    this.loading.show();
     this.coinService.getCoins().subscribe({
       next: (data) => {
         this.coins = data.map(coin => ({
@@ -74,11 +79,20 @@ export class HomeComponent implements OnInit {
         this.coinsLoaded = true;
         this.applyFiltersIfReady();
       },
-      error: (err) => console.error('Erro ao carregar moedas:', err)
+     error: (err) => {
+      console.error('Erro ao carregar moedas:', err);
+      // garante que sempre esconda no erro
+      this.loading.hide();
+    },complete: () => {
+      // quando a stream completa (ou depois do next), escondemos
+      this.loading.hide();
+    }
     });
   }
 
   applyFiltersIfReady() {
+
+    
     if (this.coinsLoaded && this.queryParamsInitialized && !this.initialFiltersApplied) {
       this.applyFilters(false, false);
       this.initialFiltersApplied = true;
@@ -86,7 +100,9 @@ export class HomeComponent implements OnInit {
       this.applyFilters(true, false);
       this.initialFiltersApplied = true;
     }
+
   }
+  
   applyFilters(resetPage: boolean = true, updateUrl: boolean = true) {
     const coinsFiltered = this.coins.filter(coin => {
       const matchName = this.searchName
@@ -148,6 +164,7 @@ export class HomeComponent implements OnInit {
     }
   }
   clearFilters() {
+    this.loading.show();
     this.searchName = '';
     this.selectedIssuer = '';
     this.selectedCategory = '';
@@ -155,6 +172,7 @@ export class HomeComponent implements OnInit {
     this.maxYear = null;
     this.currentPage = 1;
     this.applyFilters(true, true);
+    this.loading.hide();
   }
 
   get paginatedCoins() {
@@ -200,6 +218,7 @@ export class HomeComponent implements OnInit {
   }
 
   abrirModal(event: Event, itemId: number, type: 'coin' | 'banknote'): void {
+    this.loading.show();
     event.preventDefault();
     event.stopPropagation();
 
@@ -229,5 +248,6 @@ export class HomeComponent implements OnInit {
     this.showModal = true;
 
     console.log('Abrindo modal para:', this.coin);
+    this.loading.hide();
   }
 }
