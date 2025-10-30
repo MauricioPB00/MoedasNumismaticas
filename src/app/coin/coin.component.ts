@@ -36,6 +36,7 @@ export class CoinComponent {
     if (id) {
       this.loadingService.show();
       this.loadCoin(id);
+      this.loadingService.hide();
     }
 
   }
@@ -79,7 +80,6 @@ export class CoinComponent {
   }
 
   getPrice(prices: any[], grade: string): string {
-    this.loadingService.show();
     if (!prices || !prices.length) return '-';
 
     const gradeMap: Record<string, string> = {
@@ -99,7 +99,6 @@ export class CoinComponent {
     if (isNaN(value)) return '-';
 
     const valorEmReais = value * 7.5;
-    this.loadingService.hide();
     return valorEmReais.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
