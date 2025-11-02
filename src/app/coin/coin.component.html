@@ -17,8 +17,6 @@
           alt="Anverso" class="coin-img">
         <img *ngIf="coin.reverseImg || coin.reverse" [src]="'assets/img/imagens/' + (coin.reverseImg || coin.reverse)"
           alt="Reverso" class="coin-img">
-        <img *ngIf="coin.edgeImg || coin.edge?.picture" [src]="'assets/img/imagens/' + coin.edgeImg"
-          [alt]="coin.title || 'Moeda Borda'" class="coin-edge-img" (error)="removeEdgeImg()">
       </div>
       <div class="img-descriptions">
         <p *ngIf="coin.obverseDescription"><strong>Anverso:</strong> {{ coin.obverseDescription }}</p>
