@@ -10,10 +10,10 @@ import { API_CONFIG } from '../config/api.config';
 export class CoinService {
   constructor(private http: HttpClient) { }
 
-  getCoins(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_CONFIG.baseUrl}/coin/list/collection`);
-  }
-  
+getCoins(issuer: string = 'Brasil') {
+  return this.http.get<any[]>(`${API_CONFIG.baseUrl}/coin/list/collection?issuer=${issuer}`);
+}
+
   getCoinsPdf(): Observable<any[]> {
     return this.http.get<any[]>(`${API_CONFIG.baseUrl}/coin/list/collection/pdf`);
   }

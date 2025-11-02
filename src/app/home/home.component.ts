@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CoinService } from '../AuthService/coin.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '../shared/loading.service';
+import { AVAILABLE_COUNTRIES_CAD, CountryCAD } from '../models/countriesCAD';
 
 @Component({
   selector: 'app-home',
@@ -15,17 +16,21 @@ export class HomeComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 24;
   searchName: string = '';
-  selectedIssuer: string = '';
   selectedCategory: string = '';
   minYear: number | null = null;
   maxYear: number | null = null;
   coinsLoaded = false;
   queryParamsInitialized = false;
   initialFiltersApplied = false;
-  
+
   coin: any;
   coinEntries: { year: number; quantity: number | null; condition: string | null, id: number, type: string }[] = [];
   showModal = false;
+
+  selectedIssuer: string = '';
+  selectedCountry: string = 'Brasil';
+  availableCountries: CountryCAD[] = AVAILABLE_COUNTRIES_CAD;
+  uniqueCategories: string[] = [];
 
   constructor(
     private coinService: CoinService,
@@ -35,64 +40,62 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loading.show();
     this.route.queryParams.subscribe(params => {
       this.queryParamsInitialized = true;
 
-      if (params['searchName'] !== undefined) this.searchName = params['searchName'];
-      if (params['issuer'] !== undefined) this.selectedIssuer = params['issuer'];
-      if (params['category'] !== undefined) this.selectedCategory = params['category'];
+      if (params['searchName']) this.searchName = params['searchName'];
+      if (params['category']) this.selectedCategory = params['category'];
+      if (params['issuer']) this.selectedIssuer = params['issuer'];
+      if (params['country']) this.selectedCountry = params['country'];
 
-      if (params['minYear'] !== undefined) {
-        this.minYear = params['minYear'] !== '' ? +params['minYear'] : null;
-      }
-      if (params['maxYear'] !== undefined) {
-        this.maxYear = params['maxYear'] !== '' ? +params['maxYear'] : null;
-      }
+      if (params['minYear']) this.minYear = +params['minYear'];
+      if (params['maxYear']) this.maxYear = +params['maxYear'];
 
       this.currentPage = params['page'] ? +params['page'] : 1;
 
-      this.applyFiltersIfReady();
+      this.loadCoins(this.selectedCountry);
     });
-    this.loadCoins();
-    this.loading.hide();
   }
 
-  loadCoins() {
+  loadCoins(country: string) {
     this.loading.show();
-    this.coinService.getCoins().subscribe({
+
+    this.coinService.getCoins(country).subscribe({
       next: (data) => {
         this.coins = data.map(coin => ({
           ...coin,
-          categoryDisplay: coin.category === 'coin' ? 'Moeda' : coin.category,
+          categoryDisplay: coin.category === 'coin' ? 'Moeda' : 'Cédula',
           showBrazilFlag: coin.issuer === 'Brasil'
         }));
 
-        this.coins.sort((a, b) => (a.min_year || 0) - (b.min_year || 0));
+        this.uniqueCategories = [...new Set(this.coins.map(c => c.category))];
 
-        const min = Math.min(...this.coins.map(c => (c.min_year ?? Infinity)));
+        this.coins.sort((a, b) => {
+          const yearA = a.min_year ?? a.year ?? 0;
+          const yearB = b.min_year ?? b.year ?? 0;
+          return yearA - yearB;
+        });
 
-        if (!this.queryParamsInitialized || this.minYear == null) {
-          this.minYear = isFinite(min) ? min : null;
-        }
-
+        this.filteredCoins = [...this.coins];
         this.coinsLoaded = true;
-        this.applyFiltersIfReady();
+
+        this.applyFilters();
+
+        this.loading.hide();
       },
-     error: (err) => {
-      console.error('Erro ao carregar moedas:', err);
-      // garante que sempre esconda no erro
-      this.loading.hide();
-    },complete: () => {
-      // quando a stream completa (ou depois do next), escondemos
-      this.loading.hide();
-    }
+      error: (err) => {
+        console.error('Erro ao carregar moedas:', err);
+        this.loading.hide();
+      }
     });
   }
 
-  applyFiltersIfReady() {
+  onCountryChange(event: any) {
+    this.selectedCountry = event.target.value || 'Brasil';
+    this.loadCoins(this.selectedCountry);
+  }
 
-    
+  applyFiltersIfReady() {
     if (this.coinsLoaded && this.queryParamsInitialized && !this.initialFiltersApplied) {
       this.applyFilters(false, false);
       this.initialFiltersApplied = true;
@@ -102,71 +105,57 @@ export class HomeComponent implements OnInit {
     }
 
   }
-  
-  applyFilters(resetPage: boolean = true, updateUrl: boolean = true) {
+
+  applyFilters(resetPage: boolean = false, updateUrl: boolean = true) {
     const coinsFiltered = this.coins.filter(coin => {
       const matchName = this.searchName
         ? (coin.title || '').toLowerCase().includes(this.searchName.toLowerCase())
         : true;
 
-      const matchIssuer = this.selectedIssuer ? coin.issuer === this.selectedIssuer : true;
       const matchCategory = this.selectedCategory ? coin.category === this.selectedCategory : true;
 
       const matchYear = (() => {
         const minFilter = this.minYear;
         const maxFilter = this.maxYear;
-
         if (minFilter == null && maxFilter == null) return true;
 
         const coinMin = coin.min_year ?? coin.year ?? null;
         const coinMax = coin.max_year ?? coin.min_year ?? coin.year ?? null;
 
-        if (minFilter != null && maxFilter == null) {
-          return coinMax != null && coinMax >= minFilter;
-        }
-
-        if (minFilter == null && maxFilter != null) {
-          return coinMin != null && coinMin <= maxFilter;
-        }
-
-        if (minFilter != null && maxFilter != null) {
+        if (minFilter != null && maxFilter == null) return coinMax != null && coinMax >= minFilter;
+        if (minFilter == null && maxFilter != null) return coinMin != null && coinMin <= maxFilter;
+        if (minFilter != null && maxFilter != null)
           return coinMin != null && coinMax != null && coinMin >= minFilter && coinMax <= maxFilter;
-        }
 
         return true;
       })();
 
-      return matchName && matchIssuer && matchCategory && matchYear;
+      return matchName && matchCategory && matchYear;
     });
 
     this.filteredCoins = coinsFiltered;
 
-    if (resetPage) {
-      this.currentPage = 1;
-    }
-
-    if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
-    if (this.currentPage < 1) this.currentPage = 1;
+    if (resetPage) this.currentPage = 1;
 
     if (updateUrl) {
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: {
           searchName: this.searchName || null,
-          issuer: this.selectedIssuer || null,
           category: this.selectedCategory || null,
           minYear: this.minYear != null ? this.minYear : null,
           maxYear: this.maxYear != null ? this.maxYear : null,
+          country: this.selectedCountry || null,
           page: this.currentPage
         },
         queryParamsHandling: 'merge'
       });
     }
   }
+
   clearFilters() {
     this.loading.show();
     this.searchName = '';
-    this.selectedIssuer = '';
     this.selectedCategory = '';
     this.minYear = null;
     this.maxYear = null;
@@ -198,10 +187,6 @@ export class HomeComponent implements OnInit {
 
   get uniqueIssuers(): string[] {
     return [...new Set(this.coins.map(c => c.issuer))];
-  }
-
-  get uniqueCategories(): string[] {
-    return [...new Set(this.coins.map(c => c.category))];
   }
 
   verDetalhes(id: number) {

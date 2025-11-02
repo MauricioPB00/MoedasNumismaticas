@@ -1,13 +1,10 @@
 <div class="filters">
   <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (input)="applyFilters()">
-
-  <select [(ngModel)]="selectedIssuer" (change)="applyFilters()">
-    <option value="">Todos emissores</option>
-    <option *ngFor="let issuer of uniqueIssuers" [value]="issuer">
-      {{ issuer }}
+  <select [(ngModel)]="selectedCountry" (change)="onCountryChange($event)">
+    <option *ngFor="let country of availableCountries" [value]="country.name">
+      {{ country.name }}
     </option>
   </select>
-
   <select [(ngModel)]="selectedCategory" (change)="applyFilters()">
     <option value="">Todas categorias</option>
     <option *ngFor="let cat of uniqueCategories" [value]="cat">
