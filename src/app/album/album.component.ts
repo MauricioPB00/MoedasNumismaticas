@@ -95,6 +95,11 @@ export class AlbumComponent implements OnInit {
 
         this.applyFilters();
 
+        setTimeout(() => {
+          this.loading = false;
+          this.loadingService.hide();
+        });
+
         this.loading = false;
         console.log('Álbum carregado (raw):', this.albumCoins);
         this.loadingService.hide();
