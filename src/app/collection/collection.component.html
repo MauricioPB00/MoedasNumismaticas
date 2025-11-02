@@ -6,23 +6,21 @@
   </button>
   <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
   <button (click)="generateMissingYearsPDF()">
-     <i class="fa-solid fa-file-pdf"></i> Faltantes 
+    <i class="fa-solid fa-file-pdf"></i> Faltantes
   </button>
 </div>
-
 <div class="tabs country-tabs">
-  <button *ngFor="let country of countries" [class.active]="activeCountry === country"
-    (click)="activeCountry = country">
-    {{ country }}
+  <button *ngFor="let country of countries" [class.active]="activeCountry === country.name"
+    (click)="onCountryClick(country.name)">
+    {{ country.name }}
   </button>
 </div>
-
 <div class="tab-content">
   <div class="tabs2 category-tabs">
     <button [class.active]="activeTab === 'coins'" (click)="activeTab = 'coins'">🪙 Moedas</button>
     <button [class.active]="activeTab === 'banknotes'" (click)="activeTab = 'banknotes'">💵 Cédulas</button>
   </div>
-  <div *ngIf="activeTab === 'coins'" class="progress-container">
+  <div class="progress-container" *ngIf="activeTab === 'coins'">
     <div class="progress-bar">
       <div class="progress-fill" [style.width.%]="getProgressPercentByCountry(activeCountry, 'coins')"></div>
       <span class="progress-text">
@@ -30,18 +28,16 @@
       </span>
     </div>
   </div>
-
   <div class="album-grid scroll-container" *ngIf="activeTab === 'coins'"
     (scroll)="onScroll($event, activeCountry, 'coins')" [attr.data-country]="activeCountry" data-type="coins">
     <div *ngFor="let coin of pagination[activeCountry]?.coins?.loaded || []" class="coin-card"
       [class.owned]="userHasCoin(coin)" [class.missing]="!userHasCoin(coin)">
       <img [src]="'assets/img/imagens/' + coin.obverse" alt="{{ coin.title }}">
-      <p class="coin-title">{{ coin['titleDisplay']  }}</p>
+      <p class="coin-title">{{ coin.titleDisplay }}</p>
       <p class="coin-year">{{ coin.min_year }} - {{ coin.max_year }}</p>
     </div>
   </div>
-
-  <div *ngIf="activeTab === 'banknotes'" class="progress-container">
+  <div class="progress-container" *ngIf="activeTab === 'banknotes'">
     <div class="progress-bar">
       <div class="progress-fill" [style.width.%]="getProgressPercentByCountry(activeCountry, 'banknotes')"></div>
       <span class="progress-text">
@@ -50,13 +46,12 @@
       </span>
     </div>
   </div>
-
   <div class="album-grid scroll-container" *ngIf="activeTab === 'banknotes'"
     (scroll)="onScroll($event, activeCountry, 'banknotes')" [attr.data-country]="activeCountry" data-type="banknotes">
     <div *ngFor="let note of pagination[activeCountry]?.banknotes?.loaded || []" class="coin-card"
       [class.owned]="userHasBanknote(note)" [class.missing]="!userHasBanknote(note)">
       <img [src]="'assets/img/imagens/' + note.obverse" alt="{{ note.title }}">
-      <p class="coin-title">{{ note['titleDisplay']  }}</p>
+      <p class="coin-title">{{ note.titleDisplay }}</p>
       <p class="coin-year">{{ note.min_year }} - {{ note.max_year }}</p>
     </div>
   </div>

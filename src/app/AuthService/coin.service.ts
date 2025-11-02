@@ -10,11 +10,15 @@ import { API_CONFIG } from '../config/api.config';
 export class CoinService {
   constructor(private http: HttpClient) { }
 
-getCoins(issuer: string = 'Brasil') {
-  return this.http.get<any[]>(`${API_CONFIG.baseUrl}/coin/list/collection?issuer=${issuer}`);
-}
+  getCoins(issuer: string = 'Brasil') {
+    return this.http.get<any[]>(`${API_CONFIG.baseUrl}/coin/list/collection?issuer=${issuer}`);
+  }
 
-  getCoinsPdf(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_CONFIG.baseUrl}/coin/list/collection/pdf`);
+  getCoinsPdf(params?: { issuer?: string }): Observable<any[]> {
+    let url = `${API_CONFIG.baseUrl}/coin/list/collection/pdf`;
+    if (params?.issuer) {
+      url += `?issuer=${encodeURIComponent(params.issuer)}`;
+    }
+    return this.http.get<any[]>(url);
   }
 }

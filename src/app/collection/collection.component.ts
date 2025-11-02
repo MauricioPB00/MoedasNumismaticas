@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CoinsService } from '../AuthService/coins.service';
 import { CoinService } from '../AuthService/coin.service';
-
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 (pdfMake as any).vfs = (pdfFonts as any).vfs;
 import { logoBase64 } from 'src/assets/logo';
-
 import { LoadingService } from '../shared/loading.service';
+import { AVAILABLE_COUNTRIES_CAD, CountryCAD } from '../models/countriesCAD';
 
 interface Coin {
   id?: number;
@@ -18,6 +17,7 @@ interface Coin {
   min_year?: number;
   max_year?: number;
   obverse?: string;
+  titleDisplay?: string;
   [key: string]: any;
 }
 
@@ -27,8 +27,6 @@ interface Coin {
   styleUrls: ['./collection.component.css']
 })
 export class CollectionComponent implements OnInit {
-  coins: Coin[] = [];
-  banknotes: Coin[] = [];
   albumCoins: Coin[] = [];
   albumBanknotes: Coin[] = [];
   ownedCoinIds: Set<string> = new Set();
@@ -37,29 +35,35 @@ export class CollectionComponent implements OnInit {
   minYear?: number;
   maxYear?: number;
 
-  countries: string[] = [];
-  activeCountry: string = '';
+  countries: CountryCAD[] = AVAILABLE_COUNTRIES_CAD;
+  activeCountry: string = 'Brasil';
   activeTab: 'coins' | 'banknotes' = 'coins';
   sortOrder: 'asc' | 'desc' = 'asc';
   pageSize = 53;
+
+  countryData: { [country: string]: { coins: Coin[], banknotes: Coin[] } } = {};
 
   pagination: {
     [country: string]: {
       coins: { page: number; loaded: Coin[] };
       banknotes: { page: number; loaded: Coin[] };
-    }
+    };
   } = {};
 
   constructor(
     private coinsService: CoinsService,
     private coinService: CoinService,
-    private loadingService: LoadingService,
+    private loadingService: LoadingService
   ) { }
 
   ngOnInit(): void {
     this.loadingService.show();
     this.getAlbum();
-    this.loadAll();
+    this.pagination[this.activeCountry] = {
+      coins: { page: 1, loaded: [] },
+      banknotes: { page: 1, loaded: [] }
+    };
+    this.loadCountryData(this.activeCountry);
     this.loadingService.hide();
   }
 
@@ -76,46 +80,55 @@ export class CollectionComponent implements OnInit {
 
         this.applyFilters();
       },
-      error: (err) => console.error('Erro ao carregar álbum:', err)
-    });
-    this.loadingService.hide();
+      error: err => console.error('Erro ao carregar álbum:', err)
+    }).add(() => this.loadingService.hide());
   }
 
-  loadAll(): void {
+  loadCountryData(country: string) {
+    if (this.countryData[country]) return;
+
     this.loadingService.show();
-    this.coinService.getCoinsPdf().subscribe({
+    this.coinService.getCoinsPdf({ issuer: country }).subscribe({
       next: (data: Coin[]) => {
         const all = data.map(coin => ({
           ...coin,
           categoryDisplay: coin.category === 'coin' ? 'Moeda' : 'Cédula',
           showBrazilFlag: coin.issuer === 'Brasil',
-          titleDisplay: coin.title
-            ?.replace(/\s*\(.*?\)\s*/g, '') 
-            .split('-')[0]                  
-            .trim()
+          titleDisplay: coin.title?.replace(/\s*\(.*?\)\s*/g, '').split('-')[0].trim()
         }));
 
-        this.coins = all.filter(c => c.category === 'coin');
-        this.banknotes = all.filter(c => c.category === 'banknote');
+        this.countryData[country] = {
+          coins: all.filter(c => c.category === 'coin'),
+          banknotes: all.filter(c => c.category === 'banknote')
+        };
 
-        this.countries = Array.from(
-          new Set(all.map(c => c.issuer).filter((issuer): issuer is string => !!issuer))
-        ).sort();
-
-        this.activeCountry = this.countries[0] || '';
-
-        this.countries.forEach(c => {
-          this.pagination[c] = {
+        if (!this.pagination[country]) {
+          this.pagination[country] = {
             coins: { page: 1, loaded: [] },
             banknotes: { page: 1, loaded: [] }
           };
-          this.loadMore(c, 'coins');
-          this.loadMore(c, 'banknotes');
-        });
+        }
+
+        this.loadMore(country, 'coins');
+        this.loadMore(country, 'banknotes');
       },
-      error: (err) => console.error('Erro ao carregar moedas/cédulas:', err)
-    });
-    this.loadingService.hide();
+      error: err => console.error('Erro ao carregar moedas/cédulas:', err)
+    }).add(() => this.loadingService.hide());
+  }
+
+  onCountryClick(country: string) {
+    if (this.activeCountry !== country) {
+      this.activeCountry = country;
+
+      if (!this.pagination[country]) {
+        this.pagination[country] = {
+          coins: { page: 1, loaded: [] },
+          banknotes: { page: 1, loaded: [] }
+        };
+      }
+
+      this.loadCountryData(country);
+    }
   }
 
   userHasCoin(coin: Coin): boolean {
@@ -128,31 +141,13 @@ export class CollectionComponent implements OnInit {
 
   applyFilters(): void {
     this.loadingService.show();
-    this.countries.forEach(country => {
-      this.pagination[country].coins = { page: 1, loaded: [] };
-      this.pagination[country].banknotes = { page: 1, loaded: [] };
+    if (!this.activeCountry) return;
 
-      this.loadMore(country, 'coins');
-      this.loadMore(country, 'banknotes');
+    this.pagination[this.activeCountry].coins = { page: 1, loaded: [] };
+    this.pagination[this.activeCountry].banknotes = { page: 1, loaded: [] };
 
-      const coinContainer = document.querySelector(`.scroll-container[data-country="${country}"][data-type="coins"]`);
-      if (coinContainer) {
-        let div = coinContainer as HTMLElement;
-        while (div.scrollHeight <= div.clientHeight &&
-          this.filteredCoinsByCountry(country).length > this.pagination[country].coins.loaded.length) {
-          this.loadMore(country, 'coins');
-        }
-      }
-
-      const banknoteContainer = document.querySelector(`.scroll-container[data-country="${country}"][data-type="banknotes"]`);
-      if (banknoteContainer) {
-        let div = banknoteContainer as HTMLElement;
-        while (div.scrollHeight <= div.clientHeight &&
-          this.filteredBanknotesByCountry(country).length > this.pagination[country].banknotes.loaded.length) {
-          this.loadMore(country, 'banknotes');
-        }
-      }
-    });
+    this.loadMore(this.activeCountry, 'coins');
+    this.loadMore(this.activeCountry, 'banknotes');
     this.loadingService.hide();
   }
 
@@ -161,27 +156,31 @@ export class CollectionComponent implements OnInit {
   }
 
   filteredCoinsByCountry(country: string): Coin[] {
+    const allCoins = this.countryData[country]?.coins || [];
     const minY = this.minYear ?? -Infinity;
     const maxY = this.maxYear ?? Infinity;
-    return this.coins
-      .filter(c => c.issuer === country && this.getYearValue(c) >= minY && this.getYearValue(c) <= maxY)
-      .sort((a, b) =>
-        this.sortOrder === 'asc' ? this.getYearValue(a) - this.getYearValue(b) : this.getYearValue(b) - this.getYearValue(a)
-      );
+    return allCoins
+      .filter(c => this.getYearValue(c) >= minY && this.getYearValue(c) <= maxY)
+      .sort((a, b) => this.sortOrder === 'asc'
+        ? this.getYearValue(a) - this.getYearValue(b)
+        : this.getYearValue(b) - this.getYearValue(a));
   }
 
   filteredBanknotesByCountry(country: string): Coin[] {
+    const allBanknotes = this.countryData[country]?.banknotes || [];
     const minY = this.minYear ?? -Infinity;
     const maxY = this.maxYear ?? Infinity;
-    return this.banknotes
-      .filter(c => c.issuer === country && this.getYearValue(c) >= minY && this.getYearValue(c) <= maxY)
-      .sort((a, b) =>
-        this.sortOrder === 'asc' ? this.getYearValue(a) - this.getYearValue(b) : this.getYearValue(b) - this.getYearValue(a)
-      );
+    return allBanknotes
+      .filter(c => this.getYearValue(c) >= minY && this.getYearValue(c) <= maxY)
+      .sort((a, b) => this.sortOrder === 'asc'
+        ? this.getYearValue(a) - this.getYearValue(b)
+        : this.getYearValue(b) - this.getYearValue(a));
   }
 
   loadMore(country: string, type: 'coins' | 'banknotes') {
-    const allItems = type === 'coins' ? this.filteredCoinsByCountry(country) : this.filteredBanknotesByCountry(country);
+    const allItems = type === 'coins'
+      ? this.filteredCoinsByCountry(country)
+      : this.filteredBanknotesByCountry(country);
     const page = this.pagination[country][type].page;
     const start = (page - 1) * this.pageSize;
     const end = start + this.pageSize;
@@ -193,25 +192,26 @@ export class CollectionComponent implements OnInit {
     }
   }
 
-
   onScroll(event: any, country: string, type: 'coins' | 'banknotes') {
-    this.loadingService.show();
     const div = event.target;
     if (div.scrollTop + div.clientHeight >= div.scrollHeight - 50) {
       this.loadMore(country, type);
     }
-    this.loadingService.hide();
   }
 
   getProgressByCountry(country: string, type: 'coins' | 'banknotes'): string {
-    const all = type === 'coins' ? this.filteredCoinsByCountry(country) : this.filteredBanknotesByCountry(country);
+    const all = type === 'coins'
+      ? this.filteredCoinsByCountry(country)
+      : this.filteredBanknotesByCountry(country);
     const owned = all.filter(c => type === 'coins' ? this.userHasCoin(c) : this.userHasBanknote(c)).length;
     return `${owned} / ${all.length}`;
   }
 
   getProgressPercentByCountry(country: string, type: 'coins' | 'banknotes'): number {
-    const all = type === 'coins' ? this.filteredCoinsByCountry(country) : this.filteredBanknotesByCountry(country);
-    if (all.length === 0) return 0;
+    const all = type === 'coins'
+      ? this.filteredCoinsByCountry(country)
+      : this.filteredBanknotesByCountry(country);
+    if (!all.length) return 0;
     const owned = all.filter(c => type === 'coins' ? this.userHasCoin(c) : this.userHasBanknote(c)).length;
     return Math.round((owned / all.length) * 100);
   }
