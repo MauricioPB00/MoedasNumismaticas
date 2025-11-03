@@ -62,11 +62,20 @@ export class HomeComponent implements OnInit {
 
     this.coinService.getCoins(country).subscribe({
       next: (data) => {
-        this.coins = data.map(coin => ({
-          ...coin,
-          categoryDisplay: coin.category === 'coin' ? 'Moeda' : 'Cédula',
-          showBrazilFlag: coin.issuer === 'Brasil'
-        }));
+        this.coins = data.map(coin => {
+          const normalizedIssuer = coin.issuer
+            ?.normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+/g, '-')
+            .replace(/[^\w-]/g, '');
+          return {
+            ...coin,
+            categoryDisplay: coin.category === 'coin' ? 'Moeda' : 'Cédula',
+            flagPath: normalizedIssuer
+              ? `assets/img/bandeiras/bandeira-${normalizedIssuer}.png`
+              : null
+          };
+        });
 
         this.uniqueCategories = [...new Set(this.coins.map(c => c.category))];
 
@@ -234,5 +243,10 @@ export class HomeComponent implements OnInit {
 
     console.log('Abrindo modal para:', this.coin);
     this.loading.hide();
+  }
+
+  getFlagCode(issuer: string): string {
+    const found = AVAILABLE_COUNTRIES_CAD.find(c => c.name === issuer);
+    return found ? found.code : 'un';
   }
 }

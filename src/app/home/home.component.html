@@ -1,10 +1,13 @@
 <div class="filters">
   <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (input)="applyFilters()">
-  <select [(ngModel)]="selectedCountry" (change)="onCountryChange($event)">
-    <option *ngFor="let country of availableCountries" [value]="country.name">
-      {{ country.name }}
-    </option>
-  </select>
+  <div class="country-select">
+    <span class="fi" [ngClass]="'fi-' + getFlagCode(selectedCountry)"></span>
+    <select [(ngModel)]="selectedCountry" (change)="onCountryChange($event)">
+      <option *ngFor="let country of availableCountries" [value]="country.name">
+        {{ country.name }}
+      </option>
+    </select>
+  </div>
   <select [(ngModel)]="selectedCategory" (change)="applyFilters()">
     <option value="">Todas categorias</option>
     <option *ngFor="let cat of uniqueCategories" [value]="cat">
@@ -31,7 +34,8 @@
         <h3>{{ coin.title }}</h3>
         <p class="issuer">
           {{ coin.categoryDisplay }}
-          <img *ngIf="coin.showBrazilFlag" src="assets/img/bandeira-Brasil.png" alt="Brasil" class="flag">
+          <span *ngIf="coin.issuer" class="fi" [ngClass]="'fi-' + getFlagCode(coin.issuer)"
+            style="margin-left: 6px;"></span>
         </p>
         <p *ngIf="coin.min_year || coin.max_year">
           Ano: {{ coin.min_year }} - {{ coin.max_year }}

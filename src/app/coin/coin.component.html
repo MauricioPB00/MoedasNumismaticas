@@ -3,7 +3,7 @@
     {{ coin.title || ('Moeda #' + (coin.id || '')) }}
     <small class="meta">
       <span *ngIf="coin.issuer">
-        <img *ngIf="coin.showBrazilFlag" src="assets/img/bandeira-Brasil.png" class="flag" alt="Brasil">
+        <span *ngIf="coin.flagCode" class="fi fi-{{ coin.flagCode }} flag-icon"></span>
         {{ coin.issuer.name }}
       </span>
       <span *ngIf="coin.category"> • {{ coin.categoryDisplay || coin.category }}</span>

@@ -4,13 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { CoinsService } from '../AuthService/coins.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from '../shared/loading.service';
+import { AVAILABLE_COUNTRIES_CAD } from '../models/countriesCAD';
 
 @Component({
   selector: 'app-coin',
   templateUrl: './coin.component.html',
   styleUrls: ['./coin.component.css']
 })
-export class CoinComponent {
+export class CoinComponent implements OnInit {
   coin: any;
   searchName: string = '';
   selectedIssuer: string = '';
@@ -38,16 +39,18 @@ export class CoinComponent {
       this.loadCoin(id);
       this.loadingService.hide();
     }
-
   }
 
   loadCoin(id: number): void {
     this.coinsService.getCoin(id).subscribe({
       next: (coin) => {
+        const country = AVAILABLE_COUNTRIES_CAD.find(
+          c => c.name.toLowerCase() === coin.issuer?.name?.toLowerCase()
+        );
         this.coin = {
           ...coin,
           categoryDisplay: coin.category === 'coin' ? 'Moeda' : coin.category,
-          showBrazilFlag: coin.issuer?.name?.toLowerCase() === 'brasil'
+          flagCode: country ? country.code : 'un'
         };
 
         this.minYear = this.coin.minYear ?? null;
@@ -74,9 +77,6 @@ export class CoinComponent {
 
   formatValue(coin: any): string | null {
     return coin?.valueFullName || coin?.valueText || (coin?.valueNumeric ? `${coin.valueNumeric} ${coin.currencyName || coin.currency || ''}` : null);
-  }
-  removeEdgeImg() {
-    this.coin.edgeImg = null;
   }
 
   getPrice(prices: any[], grade: string): string {

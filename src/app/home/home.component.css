@@ -49,6 +49,7 @@
   overflow: hidden;
   position: relative;
 }
+
 .coin-images img {
   max-width: 100%;
   max-width: 240px;
@@ -181,9 +182,9 @@
 
 .btn {
   display: flex;
-  flex-direction: column; 
-  align-items: center;    
-  gap: 8px;              
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   margin-top: 10px;
 }
 
@@ -220,6 +221,27 @@ button.btn-limpar {
   background-color: #EFBF04 !important;
   color: #000 !important;
   border-radius: 6px !important;
+}
+
+.country-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.country-select .fi {
+  width: 24px;
+  height: 18px;
+  border-radius: 3px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.flag,
+.fi {
+  width: 24px;
+  height: 18px;
+  border-radius: 2px;
+  vertical-align: middle;
 }
 
 

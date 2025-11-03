@@ -280,6 +280,12 @@
   -webkit-overflow-scrolling: touch;
 }
 
+.flag-icon {
+  margin-right: 6px;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 1024px) {
   .coin-layout {
