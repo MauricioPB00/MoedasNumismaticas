@@ -54,4 +54,15 @@
       </form>
     </div>
   </div>
+
+  <div class="settings-header-logout">
+    <div class="settings-header-profile">
+      <div class="settings-header" (click)="toggleLogout()">
+        <span class="arrow">{{ showLogout ? 'Deslogar ▲' : 'Deslogar ▼' }}</span>
+      </div>
+      <form [class.expanded]="showLogout" (ngSubmit)="onSubmitLogout()" enctype="multipart/form-data">
+        <button type="submit">Sair da Conta</button>
+      </form>
+    </div>
+  </div>
 </div>

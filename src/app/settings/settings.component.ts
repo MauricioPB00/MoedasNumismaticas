@@ -4,6 +4,7 @@ import { UserService } from '../AuthService/user.service';
 import { take } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from '../shared/loading.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -14,6 +15,7 @@ export class SettingsComponent implements OnInit {
   user: any = {};
   showForm = false;
   showPhoto = false
+  showLogout = false;
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
@@ -22,6 +24,7 @@ export class SettingsComponent implements OnInit {
     private userService: UserService,
     private toastr: ToastrService,
     private loadingService: LoadingService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -34,6 +37,9 @@ export class SettingsComponent implements OnInit {
   toggleForm() {
     this.showForm = !this.showForm;
   }
+  toggleLogout() {
+    this.showLogout = !this.showLogout;
+  }
 
   togglePhoto() {
     this.loadingService.show();
@@ -44,7 +50,7 @@ export class SettingsComponent implements OnInit {
 
       this.userService.getUserInfo().subscribe({
         next: (res: any) => {
-          this.user = res; // traz name, email e photo
+          this.user = res;
           this.loadingService.hide();
         },
         error: (err) => {
@@ -61,7 +67,7 @@ export class SettingsComponent implements OnInit {
     if (this.selectedFile) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.previewUrl = e.target.result; // preview da foto escolhida
+        this.previewUrl = e.target.result;
       };
       reader.readAsDataURL(this.selectedFile);
     }
@@ -97,8 +103,8 @@ export class SettingsComponent implements OnInit {
 
     this.userService.uploadPhoto(this.selectedFile).subscribe({
       next: (res: any) => {
-        this.user.photo = res.photo; // retorna o nome salvo
-        this.previewUrl = null;      // exibir a foto do banco
+        this.user.photo = res.photo; 
+        this.previewUrl = null;      
         this.selectedFile = null;
         this.loadingService.hide();
         this.toastr.success('Foto atualizada com sucesso!');
@@ -109,5 +115,13 @@ export class SettingsComponent implements OnInit {
         this.toastr.error('Erro ao salvar foto.');
       }
     });
+  }
+  onSubmitLogout(){
+    localStorage.removeItem('ControleUsuarioLogado');
+    localStorage.removeItem('ControleUsuario');
+    localStorage.removeItem('ControleUsuarioPermi');
+    localStorage.removeItem('ControleUsuarioIP');
+    localStorage.removeItem('jwt');
+    this.router.navigate(['/']);
   }
 }

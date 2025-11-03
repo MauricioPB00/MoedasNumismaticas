@@ -96,14 +96,14 @@ export class SideBarComponent implements OnInit, AfterViewInit {
   //   });
   // }
 
-  logout(): void {
-    localStorage.removeItem('ControleUsuarioLogado');
-    localStorage.removeItem('ControleUsuario');
-    localStorage.removeItem('ControleUsuarioPermi');
-    localStorage.removeItem('ControleUsuarioIP');
-    localStorage.removeItem('jwt');
-    this.router.navigate(['/']);
-  }
+  // logout(): void {
+  //   localStorage.removeItem('ControleUsuarioLogado');
+  //   localStorage.removeItem('ControleUsuario');
+  //   localStorage.removeItem('ControleUsuarioPermi');
+  //   localStorage.removeItem('ControleUsuarioIP');
+  //   localStorage.removeItem('jwt');
+  //   this.router.navigate(['/']);
+  // }
 
   toggleDarkMode(): void {
     this.isDarkMode = !this.isDarkMode;
