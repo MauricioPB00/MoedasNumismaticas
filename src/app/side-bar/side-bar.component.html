@@ -1,12 +1,25 @@
 <div class="wrapper d-flex align-items-stretch" [ngStyle]="{'color': sidebarTxtColor}">
-
     <nav id="horizontal-bar" class="d-flex align-items-center" [ngStyle]="{'background-color': sidebarColor}">
-        <ul class="horizontal-menu list-unstyled d-flex">
-            <li><a href="/home"><i class="fa fa-home"></i><span></span></a></li>
+
+        <ul class="horizontal-menu list-unstyled d-flex left-menu">
+             <li><a href="/home"><i class="fa fa-home"></i><span>Home</span></a></li>
+            <li><a href="/album"><i class="fa fa-book"></i><span>Álbum</span></a></li>
+            <li><a href="/mapa"><i class="fa fa-globe"></i><span>Mapa</span></a></li>
+            <li><a href="/collection"><i class="fa fa-folder"></i><span>Coleção</span></a></li>
+        </ul>
+
+        <ul class="horizontal-menu list-unstyled d-flex right-menu">
+            <li><a href="/collection"><i class="fa fa-folder"></i><span>Coleção</span></a></li>
+            <li class="settings-mobile">
+                <a href="/settings"><i class="fa fa-cog"></i></a>
+            </li>
+        </ul>
+
+        <ul class="horizontal-menu list-unstyled d-flex right-menu-desktop">
             <li *ngIf="loginService.hasRole('ROLE_ADMIN')">
                 <a routerLink="/profile"><i class="fa fa-user"></i></a>
             </li>
-            <li><a href="/settings"><i class="fa fa-cog"></i><span></span></a></li>
+            <li class="settings-desktop"><a href="/settings"><i class="fa fa-cog"></i><span></span></a></li>
             <li><a href="/help"><i class="fa fa-question-circle"></i><span></span></a></li>
             <div class="checkboxDiv">
                 <input type="checkbox" name="checkbox" id="darkModeToggle" (change)="toggleDarkMode()"
@@ -18,48 +31,8 @@
                 </label>
             </div>
         </ul>
-    </nav>
-
-    <nav id="sidebar" [ngClass]="{ 'active': isSidebarActive, 'minimized': isSidebarMinimizedActive }">
-        <div class="custom-menu">
-            <button type="button" class="btn btn-primary" (click)="toggleSidebar()"
-                [ngStyle]="{'--sidebar-color': sidebarColor}">
-                <i class="fas fa-bars" [ngStyle]="{'color': sidebarTxtColor}"></i>
-            </button>
-        </div>
-        <div class="container" [ngStyle]="{'background-color': sidebarColor}">
-
-            <a href="/home"><img src="../../assets/img/Logo.png" class="logo-img"></a>
-            <div class="line" [ngStyle]="{'background-color': sidebarLnColor}"></div>
-            <ul class="list-unstyled">
-                <li>
-                    <a href="/home"><i class="fa-regular fa-chess-king"></i><span>Home</span></a>
-                </li>
-                <li>
-                    <a href="/album"><i class="fa fa-book" aria-hidden="true"></i><span>Álbum</span></a>
-                </li>
-                <li>
-                    <a href="/mapa"><i class="fa fa-globe" aria-hidden="true"></i><span>Mapa</span></a>
-                </li>
-                <li>
-                    <a href="/collection"><i class="fa fa-folder" aria-hidden="true"></i><span>Coleção</span></a>
-                </li>
-            </ul>
-            <div class="line" [ngStyle]="{'background-color': sidebarLnColor}"></div>
-            <div class="logout">
-                <h2>{{ name }}</h2>
-                <img *ngIf="photo; else defaultImg" [src]="photo" class="profile-image">
-                <ng-template #defaultImg>
-                    <img src="../../assets/img/person.png" class="profile-image">
-                </ng-template>
-                <button class="logout" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i><span>
-                        Logout</span></button>
-            </div>
-            <button class="buttonMinimized" (click)="toggleSidebarMinimized()"
-                [ngStyle]="{'background-color': sidebarBtColor}">
-                <i [ngClass]="isSidebarMinimizedActive ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left'"
-                    [ngStyle]="{'color': sidebarTxtColor}"></i>
-            </button>
-        </div>
+        <li class="home-center-mobile">
+            <a href="/home"><i class="fa fa-home"></i></a>
+        </li>
     </nav>
 </div>

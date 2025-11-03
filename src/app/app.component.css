@@ -7,7 +7,6 @@
 }
 .mainNumismatico {
     padding-top:50px;
-    padding-left: 15px;
     width: 100%;
     overflow: auto;
     max-height: 100%;
@@ -15,4 +14,22 @@
 
 :host ::ng-deep .mainNumismatico:not(.mainNumismatico) {
     display: none;
+}
+
+@media (max-width: 1024px) {
+ .mainNumismatico {
+    padding-top:0px;
+    width: 100%;
+    overflow: auto;
+    max-height: 100%;
+}
+}
+
+@media (max-width: 600px) {
+  .mainNumismatico {
+    padding-top:0px;
+    width: 100%;
+    overflow: auto;
+    max-height: 100%;
+}
 }

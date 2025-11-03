@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { SIDEBAR_COLOR } from '../../../color';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../AuthService/user.service';
-import { LoginService } from '../AuthService/login.service'; // ajuste o caminho se necessário
+import { LoginService } from '../AuthService/login.service';
 
 
 @Component({
@@ -26,11 +26,11 @@ export class SideBarComponent implements OnInit, AfterViewInit {
   sidebarBtColorHover: string = SIDEBAR_COLOR.SIDEBAR_BT_COLOR_HOVER;
   sidebarTxtColor: string = SIDEBAR_COLOR.SIDEBAR_TXT_COLOR;
   sidebarIconColor: string = SIDEBAR_COLOR.SIDEBAR_ICON_COLOR;
-  isSidebarActive: boolean = false;
-  isSidebarMinimizedActive: boolean = false;
-  name: string | undefined;
+  // isSidebarActive: boolean = false;
+  // isSidebarMinimizedActive: boolean = false;
+  // name: string | undefined;
   isDarkMode: boolean = false;
-  photo: string | null = null;
+  // photo: string | null = null;
   permi: number | null = null;
 
   constructor(
@@ -42,59 +42,59 @@ export class SideBarComponent implements OnInit, AfterViewInit {
     const savedMode = localStorage.getItem('darkMode');
     if (savedMode) {
       this.isDarkMode = JSON.parse(savedMode);
-    const storedPermi = localStorage.getItem('ControleUsuarioPermi');
-    this.permi = storedPermi ? Number(JSON.parse(storedPermi)) : null;
+      const storedPermi = localStorage.getItem('ControleUsuarioPermi');
+      this.permi = storedPermi ? Number(JSON.parse(storedPermi)) : null;
     }
   }
 
   ngOnInit(): void {
-    const AuthUsername = localStorage.getItem('ControleUsuario');
+    // const AuthUsername = localStorage.getItem('ControleUsuario');
     const darkMode = localStorage.getItem('darkMode');
-    const sideBarMinimized = localStorage.getItem('SideBarMinimized');
+    // const sideBarMinimized = localStorage.getItem('SideBarMinimized');
 
-    if (AuthUsername) {
-      const userObj = JSON.parse(AuthUsername);
-      this.name = userObj.name ? userObj.name.split('@')[0] : 'Usuário';
-    } else {
-      this.name = 'Usuário';
-    }
-    if (sideBarMinimized !== null) {
-      this.isSidebarMinimizedActive = JSON.parse(sideBarMinimized);
-    }
-    this.getPhoto();
+    // if (AuthUsername) {
+    //   const userObj = JSON.parse(AuthUsername);
+    //   this.name = userObj.name ? userObj.name.split('@')[0] : 'Usuário';
+    // } else {
+    //   this.name = 'Usuário';
+    // }
+    // if (sideBarMinimized !== null) {
+    //   this.isSidebarMinimizedActive = JSON.parse(sideBarMinimized);
+    // }
+    // this.getPhoto();
   }
 
   ngAfterViewInit(): void {
     this.applyDarkMode();
   }
 
-  hasAdminAccess(): boolean {
-    return this.permi === 2;
-  }
+  // hasAdminAccess(): boolean {
+  //   return this.permi === 2;
+  // }
 
-  toggleSidebar(): void {
-    this.isSidebarMinimizedActive = false
-    this.isSidebarActive = !this.isSidebarActive;
-  }
+  // toggleSidebar(): void {
+  //   this.isSidebarMinimizedActive = false
+  //   this.isSidebarActive = !this.isSidebarActive;
+  // }
 
-  toggleSidebarMinimized(): void {
-    this.isSidebarMinimizedActive = !this.isSidebarMinimizedActive;
-    localStorage.setItem('SideBarMinimized', JSON.stringify(this.isSidebarMinimizedActive))
-  }
+  // toggleSidebarMinimized(): void {
+  //   this.isSidebarMinimizedActive = !this.isSidebarMinimizedActive;
+  //   localStorage.setItem('SideBarMinimized', JSON.stringify(this.isSidebarMinimizedActive))
+  // }
 
-  getPhoto() {
-    this.userService.getUserInfo().subscribe({
-      next: (user) => {
-        this.name = user.name;
-        this.photo = user.photo
-          ? `http://localhost:8000/uploads/users/${user.photo}`
-          : null;
-      },
-      error: (err) => {
-        console.error('Erro ao carregar usuário:', err);
-      }
-    });
-  }
+  // getPhoto() {
+  //   this.userService.getUserInfo().subscribe({
+  //     next: (user) => {
+  //       this.name = user.name;
+  //       this.photo = user.photo
+  //         ? `http://localhost:8000/uploads/users/${user.photo}`
+  //         : null;
+  //     },
+  //     error: (err) => {
+  //       console.error('Erro ao carregar usuário:', err);
+  //     }
+  //   });
+  // }
 
   logout(): void {
     localStorage.removeItem('ControleUsuarioLogado');
