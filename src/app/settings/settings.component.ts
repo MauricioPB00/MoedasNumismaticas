@@ -35,7 +35,9 @@ export class SettingsComponent implements OnInit {
   }
 
   toggleForm() {
+    this.loadingService.show();
     this.showForm = !this.showForm;
+    this.loadingService.hide();
   }
   toggleLogout() {
     this.showLogout = !this.showLogout;
@@ -59,6 +61,7 @@ export class SettingsComponent implements OnInit {
         }
       });
     }
+    this.loadingService.hide();
   }
 
   onFileSelected(event: any) {
@@ -95,6 +98,7 @@ export class SettingsComponent implements OnInit {
         this.loadingService.hide();
       }
     });
+    this.loadingService.hide();
   }
 
   onSubmitPhoto() {
