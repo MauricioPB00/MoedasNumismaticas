@@ -1,4 +1,13 @@
-<div class="filters">
+<div class="mobile-filter-bar">
+  <button class="filter-toggle" (click)="toggleFilters()" [class.active]="showFilters">
+    <i class="fa-solid fa-filter"></i> Filtros
+  </button>
+  <button class="filter-toggle" (click)="toggleFilters2()" [class.active]="showFilters2">
+    <i class="fa-solid fa-sliders"></i> Opções
+  </button>
+</div>
+
+<div class="filters" [class.show]="showFilters">
   <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (input)="applyFilters()">
   <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
   <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
@@ -19,41 +28,21 @@
   <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
 </div>
 
-<div class="filters2">
+<div class="filters2" [class.show]="showFilters2">
   <div class="checkboxes-left">
-    <label>
-      <input type="checkbox" [(ngModel)]="groupByCoinId" (change)="toggleGroupByCoinId()" />
-      Agrupar por moeda
-    </label>
-
-    <label>
-      <input type="checkbox" [(ngModel)]="groupByYear" (change)="toggleGroupByYear()" />
-      Agrupar por ano
-    </label>
-
-    <label>
-      <input type="checkbox" [(ngModel)]="showCoins" (change)="applyFilters()" />
-      Moedas
-    </label>
-
-    <label>
-      <input type="checkbox" [(ngModel)]="showBanknotes" (change)="applyFilters()" />
-      Cédulas
-    </label>
-
-    <label>
-      <input type="checkbox" [(ngModel)]="showOnlyRepeated" (change)="onRepeatedChange()" />
-      Repetidas
-    </label>
+    <label><input type="checkbox" [(ngModel)]="groupByCoinId" (change)="toggleGroupByCoinId()" /> Agrupar por
+      moeda</label>
+    <label><input type="checkbox" [(ngModel)]="groupByYear" (change)="toggleGroupByYear()" /> Agrupar por ano</label>
+    <label><input type="checkbox" [(ngModel)]="showCoins" (change)="applyFilters()" /> Moedas</label>
+    <label><input type="checkbox" [(ngModel)]="showBanknotes" (change)="applyFilters()" /> Cédulas</label>
+    <label><input type="checkbox" [(ngModel)]="showOnlyRepeated" (change)="onRepeatedChange()" /> Repetidas</label>
   </div>
 
   <div class="buttons-right">
     <button class="btn-album-value" (click)="openModalPrice()">Valor do Álbum</button>
     <button class="btn-album-pdf" (click)="openModalPDF()">Gerar PDF</button>
   </div>
-
 </div>
-
 
 <div class="album-container" *ngIf="pagedCoins.length > 0; else emptyState">
   <div class="coin-card" *ngFor="let entry of pagedCoins" (click)="viewCoin(entry.id, entry.type)">
@@ -124,7 +113,6 @@
     <label>
       <input type="radio" name="pdfType" [(ngModel)]="selectedPDFType" value="repeated" /> Repetidas
     </label>
-
     <button (click)="gerarPDF(); closeModalPDF()">Gerar PDF</button>
   </div>
 </div>

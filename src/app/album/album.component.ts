@@ -37,7 +37,7 @@ export class AlbumComponent implements OnInit {
   showBanknotes: boolean = true;
 
   currentPage = 1;
-  itemsPerPage = 28;
+  itemsPerPage = 30;
   totalPages = 0;
 
   showModal = false;
@@ -57,6 +57,9 @@ export class AlbumComponent implements OnInit {
   selectedPDFCountry: string = 'all';
 
   showOnlyRepeated: boolean = false;
+
+  showFilters = false;
+  showFilters2 = false;
 
   constructor(
     private coinsService: CoinsService,
@@ -531,5 +534,21 @@ export class AlbumComponent implements OnInit {
         console.error('Erro ao atualizar álbum:', err);
       }
     });
+  }
+
+  toggleFilters() {
+    // Fecha o segundo se estiver aberto
+    if (this.showFilters2) {
+      this.showFilters2 = false;
+    }
+    this.showFilters = !this.showFilters;
+  }
+
+  toggleFilters2() {
+    // Fecha o primeiro se estiver aberto
+    if (this.showFilters) {
+      this.showFilters = false;
+    }
+    this.showFilters2 = !this.showFilters2;
   }
 }

@@ -300,10 +300,6 @@ button.btn-limpar {
     height: 36px;
   }
 
-  .pagination {
-    padding-bottom: 100px;
-  }
-
   .filter-toggle {
     display: flex;
     align-items: center;
