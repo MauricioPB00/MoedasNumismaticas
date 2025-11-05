@@ -1,17 +1,37 @@
-<div class="filters">
+<div class="mobile-filter-bar">
+  <button class="filter-toggle" (click)="toggleFilters()" [class.active]="showFilters">
+    <i class="fa-solid fa-filter"></i> Filtros
+  </button>
+
+  <button class="filter-toggle" (click)="toggleTabs()" [class.active]="showTabs">
+    <i class="fa-solid fa-flag"></i> Países
+  </button>
+</div>
+
+<div class="selected-country" *ngIf="activeCountry">
+  <span class="fi" [ngClass]="'fi-' + activeCountryCode"></span>
+  <h2>{{ activeCountry }}</h2>
+</div>
+
+<div class="filters" [class.show]="showFilters">
   <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
   <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
+
   <button class="btn-ordenar" (click)="toggleSortOrder()">
     Ano: {{ sortOrder === 'asc' ? 'Crescente' : 'Decrescente' }}
   </button>
+
   <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
-  <button (click)="generateMissingYearsPDF()">
+
+  <button class="btn-pdf" (click)="generateMissingYearsPDF()">
     <i class="fa-solid fa-file-pdf"></i> Faltantes
   </button>
 </div>
-<div class="tabs country-tabs">
+
+<div class="tabs country-tabs" [class.show]="showTabs">
   <button *ngFor="let country of countries" [class.active]="activeCountry === country.name"
     (click)="onCountryClick(country.name)">
+    <span class="fi fi-{{ country.code }}"></span>
     {{ country.name }}
   </button>
 </div>

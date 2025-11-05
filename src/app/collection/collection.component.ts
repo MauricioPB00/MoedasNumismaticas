@@ -39,9 +39,13 @@ export class CollectionComponent implements OnInit {
   activeCountry: string = 'Brasil';
   activeTab: 'coins' | 'banknotes' = 'coins';
   sortOrder: 'asc' | 'desc' = 'asc';
-  pageSize = 53;
+  pageSize = 70;
 
   countryData: { [country: string]: { coins: Coin[], banknotes: Coin[] } } = {};
+
+  showFilters = false;
+  showTabs = false;
+
 
   pagination: {
     [country: string]: {
@@ -354,4 +358,20 @@ export class CollectionComponent implements OnInit {
     };
     pdfMake.createPdf(docDefinition).open();
   }
+
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+    if (this.showFilters) this.showTabs = false;
+  }
+
+  toggleTabs() {
+    this.showTabs = !this.showTabs;
+    if (this.showTabs) this.showFilters = false;
+  }
+
+  get activeCountryCode(): string {
+    const found = this.countries.find(c => c.name === this.activeCountry);
+    return found ? found.code : '';
+  }
+
 }
