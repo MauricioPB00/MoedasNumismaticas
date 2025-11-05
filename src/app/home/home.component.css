@@ -277,6 +277,10 @@ button.btn-limpar {
     text-align: center;
   }
 
+  .coin-info p {
+    justify-content: center;
+  }
+
   .filters {
     flex-direction: column;
     align-items: stretch;
