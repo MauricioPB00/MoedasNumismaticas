@@ -1,25 +1,30 @@
-<div class="filters">
-  <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (input)="applyFilters()">
-  <div class="country-select">
-    <span class="fi" [ngClass]="'fi-' + getFlagCode(selectedCountry)"></span>
-    <select [(ngModel)]="selectedCountry" (change)="onCountryChange($event)">
-      <option *ngFor="let country of availableCountries" [value]="country.name">
-        {{ country.name }}
+<div class="filters-container">
+  <button class="filter-toggle" (click)="showFilters = !showFilters">
+    <i class="fa fa-filter"></i> Filtros
+  </button>
+
+  <div class="filters" [class.active]="showFilters">
+    <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (input)="applyFilters()">
+    <div class="country-select">
+      <span class="fi" [ngClass]="'fi-' + getFlagCode(selectedCountry)"></span>
+      <select [(ngModel)]="selectedCountry" (change)="onCountryChange($event)">
+        <option *ngFor="let country of availableCountries" [value]="country.name">
+          {{ country.name }}
+        </option>
+      </select>
+    </div>
+    <select [(ngModel)]="selectedCategory" (change)="applyFilters()">
+      <option value="">Todas categorias</option>
+      <option *ngFor="let cat of uniqueCategories" [value]="cat">
+        {{ cat === 'coin' ? 'Moeda' : cat === 'banknote' ? 'Cédula' : cat }}
       </option>
     </select>
+
+    <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
+    <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
+
+    <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
   </div>
-  <select [(ngModel)]="selectedCategory" (change)="applyFilters()">
-    <option value="">Todas categorias</option>
-    <option *ngFor="let cat of uniqueCategories" [value]="cat">
-      {{ cat === 'coin' ? 'Moeda' : cat === 'banknote' ? 'Cédula' : cat }}
-    </option>
-  </select>
-
-  <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
-  <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
-
-  <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
-
 </div>
 
 <div class="coins-container">

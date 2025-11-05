@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
+  padding: 0 150px 0 150px;
 }
 
 .coins-container-a {
@@ -244,10 +245,18 @@ button.btn-limpar {
   vertical-align: middle;
 }
 
+.filters-container {
+  position: relative;
+}
+
+.filter-toggle {
+  display: none;
+}
 
 @media (max-width: 768px) {
   .coins-container {
     grid-template-columns: 1fr;
+    padding: 0 15px 0 15px;
   }
 
   .coin-card {
@@ -278,5 +287,89 @@ button.btn-limpar {
   .filters select,
   .filters button {
     width: 100%;
+  }
+
+  .btn {
+    flex-direction: row;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .btn button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .pagination {
+    padding-bottom: 100px;
+  }
+
+  .filter-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--sidebar-color, #333);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 10px auto;
+    transition: background 0.3s ease;
+    width: 90%;
+  }
+
+  .filter-toggle:hover {
+    background: var(--sidebar-bt-color-hover, #555);
+  }
+
+  .filters {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 55px;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
+
+  .filters.active {
+    display: flex;
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .filters input,
+  .filters select,
+  .filters button {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .filters .btn-limpar {
+    background: #efbf04;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    color: #fff;
+    cursor: pointer;
   }
 }

@@ -32,6 +32,8 @@ export class HomeComponent implements OnInit {
   availableCountries: CountryCAD[] = AVAILABLE_COUNTRIES_CAD;
   uniqueCategories: string[] = [];
 
+  showFilters = false;
+
   constructor(
     private coinService: CoinService,
     private router: Router,
