@@ -69,7 +69,6 @@ export class LoginComponent {
         },
         error => {
           const msg =  'Email ou senha incorreto';
-          //this.showAlert(error.error); 
           this.toastr.error(msg);
           this.loading.hide();
         })
@@ -81,6 +80,10 @@ export class LoginComponent {
 
   goToRegister(){
     this.isSignUpMode = true;
+  }
+
+   goToLogin(){
+    this.isSignUpMode = false;
   }
   goToPasswordReset(){
     this.router.navigateByUrl('/password-reset');
@@ -107,7 +110,6 @@ export class LoginComponent {
           this.loading.hide();
         },
         error => {
-          // Aqui exibimos o erro de forma amigável
           const msg = error?.error?.message || 'Erro ao tentar cadastrar. Verifique os dados.';
           this.toastr.error(msg);
           this.loading.hide();
@@ -133,7 +135,7 @@ export class LoginComponent {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    this.showHeader = window.scrollY > 150; // só aparece depois de rolar 150px
+    this.showHeader = window.scrollY > 150; 
   }
 }
 

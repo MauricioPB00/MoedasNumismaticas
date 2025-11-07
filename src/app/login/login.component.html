@@ -10,10 +10,16 @@
       <img src="assets/img/Logo.png" alt="Logo" />
       <h2>Álbum Numismático</h2>
     </div>
-    <nav class="menu">
-      <a routerLink="/">Início</a>
-      <a (click)="goToRegister()">Cadastro</a>
-    </nav>
+<nav class="menu">
+  <a routerLink="/">Início</a>
+
+  <!-- Mostrar ENTRAR somente quando NÃO estiver em modo cadastro -->
+  <a class="goToLogin" *ngIf="isSignUpMode" (click)="goToLogin()">Entrar</a>
+
+  <!-- Mostrar CADASTRO somente quando NÃO estiver no login -->
+  <a class="goToRegister" *ngIf="!isSignUpMode" (click)="goToRegister()">Cadastro</a>
+</nav>
+
   </header>
 
 
