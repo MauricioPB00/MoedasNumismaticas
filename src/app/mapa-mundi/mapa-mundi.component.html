@@ -5,7 +5,7 @@
       {{ country.name }}
     </option>
   </select>
-  <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
+  <button class="btn-limpar" (click)="clearFilters()">Limpar</button>
 </div>
 
 <div class="map-container">
@@ -42,9 +42,9 @@
       </thead>
       <tbody>
         <tr *ngFor="let country of userCountries | filterCountry:searchTerm">
-          <td>{{ country.name }}</td>
-          <td>{{ country.coins }}</td>
-          <td>{{ country.banknotes }}</td>
+          <td data-label="País">{{ country.name }}</td>
+          <td data-label="Moedas">{{ country.coins }}</td>
+          <td data-label="Cédulas">{{ country.banknotes }}</td>
         </tr>
       </tbody>
     </table>
