@@ -62,6 +62,11 @@
      gap: 1.2rem;
  }
 
+ .left-menu{
+    gap: 3.0rem;
+    margin-left: 100px;
+ }
+
  .horizontal-menu li a {
      padding: 0;
  }
@@ -268,6 +273,7 @@
 
      .left-menu {
          justify-content: flex-start;
+         margin-left: 0px;
      }
 
      .right-menu {
