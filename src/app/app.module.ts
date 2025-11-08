@@ -33,6 +33,7 @@ import { FilterCountryPipe } from './models/filter-country.pipe';
 import { CollectionComponent } from './collection/collection.component';
 import { ModalPriceComponent } from './modal-price/modal-price.component';
 import { SpinnerCoinComponent } from './shared/spinner-coin/spinner-coin.component';
+import { CatalogoComponent } from './catalogo/catalogo.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { SpinnerCoinComponent } from './shared/spinner-coin/spinner-coin.compone
     CollectionComponent,
     ModalPriceComponent,
     SpinnerCoinComponent,
+    CatalogoComponent,
   ],
   imports: [
     BrowserModule,

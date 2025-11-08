@@ -37,6 +37,7 @@ export class AppComponent implements OnInit {
       url === '/login' ||
       url === '/password-reset' ||
       url === '/reset-password' ||
+      url === '/catalogo' ||
       url.startsWith('/reset-password')
     );
   }

@@ -1,0 +1,410 @@
+h2,
+h1,
+p,
+a,
+h3,
+li {
+  font-family: "Open Sans", sans-serif;
+}
+
+.home-container {
+  font-family: "Montserrat", sans-serif;
+  color: hsl(220, 68%, 4%);
+  background: #f9f9f9;
+}
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  background: hsl(208, 92%, 54%);
+  color: white;
+  flex-wrap: wrap;
+}
+
+.home-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.home-header img {
+  width: 50px;
+  height: 50px;
+}
+
+.menu {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.menu a {
+  color: white;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.menu a:hover {
+  color: hsl(208, 100%, 85%);
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.8rem;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #e6f0ff, #ffffff);
+  width: 100%;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+}
+
+.banner-text h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-family: "Open Sans", sans-serif;
+}
+
+.banner-text p {
+  font-size: 1.2rem;
+  font-family: "Open Sans", sans-serif;
+  margin-bottom: 1.5rem;
+}
+
+.banner-text button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.5rem;
+  background: hsl(208, 92%, 54%);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.banner-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner-img img {
+  max-width: 250px;
+  width: 100%;
+  border-radius: 1rem;
+}
+
+.hero-title {
+  text-align: center;
+  margin-top: 40px;
+  animation: fadeIn 1.2s ease-out forwards;
+  opacity: 0;
+}
+
+.hero-title h1 {
+  font-size: 3.2rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #555;
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+}
+
+.hero-title h1 span {
+  background: linear-gradient(180deg, #efbf04, #d5a803);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-title h2 {
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin-top: 12px;
+  color: #555;
+  letter-spacing: 1.5px;
+  font-family: 'Poppins', sans-serif;
+  opacity: 0.9;
+}
+
+/* SVG */
+
+.hero-map {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 20px;
+  margin-top: 30px;
+  height: 600px;
+}
+
+.hero-map svg {
+  width: 80%;
+  max-width: 1000px;
+  height: auto;
+  opacity: 0.12;
+}
+
+.hero-map svg.map-animate {
+  animation: heroMapIn 1.2s ease-out forwards;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.hero-map svg {
+  opacity: 0;
+}
+
+.fade-svg {
+  animation: fadeMap 1.2s ease forwards;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-top: 60px;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #d4a017, #efbf04, #ffde6b);
+  -webkit-background-clip: text;
+  color: transparent;
+  letter-spacing: 1px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 1.15rem;
+  margin-bottom: 35px;
+  color: #444;
+  opacity: 0.85;
+  font-weight: 400;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+  animation: fadeIn 1.1s ease-out;
+}
+
+.flags-grid {
+  padding-right: 10%;
+  padding-left: 10%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 26px;
+}
+
+.flag-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 0;
+  overflow: visible;
+
+  transition:
+    transform 0.35s cubic-bezier(.16, .82, .43, 1),
+    box-shadow 0.35s ease;
+}
+
+.flag-card:hover {
+  transform: translateY(-8px) scale(1.10);
+  z-index: 20;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+}
+
+.flag-card {
+  animation: cardEnter 0.45s cubic-bezier(.16, .82, .43, 1) both;
+}
+
+.flag-wrapper {
+  margin-bottom: 16px;
+  font-size: 3.2rem;
+  animation: popIn .45s ease-out;
+}
+
+.country {
+  font-weight: 700;
+  font-size: 1.35rem;
+  margin-bottom: 14px;
+  color: #222;
+  text-align: center;
+  letter-spacing: 0.4px;
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin-top: 4px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat b {
+  font-size: 1.6rem;
+  display: block;
+  color: #efbf04;
+  margin-bottom: 3px;
+}
+
+.stat span {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroMapIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+
+  to {
+    opacity: 0.12;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeMap {
+  0% {
+    opacity: 0;
+    transform: translateY(25px) scale(0.97);
+  }
+
+  100% {
+    opacity: 0.12;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 span {
+    display: block;
+    margin-top: 4px;
+  }
+
+  .home-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .menu {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-title h1 {
+    font-size: 2.6rem;
+  }
+
+  .hero-title h2 {
+    font-size: 1.2rem;
+  }
+
+  .hero-map img {
+    width: 95%;
+    opacity: 0.2;
+  }
+
+  .hero-map {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 5% 0 5%;
+    height: 100%;
+  }
+
+  .flags-grid {
+    padding: 0 10% 0 10%;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: 35px;
+  }
+
+}

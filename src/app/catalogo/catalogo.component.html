@@ -1,0 +1,44 @@
+<app-header *ngIf="showHeader"></app-header>
+<header class="home-header">
+  <div class="logo">
+    <img src="assets/img/Logo.png" alt="Logo" />
+    <h2>Álbum Numismático</h2>
+  </div>
+  <nav class="menu">
+    <a href="''">Menu</a>
+    <a (click)="goToLogin()">Entrar</a>
+  </nav>
+</header>
+<div class="hero-title">
+  <h1>Mais de <span>9 Países</span></h1>
+  <h2>Catalogados</h2>
+</div>
+<div #svgContainer class="hero-map"></div>
+<h2 class="section-title">Coleções por País</h2>
+<p class="section-subtitle">
+  Explore a quantidade de moedas e cédulas catalogadas para cada país.
+</p>
+
+<div class="flags-grid">
+  <div *ngFor="let c of cadCountries" class="flag-card">
+    <div class="flag-wrapper">
+      <span class="fi fi-{{ c.code }}"></span>
+    </div>
+
+    <div class="info">
+      <div class="country">{{ c.name }}</div>
+
+      <div class="stats">
+        <div class="stat">
+          <b>{{ c.coin }}</b>
+          <span>Moedas</span>
+        </div>
+
+        <div class="stat">
+          <b>{{ c.banknote }}</b>
+          <span>Cédulas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
