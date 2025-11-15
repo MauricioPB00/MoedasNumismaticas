@@ -16,8 +16,17 @@ export class SettingsComponent implements OnInit {
   showForm = false;
   showPhoto = false
   showLogout = false;
+  showBanner = false;
   selectedFile: File | null = null;
   previewUrl: string | null = null;
+
+  preview: string | null = null;
+  selectedFileBanner!: File | null;
+  errorMessage = '';
+  validImage = false;
+  advertisingUrl: string = '';
+
+  existingBanner = false;
 
   constructor(
     private http: HttpClient,
@@ -32,6 +41,7 @@ export class SettingsComponent implements OnInit {
     if (controleUsuario) {
       this.user = JSON.parse(controleUsuario);
     }
+    this.loadAdvertising();
   }
 
   toggleForm() {
@@ -41,6 +51,10 @@ export class SettingsComponent implements OnInit {
   }
   toggleLogout() {
     this.showLogout = !this.showLogout;
+  }
+
+  toggleBanner() {
+    this.showBanner = !this.showBanner;
   }
 
   togglePhoto() {
@@ -107,8 +121,8 @@ export class SettingsComponent implements OnInit {
 
     this.userService.uploadPhoto(this.selectedFile).subscribe({
       next: (res: any) => {
-        this.user.photo = res.photo; 
-        this.previewUrl = null;      
+        this.user.photo = res.photo;
+        this.previewUrl = null;
         this.selectedFile = null;
         this.loadingService.hide();
         this.toastr.success('Foto atualizada com sucesso!');
@@ -120,12 +134,130 @@ export class SettingsComponent implements OnInit {
       }
     });
   }
-  onSubmitLogout(){
+  onSubmitLogout() {
     localStorage.removeItem('ControleUsuarioLogado');
     localStorage.removeItem('ControleUsuario');
     localStorage.removeItem('ControleUsuarioPermi');
     localStorage.removeItem('ControleUsuarioIP');
     localStorage.removeItem('jwt');
     this.router.navigate(['/']);
+  }
+
+  onFileSelect(event: any) {
+    const file = event.target.files[0];
+    this.validateImage(file);
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    const file = event.dataTransfer?.files?.[0];
+    if (file) this.validateImage(file);
+  }
+
+  validateImage(file: File) {
+    this.errorMessage = '';
+    this.validImage = false;
+    this.preview = null;
+
+    if (!file) return;
+
+    const allowed = ['image/jpeg', 'image/png'];
+    if (!allowed.includes(file.type)) {
+      this.errorMessage = 'Apenas JPG ou PNG.';
+      return;
+    }
+
+    if (file.size > 500 * 1024) {
+      this.errorMessage = 'Imagem maior que 500 KB.';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const img = new Image();
+      img.onload = () => {
+        const w = img.width;
+        const h = img.height;
+
+        if (Math.abs(w / h - 4) > 0.1) {
+          this.errorMessage = 'A imagem deve ter proporção aproximada de 4:1.';
+          return;
+        }
+
+        if (w < 1000 || w > 3000) {
+          this.errorMessage = 'A largura deve ser entre 1000px e 3000px.';
+          return;
+        }
+
+        this.preview = e.target.result;
+        this.validImage = true;
+      };
+
+      img.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  submitBanner() {
+    if (!this.selectedFile || !this.validImage) return;
+
+    this.loadingService.show();
+
+    this.userService.uploadAdvertising(this.selectedFile, this.advertisingUrl).subscribe({
+      next: (res: any) => {
+        this.loadingService.hide();
+        this.toastr.success('Banner salvo com sucesso!');
+      },
+      error: (err) => {
+        this.loadingService.hide();
+        this.toastr.error(err?.error?.error || 'Erro ao salvar banner.');
+      }
+    });
+  }
+
+  onFileSelectBanner(event: any) {
+    const file = event.target.files?.[0];
+    if (file) {
+      this.selectedFile = file;
+      this.validateImage(file);
+    }
+  }
+
+  loadAdvertising() {
+    this.userService.getAdvertising().subscribe({
+      next: (res: any) => {
+
+        if (res?.empty) {
+          return;
+        }
+
+        this.advertisingUrl = res.url;
+
+        this.preview = `assets/img/anuncio/${res.image}`;
+
+        this.validImage = true;
+        this.existingBanner = true;
+      },
+      error: () => { }
+    });
+  }
+
+  deleteBanner() {
+    this.userService.deleteAdvertising().subscribe({
+      next: () => {
+        this.toastr.success('Banner removido.');
+
+        this.preview = null;
+        this.advertisingUrl = '';
+        this.validImage = false;
+        this.existingBanner = false;
+      },
+      error: () => this.toastr.error('Erro ao remover banner.')
+    });
   }
 }

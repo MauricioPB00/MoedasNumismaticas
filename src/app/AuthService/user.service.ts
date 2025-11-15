@@ -97,6 +97,50 @@ export class UserService {
       );
   }
 
+  uploadAdvertising(file: File, url: string): Observable<any> {
+    const token = localStorage.getItem('jwt');
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Authorization": `Bearer ${token}`
+      })
+    };
+
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('url', url);
+
+    return this.httpClient.post<any>(`${API_CONFIG.baseUrl}/advertising`, formData, httpOptions);
+  }
+
+  getAdvertising() {
+    const token = localStorage.getItem('jwt');
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Authorization": `Bearer ${token}`
+      })
+    };
+
+    return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/advertising/buscar`, httpOptions)
+      .pipe(
+        retry(0),
+        catchError(this.handleError)
+      );
+  }
+
+  deleteAdvertising(): Observable<any> {
+    const token = localStorage.getItem('jwt');
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      })
+    };
+
+    return this.httpClient.post<any>(
+      `${API_CONFIG.baseUrl}/advertising/delete`, {}, httpOptions);
+  }
 
 
 

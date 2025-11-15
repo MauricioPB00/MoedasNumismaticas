@@ -65,4 +65,53 @@
       </form>
     </div>
   </div>
+
+  <div class="settings-header-banner">
+    <div class="settings-header-profile">
+
+      <div class="settings-header" (click)="toggleBanner()">
+        <span class="arrow">
+          {{ showBanner ? 'Banner Anúncio ▲' : 'Banner Anúncio ▼' }}
+        </span>
+      </div>
+
+      <form [class.expanded]="showBanner" enctype="multipart/form-data">
+        <div class="banner-upload-container">
+
+          <h3 *ngIf="!existingBanner">Enviar banner de anúncio</h3>
+          <h3 *ngIf="existingBanner">Editar banner de anúncio</h3>
+
+          <p class="description">Imagem recomendada: 1200×300, JPG ou PNG, até 500 KB.</p>
+
+          <div class="url-input-box">
+            <label for="advUrl">Link do anúncio</label>
+            <input id="advUrl" type="text" placeholder="https://seusite.com" [(ngModel)]="advertisingUrl"
+              name="advertisingUrl" />
+          </div>
+
+          <label class="upload-box" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+            <input type="file" accept="image/png, image/jpeg" hidden (change)="onFileSelectBanner($event)" />
+
+            <ng-container *ngIf="!preview">
+              <span class="upload-text">Clique ou arraste sua imagem aqui</span>
+            </ng-container>
+
+            <img *ngIf="preview" [src]="preview" class="preview-img" />
+          </label>
+
+          <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+          <button class="btn-submit" [disabled]="!validImage" (click)="submitBanner()">
+            Salvar Banner
+          </button>
+
+          <button *ngIf="existingBanner" class="btn-delete" (click)="deleteBanner()">
+            Remover Banner
+          </button>
+
+        </div>
+      </form>
+
+    </div>
+  </div>
 </div>

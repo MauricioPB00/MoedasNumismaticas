@@ -171,3 +171,128 @@ form button[type="submit"]:hover {
 .save-photo-btn:hover {
   background: #218838;
 }
+
+.banner-upload-container {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h3 {
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.description {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+}
+
+.upload-box {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 35px;
+  display: block;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.upload-box:hover {
+  border-color: #efbf04;
+}
+
+.upload-text {
+  color: #777;
+  font-size: 0.95rem;
+}
+
+.preview-img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.error {
+  color: #d9534f;
+  font-size: 0.85rem;
+  margin-top: 10px;
+}
+
+.btn-submit {
+  margin-top: 18px;
+  padding: 10px 22px;
+  background: #efbf04;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-submit:disabled {
+  background: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.url-input-box {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.url-input-box label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.url-input-box input {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.url-input-box input:focus {
+  border-color: #efbf04;
+  box-shadow: 0 0 4px rgba(239,191,4,0.3);
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-delete::before {
+  content: "🗑️";
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+.btn-delete:hover {
+  background-color: #c0392b;
+  transform: translateY(-1px);
+}
+
+.btn-delete:active {
+  background-color: #962d22;
+  transform: translateY(0);
+}
+
+.btn-delete:disabled {
+  background-color: #bbb;
+  cursor: not-allowed;
+  transform: none;
+}
