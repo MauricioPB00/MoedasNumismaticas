@@ -173,8 +173,9 @@ export class UserService {
       `${API_CONFIG.baseUrl}/advertising/delete`, {}, httpOptions);
   }
 
-
-
+  getApprovedBanners() {
+    return this.httpClient.get<any[]>(`${API_CONFIG.baseUrl}/advertising/aprovados`);
+  }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';

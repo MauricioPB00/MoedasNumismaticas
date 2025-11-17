@@ -14,6 +14,7 @@ import { AlbumComponent } from './album/album.component';
 import { MapaMundiComponent } from './mapa-mundi/mapa-mundi.component';
 import { CollectionComponent } from './collection/collection.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
+import { BannerComponent } from './banner/banner.component';
 
 enum Permi { admin = 2, operador = 1 }
 
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'password-reset', component: PasswordResetComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'catalogo', component: CatalogoComponent },
+  { path: 'anuncios', component: BannerComponent },
   { path: 'collection', component: CollectionComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'sidebar', component: SideBarComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },

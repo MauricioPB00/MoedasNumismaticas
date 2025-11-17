@@ -34,6 +34,7 @@ import { CollectionComponent } from './collection/collection.component';
 import { ModalPriceComponent } from './modal-price/modal-price.component';
 import { SpinnerCoinComponent } from './shared/spinner-coin/spinner-coin.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
+import { BannerComponent } from './banner/banner.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { CatalogoComponent } from './catalogo/catalogo.component';
     ModalPriceComponent,
     SpinnerCoinComponent,
     CatalogoComponent,
+    BannerComponent,
   ],
   imports: [
     BrowserModule,
