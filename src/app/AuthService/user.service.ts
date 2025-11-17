@@ -129,6 +129,37 @@ export class UserService {
       );
   }
 
+  getPendingBanners() {
+    const token = localStorage.getItem('jwt');
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Authorization": `Bearer ${token}`
+      })
+    };
+
+    return this.httpClient.get<any[]>(
+      `${API_CONFIG.baseUrl}/advertising/pendentes`,
+      httpOptions
+    );
+  }
+
+  approveBanner(id: number) {
+    const token = localStorage.getItem('jwt');
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Authorization": `Bearer ${token}`
+      })
+    };
+
+    return this.httpClient.post(
+      `${API_CONFIG.baseUrl}/advertising/aprovar/${id}`,
+      {},
+      httpOptions
+    );
+  }
+
   deleteAdvertising(): Observable<any> {
     const token = localStorage.getItem('jwt');
 

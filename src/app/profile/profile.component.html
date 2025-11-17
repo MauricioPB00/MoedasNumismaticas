@@ -1,6 +1,11 @@
 <div class="settings-header-title">
   <h2>Perfis de Usuário</h2>
+
+  <button class="btn-approve-banner" (click)="openBannerModal()">
+    Aprovar Banner
+  </button>
 </div>
+
 <div class="profile-container">
   <div *ngFor="let user of users" class="user-card">
     <img [src]="user.photo ? 'http://localhost:8000/uploads/users/' + user.photo : 'assets/img/person.png'"
@@ -9,5 +14,32 @@
       <h3>{{ user.name }}</h3>
       <p>{{ user.email }}</p>
     </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showBannerModal">
+  <div class="modal-box">
+
+    <h2>Banners para Aprovação</h2>
+
+    <p *ngIf="banners.length === 0">Nenhum banner pendente.</p>
+
+    <div class="banner-list">
+      <div class="banner-item" *ngFor="let b of banners">
+
+        <img [src]="getBannerUrl(b.advertisingImg)" (error)="onBannerError($event)" class="banner-preview"
+          alt="Banner do anúncio" />
+
+        <div class="banner-info">
+          <p><strong>Email:</strong> {{ b.user.email }}</p>
+          <p><strong>URL:</strong> {{ b.url }}</p>
+        </div>
+
+        <button class="btn-approve" (click)="approveBanner(b.id)">
+          Aprovar
+        </button>
+      </div>
+    </div>
+    <button class="btn-close" (click)="closeBannerModal()">Fechar</button>
   </div>
 </div>
