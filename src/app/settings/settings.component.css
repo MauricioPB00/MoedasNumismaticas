@@ -262,6 +262,7 @@ h3 {
 }
 
 .btn-delete {
+  margin-left: 10px;
   background-color: #e74c3c;
   color: #fff;
   border: none;
@@ -273,12 +274,7 @@ h3 {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-}
-
-.btn-delete::before {
-  content: "🗑️";
-  font-size: 16px;
-  margin-right: 4px;
+  font-weight: 600;
 }
 
 .btn-delete:hover {
