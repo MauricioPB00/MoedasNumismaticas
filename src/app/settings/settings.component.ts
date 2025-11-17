@@ -20,6 +20,8 @@ export class SettingsComponent implements OnInit {
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
+  public bannerInReview: boolean = false;
+
   preview: string | null = null;
   selectedFileBanner!: File | null;
   errorMessage = '';
@@ -211,14 +213,16 @@ export class SettingsComponent implements OnInit {
     this.userService.uploadAdvertising(this.selectedFile, this.advertisingUrl).subscribe({
       next: (res: any) => {
         this.loadingService.hide();
-        this.toastr.success('Banner salvo com sucesso!');
+        this.toastr.info('Seu banner foi enviado para análise!');
+        this.bannerInReview = true;
       },
       error: (err) => {
         this.loadingService.hide();
-        this.toastr.error(err?.error?.error || 'Erro ao salvar banner.');
+        this.toastr.error(err?.error?.error || 'Erro ao enviar banner.');
       }
     });
   }
+
 
   onFileSelectBanner(event: any) {
     const file = event.target.files?.[0];

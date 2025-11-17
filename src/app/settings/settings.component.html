@@ -83,6 +83,10 @@
 
           <p class="description">Imagem recomendada: 1200×300, JPG ou PNG, até 500 KB.</p>
 
+          <p class="banner-review-msg" *ngIf="bannerInReview">
+            Seu banner foi enviado para análise!
+          </p>
+
           <div class="url-input-box">
             <label for="advUrl">Link do anúncio</label>
             <input id="advUrl" type="text" placeholder="https://seusite.com" [(ngModel)]="advertisingUrl"
