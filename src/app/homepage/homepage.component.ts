@@ -13,6 +13,10 @@ export class HomepageComponent {
   }
   showHeader = false;
 
+  ngOnInit() {
+  window.addEventListener("scroll", this.handleScroll);
+}
+
    @HostListener('window:scroll', [])
   onWindowScroll() {
     this.showHeader = window.scrollY > 150; // só aparece depois de rolar 150px
@@ -26,4 +30,15 @@ export class HomepageComponent {
   goToRegister(){
     this.router.navigateByUrl('/login');
   }
+
+  handleScroll = () => {
+  const elements = document.querySelectorAll(".reveal, .reveal-card");
+
+  elements.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    const visible = rect.top < window.innerHeight - 80;
+
+    if (visible) el.classList.add("visible");
+  });
+}
 }
