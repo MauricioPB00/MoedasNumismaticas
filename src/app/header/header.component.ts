@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
 
-    constructor(private router: Router) { }
+  constructor(private router: Router) { }
 
   goToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -16,5 +16,9 @@ export class HeaderComponent {
   goToLogin() {
     console.log('a');
     this.router.navigateByUrl('/login');
+  }
+
+  goToAnuncios() {
+    this.router.navigateByUrl('/anuncios');
   }
 }
