@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CoinService } from '../AuthService/coin.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '../shared/loading.service';
 import { AVAILABLE_COUNTRIES_CAD, CountryCAD } from '../models/countriesCAD';
+import { CoinRecognitionService } from '../AuthService/recognition.service';
 
 @Component({
   selector: 'app-home',
@@ -34,11 +35,16 @@ export class HomeComponent implements OnInit {
 
   showFilters = false;
 
+  @ViewChild('video', { static: false }) video!: ElementRef<HTMLVideoElement>;
+  stream: MediaStream | null = null;
+  cameraModalOpen = false;
+
   constructor(
     private coinService: CoinService,
     private router: Router,
     private route: ActivatedRoute,
     private loading: LoadingService,
+    private recognitionService: CoinRecognitionService
   ) { }
 
   ngOnInit(): void {
@@ -250,5 +256,103 @@ export class HomeComponent implements OnInit {
   getFlagCode(issuer: string): string {
     const found = AVAILABLE_COUNTRIES_CAD.find(c => c.name === issuer);
     return found ? found.code : 'un';
+  }
+
+  openCameraModal() {
+    this.cameraModalOpen = true;
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        this.stream = stream;
+        this.video.nativeElement.srcObject = stream;
+      })
+      .catch(err => console.error("Erro ao acessar câmera:", err));
+  }
+
+  closeCameraModal() {
+    this.cameraModalOpen = false;
+
+    if (this.stream) {
+      this.stream.getTracks().forEach(track => track.stop());
+    }
+  }
+
+  takePhoto() {
+    this.loading.show();
+    const video = this.video.nativeElement;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const base64Image = canvas.toDataURL("image/jpeg");
+
+    if (this.stream) {
+      this.stream.getTracks().forEach(track => track.stop());
+      this.stream = null;
+    }
+
+    const previewContainer = video.parentElement!;
+    video.style.display = "none";
+
+    let img = previewContainer.querySelector("img");
+    if (!img) {
+      img = document.createElement("img");
+      previewContainer.appendChild(img);
+    }
+    img.src = base64Image;
+    img.style.width = "100%";
+    img.style.height = "100%";
+
+    this.loading.hide();
+
+    this.sendToPython(base64Image);
+  }
+
+
+  sendToPython(base64Image: string) {
+    this.loading.show();
+
+    this.recognitionService.identifyCoin(base64Image).subscribe({
+      next: (response: any) => {
+        console.log("Moeda identificada:", response);
+        this.closeCameraModal();
+
+        const coinId = response?.result?.best_match?.id;
+        if (coinId) {
+          this.router.navigate(['/coin', coinId]);
+        } else {
+          alert("Moeda identificada, mas sem ID!");
+        }
+
+        this.loading.hide();
+      },
+      error: (err: any) => {
+        console.error("Erro no reconhecimento:", err);
+        this.loading.hide();
+      }
+    });
+  }
+
+  async startCamera() {
+    try {
+      this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+      if (this.video && this.video.nativeElement) {
+        this.video.nativeElement.srcObject = this.stream;
+      }
+    } catch (error) {
+      console.error("Erro ao acessar câmera:", error);
+      alert("Não foi possível acessar a câmera.");
+    }
+  }
+
+  stopCamera() {
+    if (this.stream) {
+      this.stream.getTracks().forEach(track => track.stop());
+      this.stream = null;
+    }
   }
 }

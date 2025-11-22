@@ -59,6 +59,10 @@
   </a>
 </div>
 
+<button class="camera-button" (click)="openCameraModal()">
+  <i class="fa-solid fa-camera"></i>
+</button>
+
 <div class="pagination">
   <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
 
@@ -70,3 +74,19 @@
 <app-modal-coin *ngIf="showModal" [show]="showModal" [coin]="coin" [coinEntries]="coinEntries"
   (closed)="showModal = false">
 </app-modal-coin>
+
+<div class="camera-modal" *ngIf="cameraModalOpen">
+  <div class="camera-modal-content">
+
+    <button class="close-x" (click)="closeCameraModal()">×</button>
+
+    <h2>Tirar Foto da Moeda</h2>
+
+    <div class="camera-preview">
+      <video #video autoplay playsinline></video>
+    </div>
+
+    <button (click)="takePhoto()">Tirar Foto</button>
+
+  </div>
+</div>
