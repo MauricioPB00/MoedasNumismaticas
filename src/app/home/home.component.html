@@ -80,13 +80,14 @@
 
     <button class="close-x" (click)="closeCameraModal()">×</button>
 
-    <h2>Tirar Foto da Moeda</h2>
+    <h2>Buscar Moeda</h2>
+    <p>Centralize a moeda com o guia</p>
 
     <div class="camera-preview">
       <video #video autoplay playsinline></video>
+      <div class="camera-guide"></div>
     </div>
-
+    <p>Mantenha a moeda na orientação correta</p>
     <button (click)="takePhoto()">Tirar Foto</button>
-
   </div>
 </div>

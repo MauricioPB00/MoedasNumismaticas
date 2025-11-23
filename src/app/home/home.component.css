@@ -437,6 +437,18 @@ button.btn-limpar {
     align-items: center;
   }
 
+  .camera-guide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250px;
+    height: 250px;
+    transform: translate(-50%, -50%);
+    border: 3px dashed rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
   .close-x {
     position: absolute;
     right: 15px;
@@ -458,5 +470,42 @@ button.btn-limpar {
     height: 100%;
     object-fit: cover;
     border-radius: 12px;
+  }
+
+  .camera-modal-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .camera-modal-content h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .camera-modal-content p {
+    font-size: 0.95rem;
+    margin: 0.3rem 0;
+    color: #333;
+  }
+
+  .camera-modal-content button:not(.close-x) {
+    background-color: #ff9900;
+    color: #1a1a1a;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .camera-modal-content button:not(.close-x):hover {
+    background-color: #ffb733;
+    transform: translateY(-2px);
   }
 }
