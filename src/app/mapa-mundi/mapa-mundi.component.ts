@@ -354,7 +354,7 @@ export class MapaMundiComponent implements OnInit {
         }
 
         path.setAttribute('fill', '#EFBF04');
-        path.setAttribute('stroke', '#ffffffff');
+        path.setAttribute('stroke', '#000000')
         path.setAttribute('stroke-width', '0.5');
       });
     });
