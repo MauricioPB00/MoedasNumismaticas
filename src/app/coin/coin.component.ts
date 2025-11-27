@@ -24,6 +24,13 @@ export class CoinComponent implements OnInit {
   uniqueConditions: string[] = [];
   showModal = false;
 
+  sideLabels: Record<'obverse' | 'reverse', string> = {
+    obverse: 'Anverso',
+    reverse: 'Reverso'
+  };
+
+  sides: Array<'obverse' | 'reverse'> = ['reverse', 'obverse'];
+
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
