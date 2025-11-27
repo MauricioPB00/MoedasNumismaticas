@@ -295,6 +295,21 @@
 }
 
 @media (max-width: 768px) {
+
+  .coin-img-row {
+    flex-wrap: nowrap;
+    max-width: 300px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    left: 0%;
+    padding-left: 100px;
+  }
+
+  .coin-img {
+    box-shadow: none;
+  }
+
   .coin-detail {
     padding: 1rem;
   }
@@ -331,7 +346,6 @@
     min-width: 400px;
   }
 }
-
 
 @media (max-width: 480px) {
   .coin-title {
