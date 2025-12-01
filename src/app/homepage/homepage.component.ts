@@ -14,10 +14,11 @@ export class HomepageComponent {
   showHeader = false;
 
   ngOnInit() {
-  window.addEventListener("scroll", this.handleScroll);
-}
+    this.onSubmitLogout()
+    window.addEventListener("scroll", this.handleScroll);
+  }
 
-   @HostListener('window:scroll', [])
+  @HostListener('window:scroll', [])
   onWindowScroll() {
     this.showHeader = window.scrollY > 150; // só aparece depois de rolar 150px
   }
@@ -27,18 +28,25 @@ export class HomepageComponent {
     this.router.navigateByUrl('/login');
   }
 
-  goToRegister(){
+  goToRegister() {
     this.router.navigateByUrl('/login');
   }
 
   handleScroll = () => {
-  const elements = document.querySelectorAll(".reveal, .reveal-card");
+    const elements = document.querySelectorAll(".reveal, .reveal-card");
 
-  elements.forEach(el => {
-    const rect = el.getBoundingClientRect();
-    const visible = rect.top < window.innerHeight - 80;
+    elements.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      const visible = rect.top < window.innerHeight - 80;
 
-    if (visible) el.classList.add("visible");
-  });
-}
+      if (visible) el.classList.add("visible");
+    });
+  }
+  onSubmitLogout() {
+    localStorage.removeItem('ControleUsuarioLogado');
+    localStorage.removeItem('ControleUsuario');
+    localStorage.removeItem('ControleUsuarioPermi');
+    localStorage.removeItem('ControleUsuarioIP');
+    localStorage.removeItem('jwt');
+  }
 }
