@@ -295,6 +295,109 @@ li {
   vertical-align: middle;
 }
 
+
+/* Fundo escuro por trás do modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Caixa do modal */
+.edit-form {
+  width: 95%;
+  max-width: 450px;
+  background: #ffffff;
+  padding: 25px 30px;
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  animation: fadeInScale .25s ease forwards;
+  position: relative;
+}
+
+/* Animação suave */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.edit-form h3,
+.edit-form h4 {
+  margin-bottom: 12px;
+  color: #333;
+  text-align: center;
+}
+
+.edit-form label {
+  font-weight: 600;
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  color: #444;
+}
+
+.edit-form input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+  transition: border 0.2s ease;
+}
+
+.edit-form input:focus {
+  border-color: #3b82f6;
+}
+
+.edit-form button {
+  margin-top: 18px;
+  padding: 12px;
+  width: 48%;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.edit-form button:first-of-type {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.edit-form button:first-of-type:hover {
+  background: #1e64d8;
+}
+
+.edit-form button:last-of-type {
+  background: #ddd;
+  color: #333;
+}
+
+.edit-form button:last-of-type:hover {
+  background: #c8c8c8;
+}
+
+.edit-form button + button {
+  margin-left: 4%;
+}
+
+
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 1024px) {
   .coin-layout {

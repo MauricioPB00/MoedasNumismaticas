@@ -56,6 +56,7 @@
       <div *ngIf="coin.banknoteInfo?.length">
         <h3>Informações de Tiragem e Preços</h3>
         <div class="table-wrapper">
+          <button (click)="addNewInfo('banknote')">Adicionar Linha</button>
           <table class="table">
             <thead>
               <tr>
@@ -80,15 +81,17 @@
                   <td data-label="SOB">{{ getPrice(info.prices, 'SOB') }}</td>
                   <td data-label="SOB/FE">{{ getPrice(info.prices, 'S/FDC') }}</td>
                   <td data-label="FE">{{ getPrice(info.prices, 'FE') }}</td>
+                  <td><button (click)="editInfo('banknote', info)">Editar</button></td>
                 </tr>
               </ng-container>
             </tbody>
           </table>
         </div>
-      </div>
+      </div><button (click)="addNewInfo('coin')">Adicionar Linha</button>
       <div *ngIf="coin.coinInfo?.length">
         <h3>Informações de Tiragem e Preços</h3>
         <div class="table-wrapper">
+          
           <table class="table">
             <thead>
               <tr>
@@ -113,6 +116,7 @@
                   <td data-label="SOB">{{ getPrice(info.prices, 'SOB') }}</td>
                   <td data-label="SOB/FE">{{ getPrice(info.prices, 'S/FDC') }}</td>
                   <td data-label="FE">{{ getPrice(info.prices, 'FE') }}</td>
+                  <td><button (click)="editInfo('coin', info)">Editar</button></td>
                 </tr>
               </ng-container>
             </tbody>
@@ -201,3 +205,36 @@
 <app-modal-coin [show]="showModal" [coin]="coin" [coinEntries]="coinEntries" [albumCoins]="albumCoins"
   (closed)="showModal = false">
 </app-modal-coin>
+<div class="modal-backdrop" *ngIf="editing">
+
+
+<div class="edit-form" *ngIf="editing">
+  <h3>{{ isNew ? 'Adicionar Informações' : 'Editar Informações' }}</h3>
+
+  <label>Ano</label>
+  <input [(ngModel)]="editData.year_info">
+
+  <label>Tiragem</label>
+  <input [(ngModel)]="editData.mintage">
+
+  <h4>Preços:</h4>
+
+  <label>BC</label>
+  <input [(ngModel)]="editData.prices['BC']">
+
+  <label>MBC</label>
+  <input [(ngModel)]="editData.prices['MBC']">
+
+  <label>SOB</label>
+  <input [(ngModel)]="editData.prices['SOB']">
+
+   <label>S/FDC</label>
+  <input [(ngModel)]="editData.prices['S/FDC']">
+ 
+  <label>FDC</label>
+  <input [(ngModel)]="editData.prices['FDC']">
+
+  <button (click)="saveInfo()">Salvar</button>
+  <button (click)="cancel()">Cancelar</button>
+</div>
+</div>

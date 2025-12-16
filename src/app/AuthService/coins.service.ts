@@ -15,6 +15,11 @@ export class CoinsService {
     return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/coins/${id}`);
   }
 
+  saveCoinInfo(coinId: number, data: any) {
+    return this.httpClient.post(`${API_CONFIG.baseUrl}/coins/${coinId}/saveinfo`, data);
+  }
+
+
   addCoin(payload: any): Observable<any> {
     const token = localStorage.getItem('jwt');
 

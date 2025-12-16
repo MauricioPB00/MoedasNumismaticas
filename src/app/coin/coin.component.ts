@@ -24,6 +24,22 @@ export class CoinComponent implements OnInit {
   uniqueConditions: string[] = [];
   showModal = false;
 
+  editing = false;
+  isNew = false;
+  editingType: 'coin' | 'banknote' | null = null;
+  editData: any = {
+    year_info: '',
+    mintage: '',
+    prices: {
+      'R/BC': '',
+      'BC': '',
+      'MBC': '',
+      'SOB': '',
+      'S/FDC': '',
+      'FE': ''
+    }
+  };
+
   sideLabels: Record<'obverse' | 'reverse', string> = {
     obverse: 'Anverso',
     reverse: 'Reverso'
@@ -105,7 +121,7 @@ export class CoinComponent implements OnInit {
     const value = parseFloat(priceObj.price);
     if (isNaN(value)) return '-';
 
-    const valorEmReais = value * 7.5;
+    const valorEmReais = value * 1;
     return valorEmReais.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
@@ -123,6 +139,93 @@ export class CoinComponent implements OnInit {
 
     return hasMintage || hasValidPrice;
   }
+
+  editInfo(entityType: 'coin' | 'banknote', info: any) {
+  this.editing = true;
+  this.isNew = false;
+  this.editingType = entityType;  // <-- AGORA FUNCIONA
+
+  const gradeList = ["R/BC", "BC", "MBC", "SOB", "S/FDC", "FE", "FDC"];
+
+  const pricesObj: any = {};
+  gradeList.forEach(g => pricesObj[g] = '');
+
+  if (Array.isArray(info.prices)) {
+    info.prices.forEach((p: any) => {
+      pricesObj[p.grade] = p.price ?? '';
+    });
+  }
+
+  this.editData = {
+    ...info,
+    prices: pricesObj
+  };
+}
+
+
+
+
+  addNewInfo(type: 'coin' | 'banknote') {
+    this.editing = true;
+    this.isNew = true;
+    this.editingType = type;
+
+    this.editData = {
+      year_info: '',
+      mintage: '',
+      prices: {
+        'R/BC': '',
+        'BC': '',
+        'MBC': '',
+        'SOB': '',
+        'S/FDC': '',
+        'FDC': ''
+      }
+    };
+  }
+
+
+  cancel() {
+    this.editing = false;
+  }
+
+
+ saveInfo() {
+  const pricesArray = Object.keys(this.editData.prices).map(grade => {
+    let val = this.editData.prices[grade];
+
+    if (val === '' || val === null || val === undefined) {
+      val = null;
+    } else {
+      val = Number(val);
+      if (isNaN(val)) val = null;
+    }
+
+    return { grade, price: val };
+  });
+  
+  const payload = {
+    entityType: this.editingType, // <--- OBRIGATÓRIO
+    ...this.editData,
+    prices: pricesArray
+  };
+
+  console.log("ENVIADO:", payload);
+
+  this.coinsService.saveCoinInfo(this.coin.id, payload).subscribe({
+    next: () => {
+      if (this.editingType === 'coin' && this.isNew)
+        this.coin.coinInfo.push(this.editData);
+
+      if (this.editingType === 'banknote' && this.isNew)
+        this.coin.banknoteInfo.push(this.editData);
+
+      this.editing = false;
+
+    }
+  });
+}
+
 
 
 
