@@ -9,6 +9,6 @@
 
 //AWS
 export const environment = {
-  API: 'http://172.31.6.216:8000/api',
-  URL: 'http://172.31.6.216:8000/api'
+  API: 'http://44.203.46.90:8000/api',
+  URL: 'http://44.203.46.90:8000/api'
 };
