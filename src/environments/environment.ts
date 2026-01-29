@@ -9,6 +9,6 @@
 
 //AWS
 export const environment = {
-  API: 'http://44.203.46.90:8000/api',
-  URL: 'http://44.203.46.90:8000/api'
+  API: 'https://albumnumismatico.com.br/api',
+  URL: 'https://albumnumismatico.com.br/api'
 };
