@@ -104,7 +104,6 @@ export class AlbumComponent implements OnInit {
         });
 
         this.loading = false;
-        console.log('Álbum carregado (raw):', this.albumCoins);
         this.loadingService.hide();
       },
       error: (err) => {
@@ -168,8 +167,6 @@ export class AlbumComponent implements OnInit {
 
   applyFiltersGroupByYear(): void {
     const items = this.getBaseFilteredCoins();
-    console.log('filtered (after basic filters):', items.length);
-
     const map = new Map<string, any>();
 
     items.forEach(item => {
@@ -219,7 +216,6 @@ export class AlbumComponent implements OnInit {
       return g;
     });
 
-    console.log('grouped by year result:', grouped.length);
     this.filteredCoins = grouped;
     this.updatePagination();
   }
@@ -287,8 +283,6 @@ export class AlbumComponent implements OnInit {
 
   applyFiltersGroup(): void {
     const items = this.getBaseFilteredCoins();
-    console.log('filtered (after basic filters):', items.length);
-
     const map = new Map<string, any>();
 
     items.forEach(item => {
@@ -337,7 +331,6 @@ export class AlbumComponent implements OnInit {
       return g;
     });
 
-    console.log('grouped result:', grouped.length);
     this.filteredCoins = grouped;
     this.updatePagination();
   }
@@ -354,7 +347,6 @@ export class AlbumComponent implements OnInit {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
     this.pagedCoins = this.filteredCoins.slice(start, end);
-    console.log(`Página ${this.currentPage}/${this.totalPages} — exibindo ${this.pagedCoins.length} itens`);
   }
 
   applyCoinsFilter(value?: boolean): void {
@@ -412,8 +404,6 @@ export class AlbumComponent implements OnInit {
 
     this.showModal = true;
 
-    console.log('Abrir modal para item:', this.coin);
-    console.log('Entries inicializadas:', this.coinEntries);
   }
 
   openModalPrice() {

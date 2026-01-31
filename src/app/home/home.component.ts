@@ -249,7 +249,6 @@ export class HomeComponent implements OnInit {
 
     this.showModal = true;
 
-    console.log('Abrindo modal para:', this.coin);
     this.loading.hide();
   }
 
@@ -317,7 +316,6 @@ export class HomeComponent implements OnInit {
 
     this.recognitionService.identifyCoin(base64Image).subscribe({
       next: (response: any) => {
-        console.log("Moeda identificada:", response);
         this.closeCameraModal();
 
         const coinId = response?.result?.best_match?.id;

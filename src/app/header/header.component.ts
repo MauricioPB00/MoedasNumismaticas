@@ -14,7 +14,6 @@ export class HeaderComponent {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   goToLogin() {
-    console.log('a');
     this.router.navigateByUrl('/login');
   }
 

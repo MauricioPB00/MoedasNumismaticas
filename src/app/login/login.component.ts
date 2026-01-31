@@ -68,7 +68,10 @@ export class LoginComponent {
           this.loading.hide();
         },
         error => {
-          const msg =  'Email ou senha incorreto';
+          const msg =
+            error?.error?.message ||
+            'Email ou senha incorreto';
+
           this.toastr.error(msg);
           this.loading.hide();
         })
@@ -78,14 +81,14 @@ export class LoginComponent {
     }
   }
 
-  goToRegister(){
+  goToRegister() {
     this.isSignUpMode = true;
   }
 
-   goToLogin(){
+  goToLogin() {
     this.isSignUpMode = false;
   }
-  goToPasswordReset(){
+  goToPasswordReset() {
     this.router.navigateByUrl('/password-reset');
   }
 
@@ -100,7 +103,6 @@ export class LoginComponent {
   }
 
   onSignUp() {
-    console.log('Sign Up Data:', this.signUpData);
     this.loading.show();
     if (this.isSingUpValid()) {
       this.registerService.postRegister(this.signUpData).pipe(take(1)).subscribe(
@@ -135,7 +137,7 @@ export class LoginComponent {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    this.showHeader = window.scrollY > 150; 
+    this.showHeader = window.scrollY > 150;
   }
 }
 

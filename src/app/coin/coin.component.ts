@@ -210,8 +210,6 @@ export class CoinComponent implements OnInit {
     prices: pricesArray
   };
 
-  console.log("ENVIADO:", payload);
-
   this.coinsService.saveCoinInfo(this.coin.id, payload).subscribe({
     next: () => {
       if (this.editingType === 'coin' && this.isNew)

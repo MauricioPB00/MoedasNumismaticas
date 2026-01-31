@@ -24,7 +24,6 @@ export class HomepageComponent {
   }
 
   goToLogin() {
-    console.log('a');
     this.router.navigateByUrl('/login');
   }
 

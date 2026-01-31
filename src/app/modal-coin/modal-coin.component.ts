@@ -109,7 +109,6 @@ export class ModalCoinComponent {
     this.coinsService.getCoinAlbumById(id).subscribe({
       next: (res) => {
         this.albumCoins = this.sortAlbumCoins(res);
-        console.log('Álbum carregado:', this.albumCoins);
         const conds = [...new Set(
           res
             .map((c: any) => c.condition)
@@ -117,7 +116,6 @@ export class ModalCoinComponent {
         )] as string[];
 
         this.uniqueConditions = ['Todas condições', ...conds];
-        console.log('Álbum carregado:', this.albumCoins);
       },
       error: (err) => {
         console.error('Erro ao carregar álbum:', err);

@@ -36,7 +36,6 @@ export class LoginService {
       .pipe(
         map((data: any) => {
           if (data && data.token) {
-            console.log(data);
             var userData = {
               permi: data.permi,
               id: data.id,
@@ -54,9 +53,7 @@ export class LoginService {
         }),
         tap(() => {
           if (this.isLoggedIn()) {
-            console.log('Usuário autenticado.');
           } else {
-            console.log('Falha ao autenticar o usuário.');
           }
         })
       );
