@@ -9,7 +9,7 @@
 
 //AWS
 export const environment = {
-  API: 'https://api.albumnumismatico.com.br',
-  URL: 'https://api.albumnumismatico.com.br'
+  API: 'https://api.albumnumismatico.com.br/api',
+  URL: 'https://api.albumnumismatico.com.br/api'
 };
 
