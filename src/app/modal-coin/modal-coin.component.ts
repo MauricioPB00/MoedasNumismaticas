@@ -50,7 +50,7 @@ export class ModalCoinComponent {
       this.getAlbum(routeId);
       return;
     }
-    
+
     console.warn('Nenhum CoinId válido encontrado. O modal não irá carregar o álbum.');
   }
 
@@ -105,6 +105,18 @@ export class ModalCoinComponent {
     });
   }
 
+  blockNegative(event: KeyboardEvent): void {
+    if (event.key === '-' || event.key === 'e') {
+      event.preventDefault();
+    }
+  }
+
+  sanitizeQuantity(entry: any): void {
+    if (entry.quantity !== null && entry.quantity < 1) {
+      entry.quantity = null;
+    }
+  }
+
   getAlbum(id: number): void {
     this.coinsService.getCoinAlbumById(id).subscribe({
       next: (res) => {
@@ -149,7 +161,7 @@ export class ModalCoinComponent {
     this.loadingService.show();
     const quantidade = item.toRemove || 1;
     const coinId = this.coin.id ?? this.coin.coinId;
-    
+
     if (quantidade > item.quantity) {
       this.toastr.error("Você não pode remover mais do que possui!");
       return;

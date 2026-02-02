@@ -31,8 +31,9 @@
                         <tr *ngFor="let entry of coinEntries">
                             <td>{{ entry.year }}</td>
                             <td>
-                                <input type="number" [(ngModel)]="entry.quantity" min="0"
-                                    [ngModelOptions]="{standalone: true}" placeholder="0">
+                                <input type="number" min="1" step="1" [(ngModel)]="entry.quantity"
+                                    [ngModelOptions]="{ standalone: true }" placeholder="0"
+                                    (keydown)="blockNegative($event)" (input)="sanitizeQuantity(entry)">
                             </td>
                             <td>
                                 <select [(ngModel)]="entry.condition" [ngModelOptions]="{standalone: true}">
@@ -45,10 +46,12 @@
                             </td>
                             <td>
                                 <div class="actions">
-                                    <button (click)="saveEntry(entry)">Salvar</button>
+                                    <button (click)="saveEntry(entry)"
+                                        [disabled]="!entry.quantity || entry.quantity <= 0">
+                                        Salvar
+                                    </button>
                                 </div>
                             </td>
-
                         </tr>
                     </tbody>
                 </table>
