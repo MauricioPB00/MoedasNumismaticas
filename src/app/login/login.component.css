@@ -172,6 +172,26 @@ form.sign-in-form {
   margin-bottom: 10px;
 }
 
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-field i.fa-eye,
+.password-field i.fa-eye-slash {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+}
+
+
 .input-field {
   max-width: 380px;
   width: 100%;

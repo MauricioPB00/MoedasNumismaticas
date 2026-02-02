@@ -35,6 +35,8 @@ export class LoginComponent {
   dados: Login = { email: "", password: "" };
   showHeader = false;
   isSignUpMode = false;
+  showLoginPassword = false;
+  showSignupPassword = false;
 
   toggleMode() {
     this.isSignUpMode = !this.isSignUpMode;

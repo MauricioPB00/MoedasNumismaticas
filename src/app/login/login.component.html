@@ -10,15 +10,15 @@
       <img src="assets/img/Logo.png" alt="Logo" />
       <h2>Álbum Numismático</h2>
     </div>
-<nav class="menu">
-  <a routerLink="/">Início</a>
+    <nav class="menu">
+      <a routerLink="/">Início</a>
 
-  <!-- Mostrar ENTRAR somente quando NÃO estiver em modo cadastro -->
-  <a class="goToLogin" *ngIf="isSignUpMode" (click)="goToLogin()">Entrar</a>
+      <!-- Mostrar ENTRAR somente quando NÃO estiver em modo cadastro -->
+      <a class="goToLogin" *ngIf="isSignUpMode" (click)="goToLogin()">Entrar</a>
 
-  <!-- Mostrar CADASTRO somente quando NÃO estiver no login -->
-  <a class="goToRegister" *ngIf="!isSignUpMode" (click)="goToRegister()">Cadastro</a>
-</nav>
+      <!-- Mostrar CADASTRO somente quando NÃO estiver no login -->
+      <a class="goToRegister" *ngIf="!isSignUpMode" (click)="goToRegister()">Cadastro</a>
+    </nav>
 
   </header>
 
@@ -36,12 +36,13 @@
             <input type="text" id="email" name="email" autocomplete="off" [(ngModel)]="dados.email" required
               placeholder="E-mail">
           </div>
-          <div class="input-field">
+          <div class="input-field password-field">
             <i class="fas fa-lock"></i>
-            <input type="password" id="password" name="password" [(ngModel)]="dados.password" required
-              placeholder="Senha">
+            <input [type]="showLoginPassword ? 'text' : 'password'" id="password" name="password"
+              [(ngModel)]="dados.password" required placeholder="Senha">
+            <i class="fas" [ngClass]="showLoginPassword ? 'fa-eye-slash' : 'fa-eye'"
+              (click)="showLoginPassword = !showLoginPassword"></i>
           </div>
-
           <button type="submit" [ngStyle]="{ 'background-color': getButtonBackgroundColor() }" class="login-button">
             Login
           </button>
@@ -62,9 +63,12 @@
             <i class="fas fa-envelope"></i>
             <input type="email" placeholder="Email" [(ngModel)]="signUpData.email" name="signupEmail" />
           </div>
-          <div class="input-field">
+          <div class="input-field password-field">
             <i class="fas fa-lock"></i>
-            <input type="password" placeholder="Senha" [(ngModel)]="signUpData.password" name="signupPassword" />
+            <input [type]="showSignupPassword ? 'text' : 'password'" [(ngModel)]="signUpData.password"
+              name="signupPassword" placeholder="Senha">
+            <i class="fas" [ngClass]="showSignupPassword ? 'fa-eye-slash' : 'fa-eye'"
+              (click)="showSignupPassword = !showSignupPassword"></i>
           </div>
           <div class="input-field">
             <i class="fas fa-phone"></i>
