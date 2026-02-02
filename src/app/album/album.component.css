@@ -194,6 +194,7 @@ button.btn-limpar {
   align-items: center;
   gap: 12px;
   margin: 25px 0;
+  font-family: "Open Sans", sans-serif;
 }
 
 .pagination button {
