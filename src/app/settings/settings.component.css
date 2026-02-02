@@ -9,6 +9,7 @@ li {
 
 .settings-container {
   width: 100%;
+  font-family: "Open Sans", sans-serif;
 }
 
 .settings-header-title {
@@ -107,6 +108,7 @@ form button[type="submit"] {
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s ease;
+  font-family: "Open Sans", sans-serif;
 }
 
 form button[type="submit"]:hover {
@@ -236,6 +238,7 @@ h3 {
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
+  font-family: "Open Sans", sans-serif;
 }
 
 .btn-submit:disabled {
@@ -283,6 +286,7 @@ h3 {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-family: "Open Sans", sans-serif;
   font-weight: 600;
 }
 
