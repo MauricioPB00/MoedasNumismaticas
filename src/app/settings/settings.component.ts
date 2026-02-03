@@ -244,7 +244,7 @@ export class SettingsComponent implements OnInit {
 
         this.advertisingUrl = res.url;
 
-        this.preview = `assets/img/anuncio/${res.image}`;
+        this.preview = this.environment.API_URL + '/uploads/advertising/' + res.image;
 
         this.validImage = true;
         this.existingBanner = true;
