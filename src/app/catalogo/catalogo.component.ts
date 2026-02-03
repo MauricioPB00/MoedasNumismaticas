@@ -32,7 +32,15 @@ export class CatalogoComponent {
   }
 
   goToLogin() {
-    this.router.navigateByUrl('/login');
+    this.router.navigate(['/login'], {
+      queryParams: { mode: 'login' }
+    });
+  }
+
+  goToRegister() {
+    this.router.navigate(['/login'], {
+      queryParams: { mode: 'signup' }
+    });
   }
 
   loadSVG() {

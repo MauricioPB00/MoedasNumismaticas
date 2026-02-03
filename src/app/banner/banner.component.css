@@ -100,3 +100,27 @@ a {
         justify-content: center;
     }
 }
+
+@media (max-width: 480px) {
+    .home-header {
+        padding: 1rem;
+    }
+
+    .menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .banner-text h1 {
+        font-size: 1.5rem;
+    }
+
+    .banner-text p {
+        font-size: 0.9rem;
+    }
+
+    .banner-text button {
+        width: 100%;
+    }
+}

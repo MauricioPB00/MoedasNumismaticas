@@ -7,7 +7,7 @@ import { RegisterService } from '../AuthService/register.service';
 import { take } from 'rxjs/operators';
 
 import { ToastrService } from 'ngx-toastr';
-
+import { ActivatedRoute } from '@angular/router';
 import { LoadingService } from '../shared/loading.service';
 
 @Component({
@@ -23,6 +23,7 @@ export class LoginComponent {
     private router: Router,
     private toastr: ToastrService,
     private loading: LoadingService,
+    private route: ActivatedRoute
   ) { }
 
   signUpData = {
@@ -43,6 +44,9 @@ export class LoginComponent {
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.isSignUpMode = params['mode'] === 'signup';
+    });
     this.dados.email = "";
     this.dados.password = "";
     document.body.classList.remove('dark-mode');

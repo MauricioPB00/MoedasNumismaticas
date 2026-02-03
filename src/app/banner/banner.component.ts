@@ -41,7 +41,15 @@ export class BannerComponent implements OnInit {
   }
 
   goToLogin() {
-    this.router.navigateByUrl('/login');
+    this.router.navigate(['/login'], {
+      queryParams: { mode: 'login' }
+    });
+  }
+
+  goToRegister() {
+    this.router.navigate(['/login'], {
+      queryParams: { mode: 'signup' }
+    });
   }
 
   getBannerPath(img: string) {

@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     public loadingService: LoadingService,
     private cdRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isLoginRoute = this.checkRoute(this.router.url);
@@ -32,14 +32,22 @@ export class AppComponent implements OnInit {
 
   private checkRoute(url: string | null | undefined): boolean {
     if (!url) return false;
+    const cleanUrl = url.split('?')[0].split('#')[0];
+
+    const publicRoutes = [
+      '/',
+      '/login',
+      '/password-reset',
+      '/reset-password',
+      '/catalogo',
+      '/anuncios'
+    ];
+
     return (
-      url === '/' ||
-      url === '/login' ||
-      url === '/password-reset' ||
-      url === '/reset-password' ||
-      url === '/catalogo' ||
-      url === '/anuncios' ||
-      url.startsWith('/reset-password')
+      publicRoutes.includes(cleanUrl) ||
+      cleanUrl.startsWith('/reset-password')
     );
   }
+
+
 }

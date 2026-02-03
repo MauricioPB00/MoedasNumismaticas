@@ -24,12 +24,17 @@ export class HomepageComponent {
   }
 
   goToLogin() {
-    this.router.navigateByUrl('/login');
+    this.router.navigate(['/login'], {
+      queryParams: { mode: 'login' }
+    });
   }
 
   goToRegister() {
-    this.router.navigateByUrl('/login');
+    this.router.navigate(['/login'], {
+      queryParams: { mode: 'signup' }
+    });
   }
+
 
   handleScroll = () => {
     const elements = document.querySelectorAll(".reveal, .reveal-card");

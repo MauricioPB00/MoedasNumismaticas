@@ -1,8 +1,6 @@
 <!-- ===== CABEÇALHO ===== -->
 <app-header *ngIf="showHeader"></app-header>
 <!-- ===== CABEÇALHO ===== -->
-
-
 <div class="home-container">
   <!-- ===== CABEÇALHO ===== -->
   <header class="home-header">
@@ -12,19 +10,12 @@
     </div>
     <nav class="menu">
       <a routerLink="/">Início</a>
-
       <!-- Mostrar ENTRAR somente quando NÃO estiver em modo cadastro -->
       <a class="goToLogin" *ngIf="isSignUpMode" (click)="goToLogin()">Entrar</a>
-
       <!-- Mostrar CADASTRO somente quando NÃO estiver no login -->
       <a class="goToRegister" *ngIf="!isSignUpMode" (click)="goToRegister()">Cadastro</a>
     </nav>
-
   </header>
-
-
-
-
   <div class="container" [class.sign-up-mode]="isSignUpMode">
     <div class="forms-container">
       <div class="signin-signup">
@@ -48,9 +39,6 @@
           </button>
           <a (click)="goToPasswordReset()">Esqueci minha senha!</a>
         </form>
-
-
-
         <!-- Sign Up Form -->
         <form (ngSubmit)="onSignUp()" class="sign-up-form">
           <h2 class="title">Cadastro</h2>
@@ -78,10 +66,6 @@
         </form>
       </div>
     </div>
-
-
-
-
     <div class="panels-container">
       <div class="panel left-panel">
         <div class="content">
