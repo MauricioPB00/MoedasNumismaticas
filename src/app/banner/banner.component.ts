@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../AuthService/user.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-banner',
@@ -10,6 +11,7 @@ import { UserService } from '../AuthService/user.service';
 export class BannerComponent implements OnInit {
   showHeader = false;
   banners: any[] = [];
+  environment = environment;
 
   constructor(
     private router: Router,
@@ -43,6 +45,10 @@ export class BannerComponent implements OnInit {
   }
 
   getBannerPath(img: string) {
-    return `/assets/img/anuncio/${img}`;
+    if (!img) {
+      return 'assets/img/anuncio/default-banner.png';
+    }
+    return this.environment.API_URL + '/uploads/advertising/' + img;
   }
+
 }
