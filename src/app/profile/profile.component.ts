@@ -78,17 +78,13 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // getBannerUrl(fileName?: string | null): string {
-  //   if (!fileName) return '/assets/img/anuncio/default-banner.png';
-  //   return `/assets/img/anuncio/${fileName}`;
-  // }
-
-  getBannerUrl(img: string | null): string {
-    if (!img) {
+  getBannerUrl(fileName?: string | null): string {
+    if (!fileName) {
       return 'assets/img/anuncio/default-banner.png';
     }
-    return `assets/img/anuncio/${img}`;
+    return this.environment.API_URL + '/uploads/advertising/' + fileName;
   }
+
 
   onBannerError(event: Event) {
     const img = event.target as HTMLImageElement;

@@ -28,8 +28,8 @@
     <div class="banner-list">
       <div class="banner-item" *ngFor="let b of banners">
 
-       <img [src]="getBannerUrl(b.advertisingImg)" (error)="onBannerError($event)"
-            class="banner-preview" alt="Banner do anúncio"/>
+        <img [src]="getBannerUrl(b.advertisingImg)" (error)="onBannerError($event)" class="banner-preview"
+          alt="Banner do anúncio" />
 
         <div class="banner-info">
           <p><strong>Email:</strong> {{ b.user.email }}</p>
