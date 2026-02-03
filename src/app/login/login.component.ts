@@ -108,26 +108,35 @@ export class LoginComponent {
     );
   }
 
-  onSignUp() {
-    this.loading.show();
-    if (this.isSingUpValid()) {
-      this.registerService.postRegister(this.signUpData).pipe(take(1)).subscribe(
-        data => {
-          this.toastr.success('Cadastrado com sucesso');
-          this.isSignUpMode = false;
-          this.loading.hide();
-        },
-        error => {
-          const msg = error?.error?.message || 'Erro ao tentar cadastrar. Verifique os dados.';
-          this.toastr.error(msg);
-          this.loading.hide();
-        }
-      )
-    } else {
-      this.toastr.error('Preencha todos os campos corretamente antes de se cadastrar.');
-      this.loading.hide();
-    }
+ onSignUp() {
+  this.loading.show();
+
+  if (!this.isSingUpValid()) {
+    this.toastr.error('Preencha todos os campos corretamente antes de se cadastrar.');
+    this.loading.hide();
+    return;
   }
+
+  this.registerService.postRegister(this.signUpData)
+    .pipe(take(1))
+    .subscribe({
+      next: () => {
+        this.toastr.success('Cadastrado com sucesso');
+        this.isSignUpMode = false;
+        this.loading.hide();
+      },
+      error: (error) => {
+        let msg = 'Erro ao tentar cadastrar. Verifique os dados.';
+
+        if (error?.status === 409) {
+          msg = error?.error?.message || 'Este e-mail já está cadastrado';
+        }
+
+        this.toastr.error(msg);
+        this.loading.hide();
+      }
+    });
+}
 
   showAlert(data: any) {
     if (data != undefined) {
