@@ -10,7 +10,7 @@
   <div *ngFor="let user of users" class="user-card">
     <!-- <img [src]="user.photo ? 'http://localhost:8000/uploads/users/' + user.photo : 'assets/img/person.png'"
       class="profile-photo" /> -->
-    <img [src]="user.photo ? 'assets/img/' + user.photo : 'assets/img/person.png'" class="profile-photo" />
+    <img [src]="user.photo ? environment.API_URL + '/uploads/users/' + user.photo : 'assets/img/person.png'" class="profile-photo" />
     <div class="user-info">
       <h3>{{ user.name }}</h3>
       <p>{{ user.email }}</p>

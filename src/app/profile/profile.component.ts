@@ -3,6 +3,7 @@ import { UserService } from '../AuthService/user.service';
 import { take } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from '../shared/loading.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -11,7 +12,7 @@ import { LoadingService } from '../shared/loading.service';
 })
 export class ProfileComponent implements OnInit {
   users: any[] = [];
-
+  environment = environment;
   showBannerModal = false;
   banners: any[] = [];
 
