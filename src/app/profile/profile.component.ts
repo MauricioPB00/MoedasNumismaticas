@@ -78,9 +78,16 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  getBannerUrl(fileName?: string | null): string {
-    if (!fileName) return '/assets/img/anuncio/default-banner.png'; 
-    return `/assets/img/anuncio/${fileName}`;
+  // getBannerUrl(fileName?: string | null): string {
+  //   if (!fileName) return '/assets/img/anuncio/default-banner.png';
+  //   return `/assets/img/anuncio/${fileName}`;
+  // }
+
+  getBannerUrl(img: string | null): string {
+    if (!img) {
+      return 'assets/img/anuncio/default-banner.png';
+    }
+    return `assets/img/anuncio/${img}`;
   }
 
   onBannerError(event: Event) {
