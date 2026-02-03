@@ -5,6 +5,7 @@ import { take } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from '../shared/loading.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-settings',
@@ -19,6 +20,7 @@ export class SettingsComponent implements OnInit {
   showBanner = false;
   selectedFile: File | null = null;
   previewUrl: string | null = null;
+  environment = environment;
 
   public bannerInReview: boolean = false;
 

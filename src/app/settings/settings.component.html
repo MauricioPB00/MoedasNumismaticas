@@ -41,7 +41,8 @@
       <form [class.expanded]="showPhoto" (ngSubmit)="onSubmitPhoto()" enctype="multipart/form-data">
         <div class="photo-preview">
           <a (click)="selectFileInput.click()">
-            <img [src]="previewUrl || ('http://localhost:8000/uploads/users/' + user.photo)" class="profile-photo" />
+            <img [src]="previewUrl ? previewUrl : user?.photo ? environment.API_URL + '/uploads/users/' + user.photo
+                : 'assets/img/person.png'" class="profile-photo" />
           </a>
         </div>
         <div class="photo-btn-container">
