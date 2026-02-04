@@ -32,11 +32,11 @@ export class RegisterService {
   }
 
   postRegister(signUpData: any): Observable<any> {
-    return this.httpClient.post<any>(`${API_CONFIG.baseUrl}/register`, signUpData, this.httpOptions)
-      .pipe(
-        retry(0),
-        catchError(this.handleError)
-      );
+    return this.httpClient.post<any>(
+      `${API_CONFIG.baseUrl}/register`,
+      signUpData,
+      this.httpOptions
+    );
   }
 
   handleError(error: HttpErrorResponse) {
