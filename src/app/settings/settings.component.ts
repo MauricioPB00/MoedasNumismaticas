@@ -266,4 +266,11 @@ export class SettingsComponent implements OnInit {
       error: () => this.toastr.error('Erro ao remover banner.')
     });
   }
+
+  downloadTemplate() {
+    const link = document.createElement('a');
+    link.href = 'assets/img/template/Template_Banner_1200x300.png';
+    link.download = 'Template_Banner_1200x300.png';
+    link.click();
+  }
 }
