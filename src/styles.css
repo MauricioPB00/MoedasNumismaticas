@@ -33,3 +33,151 @@ body.dark-mode .container {
 .dark-mode .settings-header-profile:hover {
   background-color: rgb(145, 145, 145);
 }
+
+body.dark-mode .coin-card {
+  background-color: #909090;
+}
+
+body.dark-mode .coin-card .coin-info {
+  background-color: #909090;
+}
+
+body.dark-mode .coin-card .coin-images {
+  background-color: #909090;
+}
+
+body.dark-mode .filters {
+  background-color: #c5c5c5;
+  border-bottom: none;
+}
+
+body.dark-mode .coin-detail {
+  background: #b5b5b5;
+}
+
+body.dark-mode .coin-images {
+  background: #b5b5b5;
+}
+
+body.dark-mode .coin-info {
+  background: rgb(204, 204, 204)
+}
+
+body.dark-mode .coin-info p.issuer {
+  color: #2b2929;
+}
+
+body.dark-mode .coin-info p {
+  color: #2b2929;
+}
+
+body.dark-mode .coin-info p:not(.issuer) {
+  color: #2b2929;
+}
+
+body.dark-mode .coin-info section h3 {
+  color: #c3c3c3;
+}
+
+body.dark-mode .coin-title {
+  color: black;
+}
+
+body.dark-mode .meta span {
+  color: black;
+}
+
+body.dark-mode .more-info {
+  color: #2b2929;
+}
+
+body.dark-mode .coin-table {
+  background: #101010;
+}
+
+body.dark-mode .modal-container {
+  background: #b5b5b5;
+}
+
+body.dark-mode .modal-container .tabs button {
+  color: #333333;
+}
+
+body.dark-mode .tab-content {
+  background: #b5b5b5;
+}
+
+body.dark-mode .album-form {
+  color: #2b2929;
+}
+
+/* album */
+body.dark-mode .filters2 {
+  background-color: #bbb8b8;
+  border-bottom: none;
+}
+
+body.dark-mode .filters2 .checkboxes-left {
+  color: #333333;
+}
+
+body.dark-mode .album-container .coin-card .coin-info h3 {
+  color: white;
+}
+
+body.dark-mode .album-container .coin-card .coin-info p {
+  color: rgb(7, 7, 7);
+}
+
+body.dark-mode .album-container .coin-card .coin-info span {
+  color: rgb(224, 224, 224);
+}
+
+body.dark-mode .album-container .coin-card .coin-info p span {
+  color: rgb(0, 0, 0);
+}
+
+/*  VALOR DO ALBUM */
+body.dark-mode .half-modal .half-modal-content {
+  background-color: #b5b5b5;
+}
+
+body.dark-mode .half-modal .half-modal-content .album-chart {
+  background-color: #b5b5b5;
+}
+
+body.dark-mode .half-modal .half-modal-content .album-chart h2 {
+  color: #333333;
+}
+
+body.dark-mode .half-modal .half-modal-content .album-value {
+  background-color: #d1d1d1;
+}
+
+/* MAPA MUNDI */
+body.dark-mode .country-list-container {
+  background-color: #b5b5b5;
+  border: none;
+}
+
+/* COLEÇÃO */
+body.dark-mode .tab-content .album-grid {
+  background-color: #d5d5d5;
+}
+
+body.dark-mode .tab-content .album-grid .coin-card .coin-year {
+  color: #4d4c4c;
+}
+
+body.dark-mode .country-tabs {
+  background-color: #B5B5B5;
+}
+
+/* EDITAR SETTINGS BANNER*/
+body.dark-mode .settings-header-banner .settings-header-profile .banner-upload-container p {
+  color: #2b2929;
+}
+
+body.dark-mode .settings-header-banner .settings-header-profile .banner-upload-container span {
+  color: #2b2929;
+}
