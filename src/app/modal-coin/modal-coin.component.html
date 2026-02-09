@@ -93,8 +93,7 @@
 
 <div class="achievement-overlay" *ngIf="achievementBadge">
     <div class="achievement-card">
-        <img [src]="'assets/img/insignias/' + achievementBadge + '.png'" alt="Conquista desbloqueada" />
-
+        <img [src]="'/assets/img/insignias/' + achievementBadge + '.png'" alt="Conquista desbloqueada" />
         <div class="achievement-text">
             <h3>{{ achievementMessage?.title }}</h3>
             <p>{{ achievementMessage?.subtitle }}</p>
