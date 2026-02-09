@@ -25,6 +25,12 @@ export class ModalCoinComponent {
   maxYear: number | null = null;
   years: number[] = [];
   uniqueConditions: string[] = [];
+  achievementBadge: string | null = null;
+
+  achievementMessage: {
+    title: string;
+    subtitle: string;
+  } | null = null;
 
   activeTab: string = 'detalhes';
 
@@ -50,7 +56,6 @@ export class ModalCoinComponent {
       this.getAlbum(routeId);
       return;
     }
-
     console.warn('Nenhum CoinId válido encontrado. O modal não irá carregar o álbum.');
   }
 
@@ -62,7 +67,7 @@ export class ModalCoinComponent {
     this.closed.emit();
   }
 
-  saveEntry(entry: { year: number; quantity: number | null; condition: string | null; category: string; }): void {
+  saveEntry(entry: { year: number; quantity: number | null; condition: string | null; category: string; country: string }): void {
     this.loadingService.show();
     if (!this.coin) return;
 
@@ -83,6 +88,7 @@ export class ModalCoinComponent {
       quantity: entry.quantity,
       condition: entry.condition,
       type: this.coin.category,
+      country: this.coin.issuer
     };
 
     this.coinsService.addCoin(payload).subscribe({
@@ -93,6 +99,11 @@ export class ModalCoinComponent {
         this.loadingService.hide();
         this.toastr.success('Moeda adicionada com sucesso!');
         this.getAlbum(coinId);
+
+        if (res.achievementsUnlocked?.length) {
+          this.showAchievementsSequentially(res.achievementsUnlocked);
+        }
+
         entry.quantity = null;
         entry.condition = null;
         this.updated.emit();
@@ -102,6 +113,45 @@ export class ModalCoinComponent {
         console.error('Erro ao adicionar moeda:', err);
         this.toastr.error('Erro ao adicionar moeda.');
       }
+    });
+  }
+
+  showAchievementsSequentially(achievements: any[]) {
+    let index = 0;
+    const showNext = () => {
+      if (index >= achievements.length) {
+        return;
+      }
+      const achievement = achievements[index];
+      this.showAchievementBadge(
+        achievement.icon,
+        achievement.title,
+        achievement.description
+      );
+      index++;
+
+      setTimeout(() => {
+        showNext();
+      }, 7000);
+    };
+
+    showNext();
+  }
+
+  showAchievementBadge(
+    badgeName: string,
+    title: string,
+    subtitle: string
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      this.achievementBadge = badgeName;
+      this.achievementMessage = { title, subtitle };
+
+      setTimeout(() => {
+        this.achievementBadge = null;
+        this.achievementMessage = null;
+        resolve();
+      }, 6555);
     });
   }
 
