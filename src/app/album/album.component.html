@@ -40,6 +40,7 @@
 
   <div class="buttons-right">
     <button class="btn-album-value" (click)="openModalPrice()">Valor do Álbum</button>
+    <button class="btn-album-insignia" (click)="openModalInsignia()">Insignias</button>
     <button class="btn-album-pdf" (click)="openModalPDF()">Gerar PDF</button>
   </div>
 </div>
@@ -91,6 +92,9 @@
 
 <app-modal-price *ngIf="showPriceModal" [show]="showPriceModal" (closed)="showPriceModal = false">
 </app-modal-price>
+
+<app-modal-insignia *ngIf="showModalInsignia" [show]="showModalInsignia" (closed)="showModalInsignia = false">
+</app-modal-insignia>
 
 <div class="modal-pdf" *ngIf="showModalPDF">
   <div class="modal-content">

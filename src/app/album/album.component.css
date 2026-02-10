@@ -261,7 +261,8 @@ button.btn-limpar {
 }
 
 .btn-album-value,
-.btn-album-pdf {
+.btn-album-pdf,
+.btn-album-insignia {
   padding: 6px 14px;
   border: none;
   border-radius: 6px;
@@ -289,6 +290,15 @@ button.btn-limpar {
   background-color: #333;
 }
 
+
+.btn-album-insignia {
+  background-color: #9d34f3;
+  color: #fff;
+}
+
+.btn-album-insignia:hover {
+  background-color: #7e07df;
+}
 
 /* ////////////// MODAL PDF ////////////*/
 

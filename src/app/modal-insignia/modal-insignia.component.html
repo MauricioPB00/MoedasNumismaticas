@@ -1,0 +1,21 @@
+<div class="half-modal" *ngIf="show">
+    <div class="half-modal-content">
+        <button class="close-btn" (click)="closeModal()">×</button>
+        <div *ngFor="let col of collections" class="collection-block">
+            <h2 class="collection-title">{{ col.name }}</h2>
+            <div class="insignia-grid">
+                <div class="insignia-card" *ngFor="let i of col.items" [class.locked]="!i.unlocked">
+                    <img [src]="'assets/img/insignias/' + i.icon + '.png'" alt="Insignia" />
+                    <h4>{{ i.title }}</h4>
+                    <p>{{ i.description }}</p>
+                    <span *ngIf="i.unlocked" class="unlocked">
+                        Desbloqueada ✔
+                    </span>
+                    <span *ngIf="!i.unlocked" class="locked-text">
+                        Bloqueada 🔒
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

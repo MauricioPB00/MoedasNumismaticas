@@ -54,6 +54,8 @@ export class AlbumComponent implements OnInit {
   showModalPDF: boolean = false;
   selectedPDFType: 'all' | 'coins' | 'banknotes' | 'repeated' = 'all';
 
+  showModalInsignia = false;
+
   selectedPDFCountry: string = 'all';
 
   showOnlyRepeated: boolean = false;
@@ -408,6 +410,10 @@ export class AlbumComponent implements OnInit {
 
   openModalPrice() {
     this.showPriceModal = true;
+  }
+
+  openModalInsignia() {
+    this.showModalInsignia = true;
   }
 
   openModalPDF(): void {
