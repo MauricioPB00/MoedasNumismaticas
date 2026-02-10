@@ -7,7 +7,9 @@
                 <div class="insignia-card" *ngFor="let i of col.items" [class.locked]="!i.unlocked">
                     <img [src]="'assets/img/insignias/' + i.icon + '.png'" alt="Insignia" />
                     <h4>{{ i.title }}</h4>
-                    <p>{{ i.description }}</p>
+                    <div *ngIf="isNextInsignia(i, col.items)" class="progress-inline">
+                        {{ getCurrentCount(i) }} / {{ getTarget(i) }}
+                    </div>
                     <span *ngIf="i.unlocked" class="unlocked">
                         Desbloqueada ✔
                     </span>

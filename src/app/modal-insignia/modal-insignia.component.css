@@ -68,8 +68,6 @@ li {
     padding-left: 14px;
 }
 
-
-/* CARD */
 .insignia-card {
     background: linear-gradient(145deg, #ffffff, #f0f0f0);
     border-radius: 16px;
@@ -85,20 +83,17 @@ li {
     overflow: hidden;
 }
 
-/* HOVER */
 .insignia-card:hover {
     transform: translateY(-6px);
     box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* IMAGEM */
 .insignia-card img {
     width: 110px;
     height: auto;
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* TITULO */
 .insignia-card h4 {
     font-size: 15px;
     font-weight: 700;
@@ -106,15 +101,12 @@ li {
     color: #333;
 }
 
-/* DESCRIÇÃO */
 .insignia-card p {
     font-size: 13px;
     color: #666;
     line-height: 1.4;
-    min-height: 36px;
 }
 
-/* DESBLOQUEADA */
 .insignia-card .unlocked {
     margin-top: auto;
     font-size: 12px;
@@ -125,7 +117,6 @@ li {
     border-radius: 20px;
 }
 
-/* BLOQUEADA */
 .insignia-card.locked {
     opacity: 0.65;
     filter: grayscale(100%);
@@ -145,7 +136,6 @@ li {
     border-radius: 20px;
 }
 
-/* BADGE RARO (opcional se quiser usar rarity depois) */
 .insignia-card::before {
     content: '';
     position: absolute;
@@ -163,7 +153,6 @@ li {
     opacity: 1;
 }
 
-/* RESPONSIVO */
 @media (max-width: 768px) {
     .album-value {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
