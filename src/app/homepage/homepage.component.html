@@ -1,146 +1,186 @@
-<!-- ===== CABEÇALHO ===== -->
 <app-header *ngIf="showHeader"></app-header>
-<!-- ===== CABEÇALHO ===== -->
-
-
 <div class="home-container">
-  <!-- ===== CABEÇALHO ===== -->
-  <header class="home-header">
-    <div class="logo">
+  <section class="hero">
+    <header class="home-header">
+      <div class="logo">
+        <img src="assets/img/Logo.png" alt="Logo" />
+        <h2>Álbum Numismático</h2>
+      </div>
+      <nav class="menu">
+        <!-- <a routerLink="/catalogo">Catálogo</a> -->
+        <a routerLink="/anuncios">Anúncios</a>
+        <a (click)="goToLogin()">Entrar</a>
+        <a class="btn-primary" (click)="goToRegister()">Cadastro</a>
+      </nav>
+    </header>
+    <img class="hero-bg" src="assets/img/home/12.png" alt="Moedas" />
+    <div class="hero-bottom-decor" [style.height.px]="decorHeight"></div>
+    <div class="logoHome">
       <img src="assets/img/Logo.png" alt="Logo" />
-      <h2>Álbum Numismático</h2>
-    </div>
-    <nav class="menu">
-      <a href="/catalogo">Catálogo</a>
-      <a href="/anuncios">Anuncio</a>
-      <!-- <a (click)="goToLogin()">Minha Coleção</a> -->
-      <a (click)="goToLogin()">Entrar</a>
-      <a (click)="goToRegister()">Cadastro</a>
-    </nav>
-  </header>
-
-  <!-- ===== BANNER ===== -->
-  <section class="banner">
-    <div class="banner-img">
-      <img src="assets/img/Logo01.png" alt="Moedas" />
-    </div>
-    <div class="banner-text">
-      <h1>Bem-vindo ao Álbum Numismático</h1>
-      <p>
-        Organize, catalogue e explore o fascinante mundo das moedas.
-      </p>
-      <button routerLink="/catalogo">Explorar agora</button>
-    </div>
-  </section>
-
-  <!-- ===== FUNCIONALIDADES ===== -->
-  <section class="features">
-    <div class="card">
-      <h2>📖 Catálogo</h2>
-      <p>Explore todas as moedas cadastradas no sistema.</p>
-      <button routerLink="/catalogo">Ver catálogo</button>
-    </div>
-
-    <div class="card">
-      <h2>💰 Coleção</h2>
-      <p>Gerencie e acompanhe sua coleção pessoal.</p>
-      <button routerLink="/login">Ver coleção</button>
-    </div>
-
-    <div class="card">
-      <h2>📊 Estatísticas</h2>
-      <p>Veja gráficos e informações detalhadas sobre suas moedas.</p>
-      <button routerLink="/login">Ver estatísticas</button>
-    </div>
-
-    <div class="card">
-      <h2>📰 Novidades</h2>
-      <p>Fique por dentro das últimas notícias e curiosidades da numismática.</p>
-      <button routerLink="/login">Ver novidades</button>
-    </div>
-  </section>
-
-  <!-- ===== DESTAQUES ===== -->
-  <section class="highlights reveal">
-    <h2>Nosso catálogo conta com:</h2>
-    <div class="highlight-grid">
-      <div class="highlight-card reveal-card">
-        <img src="assets/img/moedaimperio.png" alt="Moeda 1" />
-        <p>Moedas do Brasil</p>
-      </div>
-      <div class="highlight-card reveal-card">
-        <img src="assets/img/cedulaBrasil.png" alt="Moeda 2" />
-        <p>Cédulas do Brasil</p>
-      </div>
-      <div class="highlight-card reveal-card">
-        <img src="assets/img/Onu.png" alt="Moeda 3" />
-        <p>Países Estrangeiros</p>
+      <div class="logoText">
+        <h1>Álbum Numismático</h1>
       </div>
     </div>
   </section>
+</div>
 
-  <!-- ===== PLANOS DE ASSINATURA ===== -->
-  <section class="plans reveal">
-    <h2 class="plans-title">Nossos Planos de Assinatura</h2>
+<div class="home-welcome" #welcomeSection>
+  <h1>Bem-vindo ao Álbum Numismático!</h1>
+  <h2>O maior catálogo da América Latina</h2>
+</div>
 
-    <div class="plans-grid">
-      <!-- Plano Basic -->
-      <div class="plan-card">
-        <h3>Plano Mensal</h3>
-        <p class="old-price">R$ 7,80</p>
-        <p class="new-price">R$ 4,99</p>
-        <ul>
-          <li>✔ Álbuns Nacionais </li>
-          <li>✔ Álbuns Internacionais</li>
-        </ul>
-        <button class="btn">Assinar</button>
+
+
+<section class="home-carousel">
+  <div class="carousel-wrapper">
+    <div class="carousel-track">
+      <div class="coin-card" *ngFor="let coin of coins">
+        <img [src]="coin.image" [alt]="coin.name">
+        <h3>{{ coin.name }}</h3>
+        <p>{{ coin.country }}</p>
       </div>
-
-      <!-- Plano Platinum (Destaque) -->
-      <div class="plan-card popular">
-        <div class="badge">Mais Popular</div>
-        <h3>Plano Anual</h3>
-        <p class="old-price">R$ 84,99</p>
-        <p class="new-price">R$ 49,80</p>
-        <ul>
-          <li>✔ Álbuns Nacionais </li>
-          <li>✔ Álbuns Internacionais</li>
-          <li>✔ Grupo livre para trocas</li>
-        </ul>
-        <button class="btn">Assinar</button>
-      </div>
-
-      <!-- Plano Master -->
-      <div class="plan-card">
-        <h3>Plano Trimestral</h3>
-        <p class="old-price">R$ 22,99</p>
-        <p class="new-price">R$ 13,90</p>
-        <ul>
-          <li>✔ Álbuns Nacionais </li>
-          <li>✔ Álbuns Internacionais</li>
-        </ul>
-        <button class="btn">Assinar</button>
+      <div class="coin-card" *ngFor="let coin of coins">
+        <img [src]="coin.image" [alt]="coin.name">
+        <h3>{{ coin.name }}</h3>
+        <p>{{ coin.country }}</p>
       </div>
     </div>
-
-    <!-- Chamada Extra -->
-    <div class="plans-promo">
-      <p>🎉 Cadastre-se agora e <strong>ganhe 3 meses grátis</strong>!</p>
-    </div>
-  </section>
-
-  
-<!-- IMG CATALOGO -->
-<section class="catalogo-preview reveal" >
-  <img src="assets/img/catalogo.png" alt="Catálogo de moedas" />
+  </div>
 </section>
 
 
-  <!-- ===== RODAPÉ ===== -->
-  <footer class="footer">
-    <p>© 2025 Álbum Numismático - Todos os direitos reservados.</p>
-    <p>
-      Desenvolvido por <a href="https://github.com/MauricioPB00">Mauricio Perin</a>
-    </p>
-  </footer>
-</div>
+
+<section #highlightsSection class="highlights">
+  <div class="highlights-inner">
+    <h2>Nosso catálogo conta com:</h2>
+    <div class="highlight-grid">
+      <div class="highlight-card">
+        <img src="assets/img/moedaimperio.png" alt="Moedas do Brasil" />
+        <p>Moedas do Brasil</p>
+      </div>
+      <div class="highlight-card">
+        <img src="assets/img/cedulaBrasil.png" alt="Cédulas do Brasil" />
+        <p>Cédulas do Brasil</p>
+      </div>
+      <div class="highlight-card">
+        <img src="assets/img/Onu.png" alt="Países Estrangeiros" />
+        <p>Países Estrangeiros</p>
+      </div>
+    </div>
+  </div>
+  <div #svgContainer class="hero-map"></div>
+  <div class="highlight-stats">
+    <div class="stat-item">
+      <h3>9</h3>
+      <p>Países</p>
+    </div>
+    <div class="stat-item">
+      <h3>+1822</h3>
+      <p>Cédulas</p>
+    </div>
+    <div class="stat-item">
+      <h3>+1928</h3>
+      <p>Moedas</p>
+    </div>
+    <div class="stat-item">
+      <h3>25</h3>
+      <p>Insígnias</p>
+    </div>
+  </div>
+  <div class="countries-section">
+    <button class="expand-button" (click)="toggleCountries()">
+      <span>Conheça todos os países catalogados</span>
+      <span class="arrow" [class.open]="countriesOpen">⌄</span>
+    </button>
+    <div class="expand-container" [class.open]="countriesOpen">
+      <div class="flags-grid">
+        <div *ngFor="let c of cadCountries" class="flag-card">
+          <div class="flag-wrapper">
+            <span class="fi fi-{{ c.code }}"></span>
+          </div>
+          <div class="info">
+            <div class="country">{{ c.name }}</div>
+            <div class="stats">
+              <div class="stat">
+                <b>{{ c.coin }}</b>
+                <span>Moedas</span>
+              </div>
+              <div class="stat">
+                <b>{{ c.banknote }}</b>
+                <span>Cédulas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="plans reveal">
+  <h2 class="plans-title">Nossos Planos de Assinatura</h2>
+  <div class="plans-grid">
+    <div class="plan-card">
+      <h3>Plano Mensal</h3>
+      <p class="old-price">R$ 7,80</p>
+      <p class="new-price">R$ 4,99</p>
+      <ul>
+        <li>✔ Álbuns Nacionais </li>
+        <li>✔ Álbuns Internacionais</li>
+      </ul> <button class="btn">Assinar</button>
+    </div>
+    <div class="plan-card popular">
+      <div class="badge">Mais Popular</div>
+      <h3>Plano Anual</h3>
+      <p class="old-price">R$ 84,99</p>
+      <p class="new-price">R$ 49,80</p>
+      <ul>
+        <li>✔ Álbuns Nacionais </li>
+        <li>✔ Álbuns Internacionais</li>
+        <li>✔ Grupo livre para trocas</li>
+      </ul> <button class="btn">Assinar</button>
+    </div>
+    <div class="plan-card">
+      <h3>Plano Trimestral</h3>
+      <p class="old-price">R$ 22,99</p>
+      <p class="new-price">R$ 13,90</p>
+      <ul>
+        <li>✔ Álbuns Nacionais </li>
+        <li>✔ Álbuns Internacionais</li>
+      </ul> <button class="btn">Assinar</button>
+    </div>
+  </div>
+  <div class="plans-promo">
+    <p>🎉 Cadastre-se agora e <strong>ganhe 3 meses grátis</strong>!</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-content">
+
+    <div class="footer-brand">
+      <h3>Álbum Numismático</h3>
+      <p>Catalogando histórias através de moedas e cédulas.</p>
+    </div>
+
+    <div class="footer-links">
+      <a href="#">Início</a>
+      <a routerLink="/anuncios">Anúncios</a>
+        <a (click)="goToLogin()">Entrar</a>
+        <a (click)="goToRegister()">Cadastro</a>
+    </div>
+
+    <div class="footer-credit">
+      <p>© 2025 Álbum Numismático</p>
+      <p>
+        Desenvolvido por 
+        <a href="https://github.com/MauricioPB00" target="_blank">
+          Mauricio Perin
+        </a>
+      </p>
+    </div>
+
+  </div>
+</footer>

@@ -20,4 +20,10 @@ export class HeaderComponent {
   goToAnuncios() {
     this.router.navigateByUrl('/anuncios');
   }
+
+  goToRegister() {
+    this.router.navigate(['/login'], {
+      queryParams: { mode: 'signup' }
+    });
+  }
 }
