@@ -36,6 +36,8 @@ import { SpinnerCoinComponent } from './shared/spinner-coin/spinner-coin.compone
 import { CatalogoComponent } from './catalogo/catalogo.component';
 import { BannerComponent } from './banner/banner.component';
 import { ModalInsigniaComponent } from './modal-insignia/modal-insignia.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JwtInterceptor } from './AuthService/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -75,7 +77,14 @@ import { ModalInsigniaComponent } from './modal-insignia/modal-insignia.componen
     MatTabsModule,
     MatDialogModule,
   ],
-  providers: [LoginService],
+  providers: [
+    LoginService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -48,6 +48,9 @@ export class LoginService {
             localStorage.setItem('ControleUsuarioRoles', JSON.stringify(data.roles));
             localStorage.setItem('ControleUsuario', JSON.stringify(userData));
             localStorage.setItem('ControleUsuarioIP', JSON.stringify(data.ip));
+            if (data.refresh_token) {
+              localStorage.setItem('refresh_token', data.refresh_token);
+            }
           }
           return data;
         }),
