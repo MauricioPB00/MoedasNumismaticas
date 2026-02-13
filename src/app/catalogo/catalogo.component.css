@@ -18,15 +18,19 @@ li {
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 3rem;
-  background: hsl(208, 92%, 54%);
   color: white;
   flex-wrap: wrap;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
 .home-header .logo {
   display: flex;
   align-items: center;
   gap: 1rem;
+  color: #333;
 }
 
 .home-header img {
@@ -38,16 +42,18 @@ li {
   display: flex;
   gap: 2rem;
   flex-wrap: wrap;
+  color: #333;
 }
 
 .menu a {
   color: white;
   font-weight: bold;
   transition: color 0.3s;
+  color: #333;
 }
 
 .menu a:hover {
-  color: hsl(208, 100%, 85%);
+  color: hsl(51, 98%, 42%);
 }
 
 .banner {

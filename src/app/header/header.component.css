@@ -11,7 +11,6 @@ li {
 #horizontal-bar {
   width: 100%;
   height: 60px;
-  background: var(--sidebar-color, hsl(208, 92%, 54%));
   color: var(--sidebar-txt-color, #fff);
   display: flex;
   justify-content: space-between;
@@ -21,7 +20,10 @@ li {
   top: 0;
   left: 0;
   z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
 /* Logo */
@@ -29,6 +31,7 @@ li {
   display: flex;
   align-items: center;
   gap: 0.8rem;
+  color: #333;
 }
 
 .logo img {
@@ -39,7 +42,7 @@ li {
 .logo h2 {
   font-size: 1.2rem;
   font-weight: 600;
-  color: white;
+  color: #000000;
 }
 
 .menu {
@@ -52,16 +55,17 @@ li {
   color: white;
   font-weight: bold;
   transition: color 0.3s;
+  color: #333;
 }
 
 .menu a:hover {
-  color: hsl(208, 100%, 85%);
+  color: hsl(51, 98%, 42%);
 }
 
 a {
-  text-decoration: none; /* remove underline de todos os links */
-  color: inherit;        /* mantém a cor do texto */
-  cursor: pointer;       /* deixa mãozinha ao passar o mouse */
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 /* Responsivo */
