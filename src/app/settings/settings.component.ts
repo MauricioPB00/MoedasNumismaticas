@@ -175,8 +175,8 @@ export class SettingsComponent implements OnInit {
       return;
     }
 
-    if (file.size > 500 * 1024) {
-      this.errorMessage = 'Imagem maior que 500 KB.';
+    if (file.size > 3 * 1024 * 1024) {
+      this.errorMessage = 'Imagem maior que 3 MB.';
       return;
     }
 
