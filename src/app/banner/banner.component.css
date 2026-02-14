@@ -63,70 +63,144 @@ a {
     font-family: "Open Sans", sans-serif;
 }
 
-.banner-container {
+.ads-glass-wrapper {
     width: 100%;
+    padding: 60px 0;
     display: flex;
     justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 20px;
+
+    background: radial-gradient(circle at 20% 20%,
+            rgba(120, 160, 255, 0.15),
+            transparent 40%),
+        radial-gradient(circle at 80% 80%,
+            rgba(0, 200, 255, 0.12),
+            transparent 40%),
+        #f4f6fb;
 }
 
-.banner-item {
-    cursor: pointer;
-}
 
-.banner-image {
+.ads-glass-container {
     width: 100%;
-    max-width: 1100px;
-    border-radius: 10px;
-    transition: transform 0.2s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 1050px;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
 }
 
-.banner-image:hover {
-    transform: scale(1.02);
+
+.glass-banner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 13 / 3;
+    border-radius: 22px;
+    overflow: hidden;
+    cursor: pointer;
+
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border: 1px solid rgba(255, 255, 255, 0.4);
+
+    box-shadow:
+        0 8px 32px rgba(31, 38, 135, 0.15),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+
+    transition: transform 0.4s ease,
+        box-shadow 0.4s ease,
+        border 0.4s ease;
 }
 
+.glass-banner:hover {
+    transform: translateY(-6px);
+    box-shadow:
+        0 15px 45px rgba(31, 38, 135, 0.25),
+        0 0 30px rgba(120, 160, 255, 0.25);
+
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.glass-banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+}
+
+.glass-banner:hover .glass-banner-img {
+    transform: scale(1.05);
+}
+
+.glass-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.25) 0%,
+            rgba(0, 0, 0, 0.1) 40%,
+            rgba(0, 0, 0, 0) 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.glass-banner:hover::after {
+    opacity: 1;
+}
+
+.glass-banner:nth-child(odd) {
+    transform: translateX(-40px);
+}
+
+.glass-banner:nth-child(even) {
+    transform: translateX(40px);
+}
+
+.glass-banner:hover {
+    transform: translateX(0) translateY(-6px);
+}
+
+.glass-banner {
+    transition:
+        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.4s ease,
+        border 0.4s ease;
+}
+
+
+@media (max-width: 1024px) {
+    .ads-glass-container {
+        max-width: 92%;
+    }
+}
 
 @media (max-width: 768px) {
-    h1 span {
-        display: block;
-        margin-top: 4px;
+    .ads-glass-wrapper {
+        padding: 40px 0;
     }
 
-    .home-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
+    .glass-banner {
+        border-radius: 18px;
     }
 
-    .menu {
-        width: 100%;
-        justify-content: center;
+    .glass-banner:nth-child(odd),
+    .glass-banner:nth-child(even) {
+        transform: none;
     }
 }
 
 @media (max-width: 480px) {
-    .home-header {
-        padding: 1rem;
+    .ads-glass-container {
+        padding: 0 14px;
     }
 
-    .menu {
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
+    .glass-banner {
+        border-radius: 14px;
     }
 
-    .banner-text h1 {
-        font-size: 1.5rem;
-    }
-
-    .banner-text p {
-        font-size: 0.9rem;
-    }
-
-    .banner-text button {
-        width: 100%;
+    .glass-banner:nth-child(odd),
+    .glass-banner:nth-child(even) {
+        transform: none;
     }
 }

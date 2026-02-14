@@ -6,13 +6,15 @@
     </div>
     <nav class="menu">
         <a href="''">Menu</a>
-        <!-- <a href="/catalogo">Catálogo</a> -->
         <a (click)="goToLogin()">Entrar</a>
         <a (click)="goToRegister()">Cadastro</a>
     </nav>
 </header>
-<div class="banner-container">
-    <div class="banner-item" *ngFor="let b of banners">
-        <img [src]="getBannerPath(b.advertisingImg)" (click)="openBanner(b.url)" alt="Banner" class="banner-image">
+<div class="ads-glass-wrapper">
+    <div class="ads-glass-container">
+        <div class="glass-banner" *ngFor="let b of banners">
+            <img [src]="getBannerPath(b.advertisingImg)" (click)="openBanner(b.url)" alt="Banner"
+                class="glass-banner-img">
+        </div>
     </div>
 </div>
