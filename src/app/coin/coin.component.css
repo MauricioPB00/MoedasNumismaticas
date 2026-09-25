@@ -61,8 +61,8 @@ li {
 .coin-img-row {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
 }
 
 .coin-img {
@@ -404,25 +404,69 @@ li {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+  
+   .coin-img-row.is-banknote {
+    display: block;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .coin-img-row.is-banknote .coin-img {
+    display: block;
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    margin: 0 auto 15px;
+    object-fit: contain;
+  }
+
+  .coin-img-row.is-coin {
+    display: flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    gap: 15px;
+  }
+
+  .coin-img-row.is-coin .coin-img {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
 }
 
 @media (max-width: 768px) {
 
-  .coin-img-row {
+  .coin-img-row.is-banknote {
+    display: block;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .coin-img-row.is-banknote .coin-img {
+    display: block;
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    margin: 0 auto 15px;
+    object-fit: contain;
+  }
+
+  .coin-img-row.is-coin {
+    display: flex;
     flex-wrap: nowrap;
-    /* max-width: 300px;
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    left: 0%;
-    padding-left: 100px; */
-    display: flex;
+    max-width: 100%;
+    overflow-x: auto;
+    gap: 15px;
   }
 
-  .coin-img {
-    box-shadow: none;
+  .coin-img-row.is-coin .coin-img {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    flex-shrink: 0;
   }
-
   .coin-detail {
     padding: 1rem;
   }

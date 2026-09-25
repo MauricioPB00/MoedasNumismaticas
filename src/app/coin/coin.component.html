@@ -12,9 +12,14 @@
   </h2>
   <div class="coin-layout">
     <div class="coin-images">
-      <div class="coin-img-row">
+
+      <div class="coin-img-row" [ngClass]="{
+        'is-banknote': coin.category === 'banknote',
+        'is-coin': coin.category === 'coin'
+      }">
         <img *ngIf="coin.obverseImg || coin.obverse" [src]="'assets/img/imagens/' + (coin.obverseImg || coin.obverse)"
           alt="Anverso" class="coin-img">
+
         <img *ngIf="coin.reverseImg || coin.reverse" [src]="'assets/img/imagens/' + (coin.reverseImg || coin.reverse)"
           alt="Reverso" class="coin-img">
       </div>
@@ -92,7 +97,7 @@
       <div *ngIf="coin.coinInfo?.length">
         <h3>Informações de Tiragem e Preços</h3>
         <div class="table-wrapper">
-          
+
           <table class="table">
             <thead>
               <tr>
@@ -209,33 +214,33 @@
 <div class="modal-backdrop" *ngIf="editing">
 
 
-<div class="edit-form" *ngIf="editing">
-  <h3>{{ isNew ? 'Adicionar Informações' : 'Editar Informações' }}</h3>
+  <div class="edit-form" *ngIf="editing">
+    <h3>{{ isNew ? 'Adicionar Informações' : 'Editar Informações' }}</h3>
 
-  <label>Ano</label>
-  <input [(ngModel)]="editData.year_info">
+    <label>Ano</label>
+    <input [(ngModel)]="editData.year_info">
 
-  <label>Tiragem</label>
-  <input [(ngModel)]="editData.mintage">
+    <label>Tiragem</label>
+    <input [(ngModel)]="editData.mintage">
 
-  <h4>Preços:</h4>
+    <h4>Preços:</h4>
 
-  <label>BC</label>
-  <input [(ngModel)]="editData.prices['BC']">
+    <label>BC</label>
+    <input [(ngModel)]="editData.prices['BC']">
 
-  <label>MBC</label>
-  <input [(ngModel)]="editData.prices['MBC']">
+    <label>MBC</label>
+    <input [(ngModel)]="editData.prices['MBC']">
 
-  <label>SOB</label>
-  <input [(ngModel)]="editData.prices['SOB']">
+    <label>SOB</label>
+    <input [(ngModel)]="editData.prices['SOB']">
 
-   <label>S/FDC</label>
-  <input [(ngModel)]="editData.prices['S/FDC']">
- 
-  <label>FDC</label>
-  <input [(ngModel)]="editData.prices['FDC']">
+    <label>S/FDC</label>
+    <input [(ngModel)]="editData.prices['S/FDC']">
 
-  <button (click)="saveInfo()">Salvar</button>
-  <button (click)="cancel()">Cancelar</button>
-</div>
+    <label>FDC</label>
+    <input [(ngModel)]="editData.prices['FDC']">
+
+    <button (click)="saveInfo()">Salvar</button>
+    <button (click)="cancel()">Cancelar</button>
+  </div>
 </div>
