@@ -34,7 +34,7 @@ const routes: Routes = [
   { path: 'album', component: AlbumComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'mapa', component: MapaMundiComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], data: { roles: [Permi.admin] } },
-  { path: 'pagamento', component: PagamentoComponent, canActivate: [AuthGuard], data: { roles: [Permi.admin] }  },
+  { path: 'pagamento', component: PagamentoComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] }  },
   { path: '**', component: HomepageComponent, canActivate: [AuthGuard] }, // novas rotas tem q ser antes dessa coringa 
 
 ];
