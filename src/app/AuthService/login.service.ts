@@ -61,13 +61,19 @@ export class LoginService {
         })
       );
   }
+
   isLoggedIn(): boolean {
     return !!localStorage.getItem('jwt');
   }
+
   logout() {
     localStorage.removeItem('ControleUsuarioLogado');
     localStorage.removeItem('jwt');
     this.currentUserSubject.next(null);
+  }
+
+  statusAssinatura() {
+    return this.http.get<any>(`${API_CONFIG.baseUrl}/assinatura/status`);
   }
 
   handleError(error: HttpErrorResponse) {
@@ -86,4 +92,5 @@ export class LoginService {
     const roles = JSON.parse(localStorage.getItem('ControleUsuarioRoles') || '[]');
     return roles.includes(role);
   }
+  
 }

@@ -38,6 +38,7 @@ import { BannerComponent } from './banner/banner.component';
 import { ModalInsigniaComponent } from './modal-insignia/modal-insignia.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './AuthService/jwt.interceptor';
+import { PagamentoComponent } from './pagamento/pagamento.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { JwtInterceptor } from './AuthService/jwt.interceptor';
     CatalogoComponent,
     BannerComponent,
     ModalInsigniaComponent,
+    PagamentoComponent,
   ],
   imports: [
     BrowserModule,

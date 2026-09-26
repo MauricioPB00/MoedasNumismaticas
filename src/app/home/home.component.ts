@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '../shared/loading.service';
 import { AVAILABLE_COUNTRIES_CAD, CountryCAD } from '../models/countriesCAD';
 import { CoinRecognitionService } from '../AuthService/recognition.service';
+import { PlanoService } from '../AuthService/planos.service';
 
 @Component({
   selector: 'app-home',
@@ -44,26 +45,36 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private loading: LoadingService,
-    private recognitionService: CoinRecognitionService
+    private recognitionService: CoinRecognitionService,
+    private planoService: PlanoService
   ) { }
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.queryParamsInitialized = true;
+ngOnInit(): void {
+  console.log('========== HOME NGONINIT ==========');
 
-      if (params['searchName']) this.searchName = params['searchName'];
-      if (params['category']) this.selectedCategory = params['category'];
-      if (params['issuer']) this.selectedIssuer = params['issuer'];
-      if (params['country']) this.selectedCountry = params['country'];
+  this.route.queryParams.subscribe(params => {
+    this.queryParamsInitialized = true;
 
-      if (params['minYear']) this.minYear = +params['minYear'];
-      if (params['maxYear']) this.maxYear = +params['maxYear'];
+    if (params['searchName']) this.searchName = params['searchName'];
+    if (params['category']) this.selectedCategory = params['category'];
+    if (params['issuer']) this.selectedIssuer = params['issuer'];
+    if (params['country']) this.selectedCountry = params['country'];
 
-      this.currentPage = params['page'] ? +params['page'] : 1;
+    if (params['minYear']) this.minYear = +params['minYear'];
+    if (params['maxYear']) this.maxYear = +params['maxYear'];
 
-      this.loadCoins(this.selectedCountry);
-    });
-  }
+    this.currentPage = params['page'] ? +params['page'] : 1;
+
+    this.loadCoins(this.selectedCountry);
+  });
+
+  console.log('CHAMANDO verificarAssinatura');
+  console.log('ANTES DO VERIFICAR');
+this.verificarAssinatura();
+console.log('DEPOIS DO VERIFICAR');
+}
+
+
 
   loadCoins(country: string) {
     this.loading.show();
@@ -106,6 +117,59 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
+verificarAssinatura(): void {
+  alert('ENTROU NO VERIFICAR ASSINATURA');
+
+  console.log('========== VERIFICAR ASSINATURA ==========');
+
+  const planoSelecionado = localStorage.getItem('planoSelecionado');
+
+  console.log('PLANO SELECIONADO:', planoSelecionado);
+
+  if (planoSelecionado) {
+    console.log('TEM PLANO → PAGAMENTO');
+
+    this.router.navigate(['/pagamento']).then(resultado => {
+      console.log('NAVEGAÇÃO PAGAMENTO:', resultado);
+    });
+
+    return;
+  }
+
+  console.log('SEM PLANO → CONSULTANDO ASSINATURA');
+
+  this.planoService.statusAssinatura().subscribe({
+    next: (data) => {
+      console.log('Status assinatura:', data);
+
+      if (data.acesso) {
+        return;
+      }
+
+      this.router.navigate(['/planos']);
+    },
+
+    error: (error) => {
+      console.error('Erro ao verificar assinatura:', error);
+
+      if (error.status === 401) {
+        this.router.navigate(['/login']);
+        return;
+      }
+
+      if (error.status === 403) {
+        this.router.navigate(['/planos']);
+      }
+    }
+  });
+}
+
+
+
+
+
+
 
   onCountryChange(event: any) {
     this.selectedCountry = event.target.value || 'Brasil';

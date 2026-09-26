@@ -1,0 +1,17 @@
+<section class="payment">
+    <h2>Confirmar assinatura</h2>
+    <div class="payment-card" *ngIf="plano">
+        <h3>{{ plano.nome }}</h3>
+        <p>
+            Período:
+            {{ plano.meses }}
+            {{ plano.meses === 1 ? 'mês' : 'meses' }}
+        </p>
+        <p class="payment-value">
+            R$ {{ plano.valor | number:'1.2-2' }}
+        </p>
+        <button type="button" class="btn" (click)="continuarPagamento()">
+            Continuar para pagamento
+        </button>
+    </div>
+</section>

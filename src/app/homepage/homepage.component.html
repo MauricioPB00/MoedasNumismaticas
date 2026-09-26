@@ -122,60 +122,44 @@
 <section class="plans reveal">
   <h2 class="plans-title">Nossos Planos de Assinatura</h2>
   <div class="plans-grid">
-    <div class="plan-card">
-      <h3>Plano Mensal</h3>
-      <p class="old-price">R$ 7,80</p>
-      <p class="new-price">R$ 4,99</p>
+    <div *ngFor="let plano of planos" class="plan-card" [class.popular]="plano.codigo === 'anual'">
+      <div *ngIf="plano.codigo === 'anual'" class="badge"> Mais Popular </div>
+      <h3>{{ plano.nome }}</h3>
+      <p class="old-price" *ngIf="plano.codigo === 'mensal'"> R$ 7,80 </p>
+      <p class="old-price" *ngIf="plano.codigo === 'trimestral'"> R$ 22,99 </p>
+      <p class="old-price" *ngIf="plano.codigo === 'anual'"> R$ 84,99 </p>
+      <p class="new-price"> R$ {{ plano.valor | number:'1.2-2' }} </p>
       <ul>
-        <li>✔ Álbuns Nacionais </li>
+        <li>✔ Álbuns Nacionais</li>
         <li>✔ Álbuns Internacionais</li>
-      </ul> <button class="btn">Assinar</button>
-    </div>
-    <div class="plan-card popular">
-      <div class="badge">Mais Popular</div>
-      <h3>Plano Anual</h3>
-      <p class="old-price">R$ 84,99</p>
-      <p class="new-price">R$ 49,80</p>
-      <ul>
-        <li>✔ Álbuns Nacionais </li>
-        <li>✔ Álbuns Internacionais</li>
-        <li>✔ Grupo livre para trocas</li>
-      </ul> <button class="btn">Assinar</button>
-    </div>
-    <div class="plan-card">
-      <h3>Plano Trimestral</h3>
-      <p class="old-price">R$ 22,99</p>
-      <p class="new-price">R$ 13,90</p>
-      <ul>
-        <li>✔ Álbuns Nacionais </li>
-        <li>✔ Álbuns Internacionais</li>
-      </ul> <button class="btn">Assinar</button>
+        <li *ngIf="plano.codigo === 'anual'"> ✔ Grupo livre para trocas </li>
+      </ul> <button class="btn" type="button" (click)="assinar(plano)"> Assinar </button>
     </div>
   </div>
   <div class="plans-promo">
-    <p>🎉 Cadastre-se agora e <strong>ganhe 3 meses grátis</strong>!</p>
+    <p>🎉 Cadastre-se agora e <strong>ganhe 1 mês grátis</strong>!</p>
   </div>
 </section>
 
+
+
 <footer class="footer">
   <div class="footer-content">
-
     <div class="footer-brand">
       <h3>Álbum Numismático</h3>
       <p>Catalogando histórias através de moedas e cédulas.</p>
     </div>
-
     <div class="footer-links">
       <a href="#">Início</a>
       <a routerLink="/anuncios">Anúncios</a>
-        <a (click)="goToLogin()">Entrar</a>
-        <a (click)="goToRegister()">Cadastro</a>
+      <a (click)="goToLogin()">Entrar</a>
+      <a (click)="goToRegister()">Cadastro</a>
     </div>
 
     <div class="footer-credit">
       <p>© 2025 Álbum Numismático</p>
       <p>
-        Desenvolvido por 
+        Desenvolvido por
         <a href="https://github.com/MauricioPB00" target="_blank">
           Mauricio Perin
         </a>

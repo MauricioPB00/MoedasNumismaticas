@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LoadingService } from '../shared/loading.service';
 import { AVAILABLE_COUNTRIES_CAD } from '../models/countriesCAD';
+import { Plano, PlanoService } from '../AuthService/planos.service';
 
 
 @Component({
@@ -17,11 +18,13 @@ export class HomepageComponent {
   @ViewChild('highlightsSection') highlightsSection!: ElementRef;
 
   private hasAnimated = false;
+  planos: Plano[] = [];
 
   constructor(
     private router: Router,
     private http: HttpClient,
     private loadingService: LoadingService,
+    private planoService: PlanoService
   ) { }
 
   coins = [
@@ -104,6 +107,7 @@ export class HomepageComponent {
     this.onSubmitLogout()
     window.addEventListener("scroll", this.handleScroll);
     this.loadSVG();
+    this.carregarPlanos();
   }
 
   @HostListener('window:scroll', [])
@@ -127,28 +131,26 @@ export class HomepageComponent {
       }
     }
 
-   // ===== NOVA ANIMAÇÃO HIGHLIGHTS =====
-if (this.highlightsSection?.nativeElement && !this.hasHighlightsAnimated) {
+    // ===== NOVA ANIMAÇÃO HIGHLIGHTS =====
+    if (this.highlightsSection?.nativeElement && !this.hasHighlightsAnimated) {
 
-  const element = this.highlightsSection.nativeElement;
-  const rect = element.getBoundingClientRect();
+      const element = this.highlightsSection.nativeElement;
+      const rect = element.getBoundingClientRect();
 
-  // Só ativa quando 80% da viewport já passou
-  if (rect.top <= window.innerHeight * 0.8) {
+      // Só ativa quando 80% da viewport já passou
+      if (rect.top <= window.innerHeight * 0.8) {
 
-    const inner = element.querySelector('.highlights-inner');
-    inner?.classList.add('visible');
+        const inner = element.querySelector('.highlights-inner');
+        inner?.classList.add('visible');
 
-    this.hasHighlightsAnimated = true; // trava para não repetir
+        this.hasHighlightsAnimated = true; // trava para não repetir
+      }
+    }
   }
-}
 
-
+  toggleCountries() {
+    this.countriesOpen = !this.countriesOpen;
   }
-  
-toggleCountries() {
-  this.countriesOpen = !this.countriesOpen;
-}
 
   handleScroll = () => {
     const elements = document.querySelectorAll(".reveal, .reveal-card");
@@ -170,6 +172,23 @@ toggleCountries() {
       queryParams: { mode: 'signup' }
     });
   }
+
+  carregarPlanos(): void {
+    this.planoService.getPlanos().subscribe({
+      next: (planos) => {
+        this.planos = planos;
+        console.log('Planos:', planos);
+      },
+      error: (error) => {
+        console.error('Erro ao carregar planos:', error);
+      }
+    });
+  }
+
+ assinar(plano: Plano): void {
+  localStorage.setItem('planoSelecionado', JSON.stringify(plano));
+  this.router.navigate(['/login']);
+}
 
   onSubmitLogout() {
     localStorage.removeItem('ControleUsuarioLogado');

@@ -15,6 +15,7 @@ import { MapaMundiComponent } from './mapa-mundi/mapa-mundi.component';
 import { CollectionComponent } from './collection/collection.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
 import { BannerComponent } from './banner/banner.component';
+import { PagamentoComponent } from './pagamento/pagamento.component';
 
 enum Permi { admin = 2, operador = 1 }
 
@@ -33,7 +34,9 @@ const routes: Routes = [
   { path: 'album', component: AlbumComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'mapa', component: MapaMundiComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], data: { roles: [Permi.admin] } },
-  { path: '**', component: HomepageComponent, canActivate: [AuthGuard] },
+  { path: 'pagamento', component: PagamentoComponent, canActivate: [AuthGuard], data: { roles: [Permi.admin] }  },
+  { path: '**', component: HomepageComponent, canActivate: [AuthGuard] }, // novas rotas tem q ser antes dessa coringa 
+
 ];
 
 @NgModule({
