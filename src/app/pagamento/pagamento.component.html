@@ -1,17 +1,63 @@
 <section class="payment">
     <h2>Confirmar assinatura</h2>
-    <div class="payment-card" *ngIf="plano">
+
+    <div class="payment-card" *ngIf="plano && !pagamento">
         <h3>{{ plano.nome }}</h3>
+
         <p>
             Período:
             {{ plano.meses }}
             {{ plano.meses === 1 ? 'mês' : 'meses' }}
         </p>
+
         <p class="payment-value">
             R$ {{ plano.valor | number:'1.2-2' }}
         </p>
-        <button type="button" class="btn" (click)="continuarPagamento()">
-            Continuar para pagamento
+
+        <button
+            type="button"
+            class="btn"
+            (click)="continuarPagamento()"
+            [disabled]="carregando">
+            {{ carregando ? 'Gerando PIX...' : 'Continuar para pagamento' }}
         </button>
+    </div>
+
+    <div class="pix-card" *ngIf="pagamento">
+
+        <h3>Pagamento via PIX</h3>
+
+        <p>
+            Escaneie o QR Code abaixo com o aplicativo do seu banco.
+        </p>
+
+        <div class="qr-code" *ngIf="pagamento.pix?.qrCodeBase64">
+            <img
+                [src]="'data:image/png;base64,' + pagamento.pix.qrCodeBase64"
+                alt="QR Code PIX">
+        </div>
+
+        <p class="pix-label">
+            Ou copie o código PIX:
+        </p>
+
+        <div class="pix-copy">
+            <textarea
+                readonly
+                [value]="pagamento.pix?.qrCode">
+            </textarea>
+
+            <button
+                type="button"
+                class="btn"
+                (click)="copiarPix()">
+                Copiar código PIX
+            </button>
+        </div>
+
+        <p class="pix-status">
+            Aguardando confirmação do pagamento...
+        </p>
+
     </div>
 </section>

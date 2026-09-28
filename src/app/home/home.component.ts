@@ -119,7 +119,6 @@ console.log('DEPOIS DO VERIFICAR');
   }
 
 verificarAssinatura(): void {
-  alert('ENTROU NO VERIFICAR ASSINATURA');
 
   console.log('========== VERIFICAR ASSINATURA ==========');
 

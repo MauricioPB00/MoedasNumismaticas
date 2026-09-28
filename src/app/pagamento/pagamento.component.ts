@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlanoService } from '../AuthService/planos.service';
@@ -11,6 +10,8 @@ import { PlanoService } from '../AuthService/planos.service';
 export class PagamentoComponent implements OnInit {
 
   plano: any = null;
+  pagamento: any = null;
+  carregando = false;
 
   constructor(
     private router: Router,
@@ -31,17 +32,37 @@ export class PagamentoComponent implements OnInit {
   }
 
   continuarPagamento(): void {
-    if (!this.plano) {
+    if (!this.plano || this.carregando) {
       return;
     }
+
+    this.carregando = true;
 
     this.planoService.pagarAssinatura(this.plano.id).subscribe({
       next: (data) => {
         console.log('Pagamento iniciado:', data);
+
+        this.pagamento = data;
+
+        this.carregando = false;
       },
       error: (error) => {
         console.error('Erro ao iniciar pagamento:', error);
+
+        this.carregando = false;
       }
+    });
+  }
+
+  copiarPix(): void {
+    const codigoPix = this.pagamento?.pix?.qrCode;
+
+    if (!codigoPix) {
+      return;
+    }
+
+    navigator.clipboard.writeText(codigoPix).then(() => {
+      alert('Código PIX copiado!');
     });
   }
 }
