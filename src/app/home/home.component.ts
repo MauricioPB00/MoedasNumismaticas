@@ -49,31 +49,119 @@ export class HomeComponent implements OnInit {
     private planoService: PlanoService
   ) { }
 
-  ngOnInit(): void {
-    console.log('========== HOME NGONINIT ==========');
+ ngOnInit(): void {
+  console.log('========== HOME NGONINIT ==========');
 
-    this.route.queryParams.subscribe(params => {
-      this.queryParamsInitialized = true;
+  const planoSelecionado = localStorage.getItem('planoSelecionado');
 
-      if (params['searchName']) this.searchName = params['searchName'];
-      if (params['category']) this.selectedCategory = params['category'];
-      if (params['issuer']) this.selectedIssuer = params['issuer'];
-      if (params['country']) this.selectedCountry = params['country'];
+  if (planoSelecionado) {
+    console.log('PLANO SELECIONADO → PAGAMENTO');
 
-      if (params['minYear']) this.minYear = +params['minYear'];
-      if (params['maxYear']) this.maxYear = +params['maxYear'];
-
-      this.currentPage = params['page'] ? +params['page'] : 1;
-
-      this.loadCoins(this.selectedCountry);
-    });
-
-    console.log('PLANO NO STORAGE ANTES:', localStorage.getItem('planoSelecionado'));
-
-    console.log('CHAMANDO verificarAssinatura');
-    this.verificarAssinatura();
-    console.log('DEPOIS DO VERIFICAR');
+    this.router.navigate(['/pagamento']);
+    return;
   }
+
+  console.log('SEM PLANO SELECIONADO → CARREGANDO HOME');
+
+  this.route.queryParams.subscribe(params => {
+
+    this.queryParamsInitialized = true;
+
+    if (params['searchName']) {
+      this.searchName = params['searchName'];
+    }
+
+    if (params['category']) {
+      this.selectedCategory = params['category'];
+    }
+
+    if (params['issuer']) {
+      this.selectedIssuer = params['issuer'];
+    }
+
+    if (params['country']) {
+      this.selectedCountry = params['country'];
+    }
+
+    if (params['minYear']) {
+      this.minYear = +params['minYear'];
+    }
+
+    if (params['maxYear']) {
+      this.maxYear = +params['maxYear'];
+    }
+
+    this.currentPage = params['page']
+      ? +params['page']
+      : 1;
+
+    this.loadCoins(this.selectedCountry);
+  });
+
+  this.verificarAssinatura();
+}
+
+
+
+
+
+verificarAssinatura(): void {
+
+  console.log('========== VERIFICAR ASSINATURA ==========');
+
+  const planoSelecionado = localStorage.getItem('planoSelecionado');
+
+  if (planoSelecionado) {
+    console.log('PLANO SELECIONADO → PAGAMENTO');
+    this.router.navigate(['/pagamento']);
+    return;
+  }
+
+  this.planoService.statusAssinatura().subscribe({
+
+    next: (data) => {
+
+      console.log('STATUS ASSINATURA:', data);
+
+      if (data.acesso === true) {
+        console.log('ASSINATURA ATIVA → ACESSO LIBERADO');
+        return;
+      }
+
+      console.log('SEM ASSINATURA → PLANOS');
+
+      this.router.navigate(['/planos']);
+    },
+
+    error: (error) => {
+
+      console.error('ERRO AO VERIFICAR ASSINATURA:', error);
+
+      if (error.status === 401) {
+        this.router.navigate(['/login']);
+        return;
+      }
+
+      if (error.status === 403) {
+        this.router.navigate(['/planos']);
+      }
+    }
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -115,59 +203,6 @@ export class HomeComponent implements OnInit {
       error: (err) => {
         console.error('Erro ao carregar moedas:', err);
         this.loading.hide();
-      }
-    });
-  }
-
-
-  verificarAssinatura(): void {
-
-    console.log('========== VERIFICAR ASSINATURA ==========');
-
-    const planoSelecionado = localStorage.getItem('planoSelecionado');
-
-    console.log('PLANO SELECIONADO:', planoSelecionado);
-
-    if (planoSelecionado) {
-
-      console.log('TEM PLANO SELECIONADO → PAGAMENTO');
-
-      if (this.router.url !== '/pagamento') {
-        this.router.navigate(['/pagamento']);
-      }
-
-      return;
-    }
-
-    console.log('SEM PLANO SELECIONADO → CONSULTANDO ASSINATURA');
-
-    this.planoService.statusAssinatura().subscribe({
-      next: (data) => {
-
-        console.log('Status assinatura:', data);
-
-        if (data.acesso) {
-          console.log('ASSINATURA ATIVA → USUÁRIO LIBERADO');
-          return;
-        }
-
-        console.log('SEM ASSINATURA → PLANOS');
-
-        this.router.navigate(['/planos']);
-      },
-
-      error: (error) => {
-
-        console.error('Erro ao verificar assinatura:', error);
-
-        if (error.status === 401) {
-          this.router.navigate(['/login']);
-          return;
-        }
-
-        if (error.status === 403) {
-          this.router.navigate(['/planos']);
-        }
       }
     });
   }

@@ -30,5 +30,11 @@ export class PlanoService {
     pagarAssinatura(planoId: number) {
         return this.http.post<any>(`${API_CONFIG.baseUrl}/assinatura/pagar`, { planoId });
     }
+
+     statusPagamento(assinaturaId: number): Observable<any> {
+        return this.http.get<any>(
+            `${API_CONFIG.baseUrl}/assinatura/pagamento/${assinaturaId}/status`
+        );
+    }
 }
 
