@@ -49,30 +49,31 @@ export class HomeComponent implements OnInit {
     private planoService: PlanoService
   ) { }
 
-ngOnInit(): void {
-  console.log('========== HOME NGONINIT ==========');
+  ngOnInit(): void {
+    console.log('========== HOME NGONINIT ==========');
 
-  this.route.queryParams.subscribe(params => {
-    this.queryParamsInitialized = true;
+    this.route.queryParams.subscribe(params => {
+      this.queryParamsInitialized = true;
 
-    if (params['searchName']) this.searchName = params['searchName'];
-    if (params['category']) this.selectedCategory = params['category'];
-    if (params['issuer']) this.selectedIssuer = params['issuer'];
-    if (params['country']) this.selectedCountry = params['country'];
+      if (params['searchName']) this.searchName = params['searchName'];
+      if (params['category']) this.selectedCategory = params['category'];
+      if (params['issuer']) this.selectedIssuer = params['issuer'];
+      if (params['country']) this.selectedCountry = params['country'];
 
-    if (params['minYear']) this.minYear = +params['minYear'];
-    if (params['maxYear']) this.maxYear = +params['maxYear'];
+      if (params['minYear']) this.minYear = +params['minYear'];
+      if (params['maxYear']) this.maxYear = +params['maxYear'];
 
-    this.currentPage = params['page'] ? +params['page'] : 1;
+      this.currentPage = params['page'] ? +params['page'] : 1;
 
-    this.loadCoins(this.selectedCountry);
-  });
+      this.loadCoins(this.selectedCountry);
+    });
 
-  console.log('CHAMANDO verificarAssinatura');
-  console.log('ANTES DO VERIFICAR');
-this.verificarAssinatura();
-console.log('DEPOIS DO VERIFICAR');
-}
+    console.log('PLANO NO STORAGE ANTES:', localStorage.getItem('planoSelecionado'));
+
+    console.log('CHAMANDO verificarAssinatura');
+    this.verificarAssinatura();
+    console.log('DEPOIS DO VERIFICAR');
+  }
 
 
 
@@ -119,57 +120,57 @@ console.log('DEPOIS DO VERIFICAR');
   }
 
 
-verificarAssinatura(): void {
+  verificarAssinatura(): void {
 
-  console.log('========== VERIFICAR ASSINATURA ==========');
+    console.log('========== VERIFICAR ASSINATURA ==========');
 
-  const planoSelecionado = localStorage.getItem('planoSelecionado');
+    const planoSelecionado = localStorage.getItem('planoSelecionado');
 
-  console.log('PLANO SELECIONADO:', planoSelecionado);
+    console.log('PLANO SELECIONADO:', planoSelecionado);
 
-  if (planoSelecionado) {
+    if (planoSelecionado) {
 
-    console.log('TEM PLANO SELECIONADO → PAGAMENTO');
+      console.log('TEM PLANO SELECIONADO → PAGAMENTO');
 
-    if (this.router.url !== '/pagamento') {
-      this.router.navigate(['/pagamento']);
+      if (this.router.url !== '/pagamento') {
+        this.router.navigate(['/pagamento']);
+      }
+
+      return;
     }
 
-    return;
-  }
+    console.log('SEM PLANO SELECIONADO → CONSULTANDO ASSINATURA');
 
-  console.log('SEM PLANO SELECIONADO → CONSULTANDO ASSINATURA');
+    this.planoService.statusAssinatura().subscribe({
+      next: (data) => {
 
-  this.planoService.statusAssinatura().subscribe({
-    next: (data) => {
+        console.log('Status assinatura:', data);
 
-      console.log('Status assinatura:', data);
+        if (data.acesso) {
+          console.log('ASSINATURA ATIVA → USUÁRIO LIBERADO');
+          return;
+        }
 
-      if (data.acesso) {
-        console.log('ASSINATURA ATIVA → USUÁRIO LIBERADO');
-        return;
-      }
+        console.log('SEM ASSINATURA → PLANOS');
 
-      console.log('SEM ASSINATURA → PLANOS');
-
-      this.router.navigate(['/planos']);
-    },
-
-    error: (error) => {
-
-      console.error('Erro ao verificar assinatura:', error);
-
-      if (error.status === 401) {
-        this.router.navigate(['/login']);
-        return;
-      }
-
-      if (error.status === 403) {
         this.router.navigate(['/planos']);
+      },
+
+      error: (error) => {
+
+        console.error('Erro ao verificar assinatura:', error);
+
+        if (error.status === 401) {
+          this.router.navigate(['/login']);
+          return;
+        }
+
+        if (error.status === 403) {
+          this.router.navigate(['/planos']);
+        }
       }
-    }
-  });
-}
+    });
+  }
 
 
 
