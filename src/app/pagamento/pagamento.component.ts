@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlanoService } from '../AuthService/planos.service';
+import { Subscription, interval } from 'rxjs';
 
 @Component({
   selector: 'app-pagamento',
   templateUrl: './pagamento.component.html',
   styleUrls: ['./pagamento.component.css']
 })
-export class PagamentoComponent implements OnInit {
+export class PagamentoComponent implements OnInit, OnDestroy {
 
   plano: any = null;
   pagamento: any = null;
   carregando = false;
+
+  private verificacaoPagamento?: Subscription;
 
   constructor(
     private router: Router,
@@ -19,6 +22,7 @@ export class PagamentoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     const planoSelecionado = localStorage.getItem('planoSelecionado');
 
     if (!planoSelecionado) {
@@ -32,6 +36,7 @@ export class PagamentoComponent implements OnInit {
   }
 
   continuarPagamento(): void {
+
     if (!this.plano || this.carregando) {
       return;
     }
@@ -39,14 +44,20 @@ export class PagamentoComponent implements OnInit {
     this.carregando = true;
 
     this.planoService.pagarAssinatura(this.plano.id).subscribe({
+
       next: (data) => {
+
         console.log('Pagamento iniciado:', data);
 
         this.pagamento = data;
 
         this.carregando = false;
+
+        this.iniciarVerificacaoPagamento();
       },
+
       error: (error) => {
+
         console.error('Erro ao iniciar pagamento:', error);
 
         this.carregando = false;
@@ -54,7 +65,52 @@ export class PagamentoComponent implements OnInit {
     });
   }
 
+  iniciarVerificacaoPagamento(): void {
+
+    console.log('INICIANDO VERIFICAÇÃO DO PAGAMENTO');
+
+    this.verificacaoPagamento?.unsubscribe();
+
+    this.verificacaoPagamento = interval(5000).subscribe(() => {
+
+      console.log('VERIFICANDO ASSINATURA...');
+
+      this.planoService.statusAssinatura().subscribe({
+
+        next: (data) => {
+
+          console.log('STATUS DO PAGAMENTO:', data);
+
+          if (data.acesso === true) {
+
+            console.log('PAGAMENTO CONFIRMADO!');
+            console.log('ASSINATURA ATIVA!');
+
+            this.verificacaoPagamento?.unsubscribe();
+
+            localStorage.removeItem('planoSelecionado');
+
+            this.router.navigate(['/']);
+          }
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Erro ao verificar pagamento:',
+            error
+          );
+
+        }
+
+      });
+
+    });
+  }
+
   copiarPix(): void {
+
     const codigoPix = this.pagamento?.pix?.qrCode;
 
     if (!codigoPix) {
@@ -62,7 +118,15 @@ export class PagamentoComponent implements OnInit {
     }
 
     navigator.clipboard.writeText(codigoPix).then(() => {
+
       alert('Código PIX copiado!');
+
     });
+  }
+
+  ngOnDestroy(): void {
+
+    this.verificacaoPagamento?.unsubscribe();
+
   }
 }

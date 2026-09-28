@@ -118,6 +118,7 @@ console.log('DEPOIS DO VERIFICAR');
     });
   }
 
+
 verificarAssinatura(): void {
 
   console.log('========== VERIFICAR ASSINATURA ==========');
@@ -127,29 +128,35 @@ verificarAssinatura(): void {
   console.log('PLANO SELECIONADO:', planoSelecionado);
 
   if (planoSelecionado) {
-    console.log('TEM PLANO → PAGAMENTO');
 
-    this.router.navigate(['/pagamento']).then(resultado => {
-      console.log('NAVEGAÇÃO PAGAMENTO:', resultado);
-    });
+    console.log('TEM PLANO SELECIONADO → PAGAMENTO');
+
+    if (this.router.url !== '/pagamento') {
+      this.router.navigate(['/pagamento']);
+    }
 
     return;
   }
 
-  console.log('SEM PLANO → CONSULTANDO ASSINATURA');
+  console.log('SEM PLANO SELECIONADO → CONSULTANDO ASSINATURA');
 
   this.planoService.statusAssinatura().subscribe({
     next: (data) => {
+
       console.log('Status assinatura:', data);
 
       if (data.acesso) {
+        console.log('ASSINATURA ATIVA → USUÁRIO LIBERADO');
         return;
       }
+
+      console.log('SEM ASSINATURA → PLANOS');
 
       this.router.navigate(['/planos']);
     },
 
     error: (error) => {
+
       console.error('Erro ao verificar assinatura:', error);
 
       if (error.status === 401) {
@@ -163,8 +170,6 @@ verificarAssinatura(): void {
     }
   });
 }
-
-
 
 
 
