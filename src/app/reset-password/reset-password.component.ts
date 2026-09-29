@@ -20,7 +20,7 @@ export class ResetPasswordComponent implements OnInit {
     private passwordResetService: PasswordResetService,
     private toastr: ToastrService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // pega token da URL

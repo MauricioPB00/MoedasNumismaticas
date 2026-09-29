@@ -141,26 +141,26 @@ export class CoinComponent implements OnInit {
   }
 
   editInfo(entityType: 'coin' | 'banknote', info: any) {
-  this.editing = true;
-  this.isNew = false;
-  this.editingType = entityType;  // <-- AGORA FUNCIONA
+    this.editing = true;
+    this.isNew = false;
+    this.editingType = entityType;  // <-- AGORA FUNCIONA
 
-  const gradeList = ["R/BC", "BC", "MBC", "SOB", "S/FDC", "FE", "FDC"];
+    const gradeList = ["R/BC", "BC", "MBC", "SOB", "S/FDC", "FE", "FDC"];
 
-  const pricesObj: any = {};
-  gradeList.forEach(g => pricesObj[g] = '');
+    const pricesObj: any = {};
+    gradeList.forEach(g => pricesObj[g] = '');
 
-  if (Array.isArray(info.prices)) {
-    info.prices.forEach((p: any) => {
-      pricesObj[p.grade] = p.price ?? '';
-    });
+    if (Array.isArray(info.prices)) {
+      info.prices.forEach((p: any) => {
+        pricesObj[p.grade] = p.price ?? '';
+      });
+    }
+
+    this.editData = {
+      ...info,
+      prices: pricesObj
+    };
   }
-
-  this.editData = {
-    ...info,
-    prices: pricesObj
-  };
-}
 
 
 
@@ -190,39 +190,39 @@ export class CoinComponent implements OnInit {
   }
 
 
- saveInfo() {
-  const pricesArray = Object.keys(this.editData.prices).map(grade => {
-    let val = this.editData.prices[grade];
+  saveInfo() {
+    const pricesArray = Object.keys(this.editData.prices).map(grade => {
+      let val = this.editData.prices[grade];
 
-    if (val === '' || val === null || val === undefined) {
-      val = null;
-    } else {
-      val = Number(val);
-      if (isNaN(val)) val = null;
-    }
+      if (val === '' || val === null || val === undefined) {
+        val = null;
+      } else {
+        val = Number(val);
+        if (isNaN(val)) val = null;
+      }
 
-    return { grade, price: val };
-  });
-  
-  const payload = {
-    entityType: this.editingType, // <--- OBRIGATÓRIO
-    ...this.editData,
-    prices: pricesArray
-  };
+      return { grade, price: val };
+    });
 
-  this.coinsService.saveCoinInfo(this.coin.id, payload).subscribe({
-    next: () => {
-      if (this.editingType === 'coin' && this.isNew)
-        this.coin.coinInfo.push(this.editData);
+    const payload = {
+      entityType: this.editingType, // <--- OBRIGATÓRIO
+      ...this.editData,
+      prices: pricesArray
+    };
 
-      if (this.editingType === 'banknote' && this.isNew)
-        this.coin.banknoteInfo.push(this.editData);
+    this.coinsService.saveCoinInfo(this.coin.id, payload).subscribe({
+      next: () => {
+        if (this.editingType === 'coin' && this.isNew)
+          this.coin.coinInfo.push(this.editData);
 
-      this.editing = false;
+        if (this.editingType === 'banknote' && this.isNew)
+          this.coin.banknoteInfo.push(this.editData);
 
-    }
-  });
-}
+        this.editing = false;
+
+      }
+    });
+  }
 
 
 

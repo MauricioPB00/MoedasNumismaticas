@@ -92,5 +92,5 @@ export class LoginService {
     const roles = JSON.parse(localStorage.getItem('ControleUsuarioRoles') || '[]');
     return roles.includes(role);
   }
-  
+
 }

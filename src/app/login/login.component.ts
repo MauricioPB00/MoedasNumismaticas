@@ -65,38 +65,64 @@ export class LoginComponent {
   }
 
   logar() {
-  this.loading.show();
-  if (this.isLoginValid()) {
-    this.loginService.login(this.dados.email, this.dados.password).pipe(take(1)).subscribe(
-      data => {
-        this.loginService.statusAssinatura().pipe(take(1)).subscribe(
-          assinatura => {
-            if (assinatura.acesso) {
-              this.toastr.success('Logado com sucesso');
-              this.router.navigateByUrl('/home');
-            } else {
-              this.toastr.warning('Sua assinatura expirou. Escolha um plano para continuar.');
-              this.router.navigateByUrl('/assinatura');
+    this.loading.show();
+    if (this.isLoginValid()) {
+      this.loginService
+        .login(this.dados.email, this.dados.password)
+        .pipe(take(1))
+        .subscribe(
+          data => {
+            const planoSelecionado =
+              localStorage.getItem('planoSelecionado');
+            if (planoSelecionado) {
+              // console.log(
+              //   'PLANO SELECIONADO → PAGAMENTO'
+              // );
+              this.loading.hide();
+              this.router.navigateByUrl('/pagamento');
+              return;
             }
-            this.loading.hide();
+            this.loginService
+              .statusAssinatura()
+              .pipe(take(1))
+              .subscribe(
+                assinatura => {
+                  if (assinatura.acesso) {
+                    this.toastr.success(
+                      'Logado com sucesso'
+                    );
+                    this.router.navigateByUrl('/home');
+                  } else {
+                    this.toastr.warning(
+                      'Escolha um plano para continuar.'
+                    );
+                    this.router.navigateByUrl('/planos');
+                  }
+                  this.loading.hide();
+                },
+                error => {
+                  this.toastr.error(
+                    'Não foi possível verificar sua assinatura.'
+                  );
+                  this.loading.hide();
+                }
+              );
           },
           error => {
-            this.toastr.error('Não foi possível verificar sua assinatura.');
+            const msg =
+              error?.error?.message ||
+              'Email ou senha incorreto';
+            this.toastr.error(msg);
             this.loading.hide();
           }
         );
-      },
-      error => {
-        const msg = error?.error?.message || 'Email ou senha incorreto';
-        this.toastr.error(msg);
-        this.loading.hide();
-      }
-    );
-  } else {
-    this.toastr.error('Preencha todos os campos corretamente antes de se cadastrar.');
-    this.loading.hide();
+    } else {
+      this.toastr.error(
+        'Preencha todos os campos corretamente antes de se cadastrar.'
+      );
+      this.loading.hide();
+    }
   }
-}
 
   goToRegister() {
     this.isSignUpMode = true;

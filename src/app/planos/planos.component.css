@@ -1,320 +1,314 @@
 :host {
-  display: block;
+    display: block;
 }
 
 .plans {
-  min-height: calc(100vh - 80px);
-  padding: 70px 30px 60px;
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(37, 138, 91, 0.10),
-      transparent 40%
-    ),
-    linear-gradient(
-      180deg,
-      #f8faf9 0%,
-      #ffffff 100%
-    );
+    min-height: calc(100vh - 80px);
+    padding: 70px 30px 60px;
+    background:
+        radial-gradient(circle at 50% 0%,
+            rgba(37, 138, 91, 0.10),
+            transparent 40%),
+        linear-gradient(180deg,
+            #f8faf9 0%,
+            #ffffff 100%);
 }
 
 .plans-header {
-  max-width: 760px;
-  margin: 0 auto 55px;
-  text-align: center;
+    max-width: 760px;
+    margin: 0 auto 55px;
+    text-align: center;
 }
 
 .plans-eyebrow {
-  display: inline-block;
-  margin-bottom: 12px;
-  padding: 7px 15px;
-  border-radius: 30px;
-  background: rgba(37, 138, 91, 0.10);
-  color: #258a5b;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1.8px;
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 7px 15px;
+    border-radius: 30px;
+    background: rgba(37, 138, 91, 0.10);
+    color: #258a5b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
 }
 
 .plans-title {
-  margin: 0;
-  color: #17231d;
-  font-size: 38px;
-  line-height: 1.15;
-  font-weight: 800;
-  letter-spacing: -1px;
+    margin: 0;
+    color: #17231d;
+    font-size: 38px;
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -1px;
 }
 
 .plans-subtitle {
-  max-width: 650px;
-  margin: 18px auto 0;
-  color: #718078;
-  font-size: 16px;
-  line-height: 1.7;
+    max-width: 650px;
+    margin: 18px auto 0;
+    color: #718078;
+    font-size: 16px;
+    line-height: 1.7;
 }
 
 .plans-grid {
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  align-items: stretch;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    align-items: stretch;
 }
 
 .plan-card {
-  position: relative;
-  overflow: hidden;
-  background: #ffffff;
-  border: 1px solid #e5ebe7;
-  border-radius: 22px;
-  box-shadow: 0 12px 35px rgba(27, 48, 38, 0.07);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e5ebe7;
+    border-radius: 22px;
+    box-shadow: 0 12px 35px rgba(27, 48, 38, 0.07);
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .plan-card:hover {
-  transform: translateY(-8px);
-  border-color: #b9dcca;
-  box-shadow: 0 22px 50px rgba(27, 48, 38, 0.13);
+    transform: translateY(-8px);
+    border-color: #b9dcca;
+    box-shadow: 0 22px 50px rgba(27, 48, 38, 0.13);
 }
 
 .plan-card.popular {
-  border: 2px solid #258a5b;
-  box-shadow:
-    0 18px 45px rgba(37, 138, 91, 0.16);
-  transform: translateY(-10px);
+    border: 2px solid #258a5b;
+    box-shadow:
+        0 18px 45px rgba(37, 138, 91, 0.16);
+    transform: translateY(-10px);
 }
 
 .plan-card.popular:hover {
-  transform: translateY(-15px);
+    transform: translateY(-15px);
 }
 
 .badge {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 10px 15px;
-  text-align: center;
-  background: linear-gradient(
-    135deg,
-    #258a5b,
-    #36a96f
-  );
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 15px;
+    text-align: center;
+    background: linear-gradient(135deg,
+            #258a5b,
+            #36a96f);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 .badge span {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
 .plan-content {
-  height: 100%;
-  padding: 38px 30px 30px;
-  display: flex;
-  flex-direction: column;
+    height: 100%;
+    padding: 38px 30px 30px;
+    display: flex;
+    flex-direction: column;
 }
 
 .plan-card.popular .plan-content {
-  padding-top: 62px;
+    padding-top: 62px;
 }
 
 .plan-card h3 {
-  margin: 0;
-  color: #17231d;
-  font-size: 25px;
-  font-weight: 800;
-  text-align: center;
+    margin: 0;
+    color: #17231d;
+    font-size: 25px;
+    font-weight: 800;
+    text-align: center;
 }
 
 .plan-description {
-  min-height: 24px;
-  margin: 8px 0 24px;
-  color: #849089;
-  font-size: 14px;
-  text-align: center;
+    min-height: 24px;
+    margin: 8px 0 24px;
+    color: #849089;
+    font-size: 14px;
+    text-align: center;
 }
 
 .price-area {
-  text-align: center;
+    text-align: center;
 }
 
 .old-price {
-  min-height: 20px;
-  margin: 0 0 3px;
-  color: #a1aaa5;
-  font-size: 14px;
-  text-decoration: line-through;
+    min-height: 20px;
+    margin: 0 0 3px;
+    color: #a1aaa5;
+    font-size: 14px;
+    text-decoration: line-through;
 }
 
 .price {
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-  color: #17231d;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    color: #17231d;
 }
 
 .currency {
-  margin-right: 4px;
-  color: #258a5b;
-  font-size: 19px;
-  font-weight: 700;
+    margin-right: 4px;
+    color: #258a5b;
+    font-size: 19px;
+    font-weight: 700;
 }
 
 .value {
-  font-size: 42px;
-  line-height: 1;
-  font-weight: 850;
-  letter-spacing: -1.5px;
+    font-size: 42px;
+    line-height: 1;
+    font-weight: 850;
+    letter-spacing: -1.5px;
 }
 
 .price-period {
-  display: block;
-  margin-top: 8px;
-  color: #8a948e;
-  font-size: 13px;
+    display: block;
+    margin-top: 8px;
+    color: #8a948e;
+    font-size: 13px;
 }
 
 .divider {
-  height: 1px;
-  margin: 28px 0 25px;
-  background: #edf1ee;
+    height: 1px;
+    margin: 28px 0 25px;
+    background: #edf1ee;
 }
 
 .features {
-  flex: 1;
-  padding: 0;
-  margin: 0 0 28px;
-  list-style: none;
+    flex: 1;
+    padding: 0;
+    margin: 0 0 28px;
+    list-style: none;
 }
 
 .features li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
-  color: #526059;
-  font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: #526059;
+    font-size: 14px;
 }
 
 .check {
-  flex: 0 0 22px;
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(37, 138, 91, 0.11);
-  color: #258a5b;
-  font-size: 13px;
-  font-weight: 900;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(37, 138, 91, 0.11);
+    color: #258a5b;
+    font-size: 13px;
+    font-weight: 900;
 }
 
 .btn {
-  width: 100%;
-  min-height: 52px;
-  border: 0;
-  border-radius: 13px;
-  background: #edf4ef;
-  color: #258a5b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-size: 15px;
-  font-weight: 800;
-  cursor: pointer;
-  transition:
-    background 0.25s ease,
-    color 0.25s ease,
-    transform 0.25s ease;
+    width: 100%;
+    min-height: 52px;
+    border: 0;
+    border-radius: 13px;
+    background: #edf4ef;
+    color: #258a5b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
 }
 
 .btn:hover {
-  background: #258a5b;
-  color: #ffffff;
+    background: #258a5b;
+    color: #ffffff;
 }
 
 .arrow {
-  font-size: 20px;
-  line-height: 1;
-  transition: transform 0.25s ease;
+    font-size: 20px;
+    line-height: 1;
+    transition: transform 0.25s ease;
 }
 
 .btn:hover .arrow {
-  transform: translateX(4px);
+    transform: translateX(4px);
 }
 
 .plan-card.popular .btn {
-  background: #258a5b;
-  color: #ffffff;
-  box-shadow: 0 8px 20px rgba(37, 138, 91, 0.20);
+    background: #258a5b;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(37, 138, 91, 0.20);
 }
 
 .plan-card.popular .btn:hover {
-  background: #1f744d;
+    background: #1f744d;
 }
 
 .plans-promo {
-  width: fit-content;
-  max-width: 100%;
-  margin: 45px auto 0;
-  padding: 16px 25px;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  border: 1px solid #d9eee2;
-  border-radius: 15px;
-  background: #f1faf5;
-  color: #286047;
+    width: fit-content;
+    max-width: 100%;
+    margin: 45px auto 0;
+    padding: 16px 25px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    border: 1px solid #d9eee2;
+    border-radius: 15px;
+    background: #f1faf5;
+    color: #286047;
 }
 
 .promo-icon {
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #ffffff;
-  font-size: 20px;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #ffffff;
+    font-size: 20px;
 }
 
 .plans-promo strong {
-  color: #258a5b;
+    color: #258a5b;
 }
 
 .plans-promo p {
-  margin: 3px 0 0;
-  font-size: 13px;
+    margin: 3px 0 0;
+    font-size: 13px;
 }
 
 .plans-security {
-  margin-top: 22px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  color: #9aa39e;
-  font-size: 12px;
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    color: #9aa39e;
+    font-size: 12px;
 }
 
 .plans-security p {
-  margin: 0;
+    margin: 0;
 }
 
 .separator {
-  opacity: 0.5;
+    opacity: 0.5;
 }
 
 .pix-container {
@@ -350,11 +344,9 @@
     align-items: center;
     gap: 15px;
     padding: 24px 30px;
-    background: linear-gradient(
-        135deg,
-        #258a5b,
-        #36a96f
-    );
+    background: linear-gradient(135deg,
+            #258a5b,
+            #36a96f);
     color: #ffffff;
 }
 
@@ -413,7 +405,7 @@
     font-weight: 800;
 }
 
-.pix-info > p {
+.pix-info>p {
     margin: 0 0 22px;
     color: #7a867f;
     font-size: 14px;
@@ -612,73 +604,73 @@
 
 @media (max-width: 900px) {
 
-  .plans {
-    padding: 55px 20px 45px;
-  }
+    .plans {
+        padding: 55px 20px 45px;
+    }
 
-  .plans-title {
-    font-size: 32px;
-  }
+    .plans-title {
+        font-size: 32px;
+    }
 
-  .plans-grid {
-    max-width: 700px;
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
+    .plans-grid {
+        max-width: 700px;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
 
-  .plan-card.popular {
-    transform: none;
-  }
+    .plan-card.popular {
+        transform: none;
+    }
 
-  .plan-card.popular:hover {
-    transform: translateY(-8px);
-  }
+    .plan-card.popular:hover {
+        transform: translateY(-8px);
+    }
 
-  .plan-card {
-    max-width: 500px;
-    width: 100%;
-    margin: 0 auto;
-  }
+    .plan-card {
+        max-width: 500px;
+        width: 100%;
+        margin: 0 auto;
+    }
 
 }
 
 @media (max-width: 500px) {
 
-  .plans {
-    padding: 40px 15px;
-  }
+    .plans {
+        padding: 40px 15px;
+    }
 
-  .plans-header {
-    margin-bottom: 35px;
-  }
+    .plans-header {
+        margin-bottom: 35px;
+    }
 
-  .plans-title {
-    font-size: 28px;
-  }
+    .plans-title {
+        font-size: 28px;
+    }
 
-  .plans-subtitle {
-    font-size: 14px;
-  }
+    .plans-subtitle {
+        font-size: 14px;
+    }
 
-  .plan-content {
-    padding: 32px 22px 24px;
-  }
+    .plan-content {
+        padding: 32px 22px 24px;
+    }
 
-  .plan-card.popular .plan-content {
-    padding-top: 60px;
-  }
+    .plan-card.popular .plan-content {
+        padding-top: 60px;
+    }
 
-  .value {
-    font-size: 38px;
-  }
+    .value {
+        font-size: 38px;
+    }
 
-  .plans-promo {
-    width: 100%;
-    box-sizing: border-box;
-  }
+    .plans-promo {
+        width: 100%;
+        box-sizing: border-box;
+    }
 
-  .plans-security {
-    flex-wrap: wrap;
-  }
+    .plans-security {
+        flex-wrap: wrap;
+    }
 
 }

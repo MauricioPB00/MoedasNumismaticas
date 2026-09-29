@@ -49,105 +49,93 @@ export class HomeComponent implements OnInit {
     private planoService: PlanoService
   ) { }
 
- ngOnInit(): void {
-  console.log('========== HOME NGONINIT ==========');
+  ngOnInit(): void {
 
-  const planoSelecionado = localStorage.getItem('planoSelecionado');
+    this.route.queryParams.subscribe(params => {
 
-  if (planoSelecionado) {
-    console.log('PLANO SELECIONADO → PAGAMENTO');
+      this.queryParamsInitialized = true;
 
-    this.router.navigate(['/pagamento']);
-    return;
+      if (params['searchName']) {
+        this.searchName = params['searchName'];
+      }
+
+      if (params['category']) {
+        this.selectedCategory = params['category'];
+      }
+
+      if (params['issuer']) {
+        this.selectedIssuer = params['issuer'];
+      }
+
+      if (params['country']) {
+        this.selectedCountry = params['country'];
+      }
+
+      if (params['minYear']) {
+        this.minYear = +params['minYear'];
+      }
+
+      if (params['maxYear']) {
+        this.maxYear = +params['maxYear'];
+      }
+
+      this.currentPage = params['page']
+        ? +params['page']
+        : 1;
+
+      this.loadCoins(this.selectedCountry);
+    });
+
+
   }
 
-  console.log('SEM PLANO SELECIONADO → CARREGANDO HOME');
-
-  this.route.queryParams.subscribe(params => {
-
-    this.queryParamsInitialized = true;
-
-    if (params['searchName']) {
-      this.searchName = params['searchName'];
-    }
-
-    if (params['category']) {
-      this.selectedCategory = params['category'];
-    }
-
-    if (params['issuer']) {
-      this.selectedIssuer = params['issuer'];
-    }
-
-    if (params['country']) {
-      this.selectedCountry = params['country'];
-    }
-
-    if (params['minYear']) {
-      this.minYear = +params['minYear'];
-    }
-
-    if (params['maxYear']) {
-      this.maxYear = +params['maxYear'];
-    }
-
-    this.currentPage = params['page']
-      ? +params['page']
-      : 1;
-
-    this.loadCoins(this.selectedCountry);
-  });
-
-  this.verificarAssinatura();
-}
 
 
 
 
+  // verificarAssinatura(): void {
 
-verificarAssinatura(): void {
+  //   console.log('========== VERIFICAR ASSINATURA ==========');
 
-  console.log('========== VERIFICAR ASSINATURA ==========');
+  //   const planoSelecionado = localStorage.getItem('planoSelecionado');
 
-  const planoSelecionado = localStorage.getItem('planoSelecionado');
+  //   if (planoSelecionado) {
+  //     console.log('PLANO SELECIONADO → PAGAMENTO');
+  //     this.router.navigate(['/pagamento']);
+  //     return;
+  //   }
 
-  if (planoSelecionado) {
-    console.log('PLANO SELECIONADO → PAGAMENTO');
-    this.router.navigate(['/pagamento']);
-    return;
-  }
+  //   this.planoService.statusAssinatura().subscribe({
 
-  this.planoService.statusAssinatura().subscribe({
+  //     next: (data) => {
 
-    next: (data) => {
+  //       console.log('STATUS ASSINATURA:', data);
 
-      console.log('STATUS ASSINATURA:', data);
+  //       if (data.acesso === true) {
+  //         console.log('ASSINATURA ATIVA → ACESSO LIBERADO');
+  //         return;
+  //       }
 
-      if (data.acesso === true) {
-        console.log('ASSINATURA ATIVA → ACESSO LIBERADO');
-        return;
-      }
+  //       console.log('SEM ASSINATURA → PLANOS');
 
-      console.log('SEM ASSINATURA → PLANOS');
+  //       this.router.navigate(['/planos']);
+  //     },
 
-      this.router.navigate(['/planos']);
-    },
+  //     error: (error) => {
 
-    error: (error) => {
+  //       console.error('ERRO AO VERIFICAR ASSINATURA:', error);
 
-      console.error('ERRO AO VERIFICAR ASSINATURA:', error);
+  //       if (error.status === 401) {
+  //         this.router.navigate(['/login']);
+  //         return;
+  //       }
 
-      if (error.status === 401) {
-        this.router.navigate(['/login']);
-        return;
-      }
-
-      if (error.status === 403) {
-        this.router.navigate(['/planos']);
-      }
-    }
-  });
-}
+  //       if (error.status === 403) {
+  //         this.router.navigate(['/planos']);
+  //       }
+  //     }
+  //   });
+  // }
 
 
 

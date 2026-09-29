@@ -41,7 +41,7 @@ export class PlanosComponent implements OnInit, OnDestroy {
 
         this.carregando = false;
 
-        console.log('PLANOS:', planos);
+        // console.log('PLANOS:', planos);
 
       },
 
@@ -66,14 +66,14 @@ export class PlanosComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log(
-      '========== CRIANDO PAGAMENTO =========='
-    );
+    // console.log(
+    //   '========== CRIANDO PAGAMENTO =========='
+    // );
 
-    console.log(
-      'PLANO:',
-      plano
-    );
+    // console.log(
+    //   'PLANO:',
+    //   plano
+    // );
 
     this.planoSelecionado = plano;
 
@@ -85,10 +85,10 @@ export class PlanosComponent implements OnInit, OnDestroy {
 
         next: (data) => {
 
-          console.log(
-            'PAGAMENTO CRIADO:',
-            data
-          );
+          // console.log(
+          //   'PAGAMENTO CRIADO:',
+          //   data
+          // );
 
           this.pagamento = data;
 
@@ -138,9 +138,9 @@ export class PlanosComponent implements OnInit, OnDestroy {
 
   iniciarVerificacaoPagamento(): void {
 
-    console.log(
-      '========== INICIANDO VERIFICAÇÃO =========='
-    );
+    // console.log(
+    //   '========== INICIANDO VERIFICAÇÃO =========='
+    // );
 
     this.verificacaoPagamento?.unsubscribe();
 
@@ -157,18 +157,18 @@ export class PlanosComponent implements OnInit, OnDestroy {
 
     }
 
-    console.log(
-      'VERIFICANDO ASSINATURA:',
-      assinaturaId
-    );
+    // console.log(
+    //   'VERIFICANDO ASSINATURA:',
+    //   assinaturaId
+    // );
 
     this.verificacaoPagamento =
       interval(5000).subscribe(() => {
 
-        console.log(
-          'VERIFICANDO STATUS:',
-          assinaturaId
-        );
+        // console.log(
+        //   'VERIFICANDO STATUS:',
+        //   assinaturaId
+        // );
 
         this.planoService
           .statusPagamento(assinaturaId)
@@ -176,16 +176,16 @@ export class PlanosComponent implements OnInit, OnDestroy {
 
             next: (data) => {
 
-              console.log(
-                'STATUS DO PAGAMENTO:',
-                data
-              );
+              // console.log(
+              //   'STATUS DO PAGAMENTO:',
+              //   data
+              // );
 
               if (data.status === 'ativo') {
 
-                console.log(
-                  'PAGAMENTO CONFIRMADO!'
-                );
+                // console.log(
+                //   'PAGAMENTO CONFIRMADO!'
+                // );
 
                 this.verificacaoPagamento
                   ?.unsubscribe();
@@ -249,9 +249,9 @@ export class PlanosComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
 
-    console.log(
-      'PLANOS DESTRUÍDO'
-    );
+    // console.log(
+    //   'PLANOS DESTRUÍDO'
+    // );
 
     this.verificacaoPagamento
       ?.unsubscribe();

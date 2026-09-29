@@ -19,7 +19,7 @@ export class SidebarService {
             "Content-Type": "application/json"
         })
     }
-    
+
     handleError(error: HttpErrorResponse) {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {

@@ -43,9 +43,10 @@ export class PasswordResetService {
   resetPassword(token: string, password: string): Observable<any> {
     return this.httpClient.post(
       `${API_CONFIG.baseUrl}/reset-password`,
-      { token: token,
+      {
+        token: token,
         password: password
-       },
+      },
       { headers: { 'Content-Type': 'application/json' } } // importante
     );
   }

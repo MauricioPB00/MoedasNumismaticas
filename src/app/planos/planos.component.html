@@ -21,16 +21,9 @@
 
     <div class="plans-grid">
 
-        <div
-            *ngFor="let plano of planos"
-            class="plan-card"
-            [class.popular]="plano.codigo === 'anual'"
-        >
+        <div *ngFor="let plano of planos" class="plan-card" [class.popular]="plano.codigo === 'anual'">
 
-            <div
-                *ngIf="plano.codigo === 'anual'"
-                class="badge"
-            >
+            <div *ngIf="plano.codigo === 'anual'" class="badge">
                 <span>★</span>
                 Mais Popular
             </div>
@@ -46,11 +39,11 @@
                 <p class="plan-description">
 
                     {{
-                        plano.codigo === 'mensal'
-                            ? 'Para começar sua coleção'
-                            : plano.codigo === 'trimestral'
-                                ? 'Mais tempo para aproveitar'
-                                : 'A experiência completa'
+                    plano.codigo === 'mensal'
+                    ? 'Para começar sua coleção'
+                    : plano.codigo === 'trimestral'
+                    ? 'Mais tempo para aproveitar'
+                    : 'A experiência completa'
                     }}
 
                 </p>
@@ -58,24 +51,15 @@
 
                 <div class="price-area">
 
-                    <p
-                        class="old-price"
-                        *ngIf="plano.codigo === 'mensal'"
-                    >
+                    <p class="old-price" *ngIf="plano.codigo === 'mensal'">
                         R$ 7,80
                     </p>
 
-                    <p
-                        class="old-price"
-                        *ngIf="plano.codigo === 'trimestral'"
-                    >
+                    <p class="old-price" *ngIf="plano.codigo === 'trimestral'">
                         R$ 22,99
                     </p>
 
-                    <p
-                        class="old-price"
-                        *ngIf="plano.codigo === 'anual'"
-                    >
+                    <p class="old-price" *ngIf="plano.codigo === 'anual'">
                         R$ 84,99
                     </p>
 
@@ -96,11 +80,11 @@
                     <span class="price-period">
 
                         {{
-                            plano.codigo === 'mensal'
-                                ? 'por mês'
-                                : plano.codigo === 'trimestral'
-                                    ? 'por 3 meses'
-                                    : 'por ano'
+                        plano.codigo === 'mensal'
+                        ? 'por mês'
+                        : plano.codigo === 'trimestral'
+                        ? 'por 3 meses'
+                        : 'por ano'
                         }}
 
                     </span>
@@ -136,25 +120,17 @@
                 </ul>
 
 
-                <button
-                    class="btn"
-                    type="button"
-                    (click)="assinar(plano)"
-                    [disabled]="carregando"
-                >
+                <button class="btn" type="button" (click)="assinar(plano)" [disabled]="carregando">
 
                     <span>
                         {{
-                            carregando
-                                ? 'Gerando PIX...'
-                                : 'Assinar agora'
+                        carregando
+                        ? 'Gerando PIX...'
+                        : 'Assinar agora'
                         }}
                     </span>
 
-                    <span
-                        class="arrow"
-                        *ngIf="!carregando"
-                    >
+                    <span class="arrow" *ngIf="!carregando">
                         →
                     </span>
 
@@ -186,10 +162,7 @@
 
     <!-- PAGAMENTO PIX -->
 
-    <div
-        class="pix-container"
-        *ngIf="pagamento"
-    >
+    <div class="pix-container" *ngIf="pagamento">
 
         <div class="pix-card">
 
@@ -218,15 +191,9 @@
             <div class="pix-body">
 
 
-                <div
-                    class="pix-qrcode"
-                    *ngIf="pagamento.pix?.qrCodeBase64"
-                >
+                <div class="pix-qrcode" *ngIf="pagamento.pix?.qrCodeBase64">
 
-                    <img
-                        [src]="'data:image/png;base64,' + pagamento.pix.qrCodeBase64"
-                        alt="QR Code PIX"
-                    >
+                    <img [src]="'data:image/png;base64,' + pagamento.pix.qrCodeBase64" alt="QR Code PIX">
 
                 </div>
 
@@ -257,21 +224,14 @@
                     </div>
 
 
-                    <button
-                        class="pix-copy"
-                        type="button"
-                        (click)="copiarPix()"
-                    >
+                    <button class="pix-copy" type="button" (click)="copiarPix()">
                         📋 Copiar código PIX
                     </button>
 
 
                     <div class="pix-code">
 
-                        <textarea
-                            readonly
-                            [value]="pagamento.pix?.qrCode"
-                        ></textarea>
+                        <textarea readonly [value]="pagamento.pix?.qrCode"></textarea>
 
                     </div>
 
@@ -289,11 +249,7 @@
             </div>
 
 
-            <button
-                class="pix-cancel"
-                type="button"
-                (click)="cancelarPagamento()"
-            >
+            <button class="pix-cancel" type="button" (click)="cancelarPagamento()">
                 Escolher outro plano
             </button>
 

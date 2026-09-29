@@ -35,7 +35,7 @@ export class MapaMundiComponent implements OnInit {
   availableCountries: Country[] = AVAILABLE_COUNTRIES;
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private coinsService: CoinsService,
     private loadingService: LoadingService,
   ) { }
@@ -76,21 +76,21 @@ export class MapaMundiComponent implements OnInit {
     const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
     gradient.setAttribute('id', 'oceanGradient');
     gradient.setAttribute('x1', '0%');
-    gradient.setAttribute('y1', '100%'); 
+    gradient.setAttribute('y1', '100%');
     gradient.setAttribute('x2', '0%');
-    gradient.setAttribute('y2', '0%');  
+    gradient.setAttribute('y2', '0%');
 
     const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
     stop1.setAttribute('offset', '0%');
-    stop1.setAttribute('stop-color', '#0a4e8a'); 
+    stop1.setAttribute('stop-color', '#0a4e8a');
 
     const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
     stop2.setAttribute('offset', '50%');
-    stop2.setAttribute('stop-color', '#1f74c0'); 
+    stop2.setAttribute('stop-color', '#1f74c0');
 
     const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
     stop3.setAttribute('offset', '100%');
-    stop3.setAttribute('stop-color', '#7fc9f9'); 
+    stop3.setAttribute('stop-color', '#7fc9f9');
 
     gradient.appendChild(stop1);
     gradient.appendChild(stop2);
@@ -116,11 +116,11 @@ export class MapaMundiComponent implements OnInit {
 
       const cStop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
       cStop1.setAttribute('offset', '0%');
-      cStop1.setAttribute('stop-color', '#0e8116ff'); 
+      cStop1.setAttribute('stop-color', '#0e8116ff');
 
       const cStop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
       cStop2.setAttribute('offset', '100%');
-      cStop2.setAttribute('stop-color', '#55d85bff'); 
+      cStop2.setAttribute('stop-color', '#55d85bff');
 
       countryGradient.appendChild(cStop1);
       countryGradient.appendChild(cStop2);
@@ -139,12 +139,12 @@ export class MapaMundiComponent implements OnInit {
         const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
         grad.setAttribute('id', gradId);
         grad.setAttribute('x1', '0%');
-        grad.setAttribute('y1', '100%'); 
+        grad.setAttribute('y1', '100%');
         grad.setAttribute('x2', '0%');
-        grad.setAttribute('y2', '0%');  
+        grad.setAttribute('y2', '0%');
 
         const lightness = 35 + Math.random() * 15;
-        const color1 = `hsl(120, 50%, ${lightness - 10}%)`; 
+        const color1 = `hsl(120, 50%, ${lightness - 10}%)`;
         const color2 = `hsl(120, 60%, ${lightness + 15}%)`;
 
         const s1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');

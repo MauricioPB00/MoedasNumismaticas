@@ -4,7 +4,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
   selector: '[appCpfFormat]'  // Nome da diretiva para o CPF
 })
 export class CpfFormatDirective {
-  constructor(private el: ElementRef) {}
+  constructor(private el: ElementRef) { }
 
   @HostListener('input', ['$event'])
   onInput(event: any): void {

@@ -13,32 +13,32 @@ import { LoadingService } from '../shared/loading.service';
 
 })
 export class PasswordResetComponent {
- email: string = '';
+  email: string = '';
 
   constructor(
-    private passwordResetService:  PasswordResetService,
+    private passwordResetService: PasswordResetService,
     private http: HttpClient,
     private router: Router,
     private toastr: ToastrService,
     private loadingService: LoadingService,
-  ) {}
+  ) { }
 
   sendResetEmail() {
     this.loadingService.show();
     this.passwordResetService.forgotPassword(this.email).pipe(take(1)).subscribe(
-          data => {
-            this.toastr.success('Email enviado ! confira sua caixa de entrada');
-            this.loadingService.hide();
-          },
-          error => {
-            const msg = error?.error?.message || 'Erro ao tentar encontrar o Email. Verifique os dados.';
-            this.toastr.error(msg);
-            this.loadingService.hide();
-          }
-        )
-      } 
+      data => {
+        this.toastr.success('Email enviado ! confira sua caixa de entrada');
+        this.loadingService.hide();
+      },
+      error => {
+        const msg = error?.error?.message || 'Erro ao tentar encontrar o Email. Verifique os dados.';
+        this.toastr.error(msg);
+        this.loadingService.hide();
+      }
+    )
+  }
 
-   goToLogin() {
+  goToLogin() {
     this.router.navigateByUrl('/login');
   }
 }

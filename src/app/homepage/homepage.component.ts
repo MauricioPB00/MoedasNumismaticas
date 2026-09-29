@@ -177,7 +177,7 @@ export class HomepageComponent {
     this.planoService.getPlanos().subscribe({
       next: (planos) => {
         this.planos = planos;
-        console.log('Planos:', planos);
+        // console.log('Planos:', planos);
       },
       error: (error) => {
         console.error('Erro ao carregar planos:', error);
@@ -185,10 +185,10 @@ export class HomepageComponent {
     });
   }
 
- assinar(plano: Plano): void {
-  localStorage.setItem('planoSelecionado', JSON.stringify(plano));
-  this.router.navigate(['/login']);
-}
+  assinar(plano: Plano): void {
+    localStorage.setItem('planoSelecionado', JSON.stringify(plano));
+    this.router.navigate(['/login']);
+  }
 
   onSubmitLogout() {
     localStorage.removeItem('ControleUsuarioLogado');

@@ -20,10 +20,10 @@ export class AssinaturaGuard implements CanActivate {
 
             map((data) => {
 
-                console.log(
-                    'ASSINATURA GUARD:',
-                    data
-                );
+                // console.log(
+                //     'ASSINATURA GUARD:',
+                //     data
+                // );
 
                 if (data.acesso === true) {
                     return true;

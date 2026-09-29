@@ -19,16 +19,16 @@ export class PagamentoComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private planoService: PlanoService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
 
-    console.log('========== PAGAMENTO ==========');
+    // console.log('========== PAGAMENTO ==========');
 
     const planoSelecionado = localStorage.getItem('planoSelecionado');
 
     if (!planoSelecionado) {
-      console.log('SEM PLANO → PLANOS');
+      // console.log('SEM PLANO → PLANOS');
       this.router.navigate(['/planos']);
       return;
     }
@@ -37,7 +37,7 @@ export class PagamentoComponent implements OnInit, OnDestroy {
 
       this.plano = JSON.parse(planoSelecionado);
 
-      console.log('PLANO:', this.plano);
+      // console.log('PLANO:', this.plano);
 
     } catch (error) {
 
@@ -57,13 +57,13 @@ export class PagamentoComponent implements OnInit, OnDestroy {
 
     this.carregando = true;
 
-    console.log('CRIANDO PAGAMENTO PARA PLANO:', this.plano.id);
+    // console.log('CRIANDO PAGAMENTO PARA PLANO:', this.plano.id);
 
     this.planoService.pagarAssinatura(this.plano.id).subscribe({
 
       next: (data) => {
 
-        console.log('PAGAMENTO CRIADO:', data);
+        // console.log('PAGAMENTO CRIADO:', data);
 
         this.pagamento = data;
 
@@ -83,59 +83,59 @@ export class PagamentoComponent implements OnInit, OnDestroy {
 
   iniciarVerificacaoPagamento(): void {
 
-  console.log('========== INICIANDO VERIFICAÇÃO ==========');
+    // console.log('========== INICIANDO VERIFICAÇÃO ==========');
 
-  this.verificacaoPagamento?.unsubscribe();
+    this.verificacaoPagamento?.unsubscribe();
 
-  const assinaturaId = this.pagamento?.assinaturaId;
+    const assinaturaId = this.pagamento?.assinaturaId;
 
-  if (!assinaturaId) {
-    console.error('ASSINATURA ID NÃO ENCONTRADO');
-    return;
-  }
+    if (!assinaturaId) {
+      console.error('ASSINATURA ID NÃO ENCONTRADO');
+      return;
+    }
 
-  console.log('VERIFICANDO ASSINATURA:', assinaturaId);
+    // console.log('VERIFICANDO ASSINATURA:', assinaturaId);
 
-  this.verificacaoPagamento = interval(5000).subscribe(() => {
+    this.verificacaoPagamento = interval(5000).subscribe(() => {
 
-    console.log(
-      'VERIFICANDO STATUS DA ASSINATURA:',
-      assinaturaId
-    );
+      // console.log(
+      //   'VERIFICANDO STATUS DA ASSINATURA:',
+      //   assinaturaId
+      // );
 
-    this.planoService.statusPagamento(assinaturaId).subscribe({
+      this.planoService.statusPagamento(assinaturaId).subscribe({
 
-      next: (data) => {
+        next: (data) => {
 
-        console.log('STATUS DO PAGAMENTO:', data);
+          // console.log('STATUS DO PAGAMENTO:', data);
 
-        if (data.status === 'ativo') {
+          if (data.status === 'ativo') {
 
-          console.log('PAGAMENTO CONFIRMADO!');
-          console.log('ASSINATURA ATIVA!');
+            // console.log('PAGAMENTO CONFIRMADO!');
+            // console.log('ASSINATURA ATIVA!');
 
-          this.verificacaoPagamento?.unsubscribe();
+            this.verificacaoPagamento?.unsubscribe();
 
-          localStorage.removeItem('planoSelecionado');
+            localStorage.removeItem('planoSelecionado');
 
-          this.router.navigate(['/']);
+            this.router.navigate(['/']);
+          }
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'ERRO AO VERIFICAR PAGAMENTO:',
+            error
+          );
+
         }
 
-      },
-
-      error: (error) => {
-
-        console.error(
-          'ERRO AO VERIFICAR PAGAMENTO:',
-          error
-        );
-
-      }
+      });
 
     });
-
-  });
-}
+  }
 
   copiarPix(): void {
 
@@ -154,7 +154,7 @@ export class PagamentoComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
 
-    console.log('PAGAMENTO DESTRUÍDO');
+    // console.log('PAGAMENTO DESTRUÍDO');
 
     this.verificacaoPagamento?.unsubscribe();
   }

@@ -328,6 +328,7 @@ li {
     opacity: 0;
     transform: scale(0.85);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -393,7 +394,7 @@ li {
   background: #c8c8c8;
 }
 
-.edit-form button + button {
+.edit-form button+button {
   margin-left: 4%;
 }
 
@@ -404,8 +405,8 @@ li {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
-   .coin-img-row.is-banknote {
+
+  .coin-img-row.is-banknote {
     display: block;
     max-width: 100%;
     overflow-x: hidden;
@@ -467,6 +468,7 @@ li {
     object-fit: contain;
     flex-shrink: 0;
   }
+
   .coin-detail {
     padding: 1rem;
   }

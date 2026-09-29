@@ -4,12 +4,12 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
   selector: '[appPhoneFormat]'
 })
 export class PhoneFormatDirective {
-  constructor(private el: ElementRef) {}
+  constructor(private el: ElementRef) { }
 
   @HostListener('input', ['$event'])
   onInput(event: any): void {
     let value = this.el.nativeElement.value;
-    value = value.replace(/\D/g, ''); 
+    value = value.replace(/\D/g, '');
 
     if (value.length <= 2) {
       this.el.nativeElement.value = `(${value}`;
