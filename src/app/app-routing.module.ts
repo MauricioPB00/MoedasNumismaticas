@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './guard/auth.guard';
+import { AssinaturaGuard } from './guard/assinatura.guard';
 import { SettingsComponent } from './settings/settings.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
@@ -16,6 +17,7 @@ import { CollectionComponent } from './collection/collection.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
 import { BannerComponent } from './banner/banner.component';
 import { PagamentoComponent } from './pagamento/pagamento.component';
+import { PlanosComponent } from './planos/planos.component';
 
 enum Permi { admin = 2, operador = 1 }
 
@@ -26,17 +28,17 @@ const routes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'catalogo', component: CatalogoComponent },
   { path: 'anuncios', component: BannerComponent },
-  { path: 'collection', component: CollectionComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
+  { path: 'collection', component: CollectionComponent, canActivate: [AuthGuard, AssinaturaGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'sidebar', component: SideBarComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
-  { path: 'coin/:id', component: CoinComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard, AssinaturaGuard], data: { roles: [Permi.operador, Permi.admin] } },
+  { path: 'coin/:id', component: CoinComponent, canActivate: [AuthGuard, AssinaturaGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
-  { path: 'album', component: AlbumComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
-  { path: 'mapa', component: MapaMundiComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], data: { roles: [Permi.admin] } },
-  { path: 'pagamento', component: PagamentoComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] }  },
+  { path: 'album', component: AlbumComponent, canActivate: [AuthGuard, AssinaturaGuard], data: { roles: [Permi.operador, Permi.admin] } },
+  { path: 'mapa', component: MapaMundiComponent, canActivate: [AuthGuard, AssinaturaGuard], data: { roles: [Permi.operador, Permi.admin] } },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard, AssinaturaGuard], data: { roles: [Permi.admin] } },
+  { path: 'pagamento', component: PagamentoComponent, canActivate: [AuthGuard, AssinaturaGuard], data: { roles: [Permi.operador, Permi.admin] }  },
+  { path: 'planos', component: PlanosComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] }  },
   { path: '**', component: HomepageComponent, canActivate: [AuthGuard] }, // novas rotas tem q ser antes dessa coringa 
-
 ];
 
 @NgModule({

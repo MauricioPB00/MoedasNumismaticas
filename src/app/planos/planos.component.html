@@ -1,0 +1,304 @@
+<section class="plans">
+
+    <div class="plans-header">
+
+        <span class="plans-eyebrow">
+            ASSINATURA
+        </span>
+
+        <h2 class="plans-title">
+            Escolha o plano ideal para sua coleção
+        </h2>
+
+        <p class="plans-subtitle">
+            Reative sua coleção de moedas com nossos planos de assinatura.
+            Aproveite benefícios exclusivos e organize sua coleção de forma
+            prática e segura.
+        </p>
+
+    </div>
+
+
+    <div class="plans-grid">
+
+        <div
+            *ngFor="let plano of planos"
+            class="plan-card"
+            [class.popular]="plano.codigo === 'anual'"
+        >
+
+            <div
+                *ngIf="plano.codigo === 'anual'"
+                class="badge"
+            >
+                <span>★</span>
+                Mais Popular
+            </div>
+
+
+            <div class="plan-content">
+
+                <h3>
+                    {{ plano.nome }}
+                </h3>
+
+
+                <p class="plan-description">
+
+                    {{
+                        plano.codigo === 'mensal'
+                            ? 'Para começar sua coleção'
+                            : plano.codigo === 'trimestral'
+                                ? 'Mais tempo para aproveitar'
+                                : 'A experiência completa'
+                    }}
+
+                </p>
+
+
+                <div class="price-area">
+
+                    <p
+                        class="old-price"
+                        *ngIf="plano.codigo === 'mensal'"
+                    >
+                        R$ 7,80
+                    </p>
+
+                    <p
+                        class="old-price"
+                        *ngIf="plano.codigo === 'trimestral'"
+                    >
+                        R$ 22,99
+                    </p>
+
+                    <p
+                        class="old-price"
+                        *ngIf="plano.codigo === 'anual'"
+                    >
+                        R$ 84,99
+                    </p>
+
+
+                    <div class="price">
+
+                        <span class="currency">
+                            R$
+                        </span>
+
+                        <span class="value">
+                            {{ plano.valor | number:'1.2-2' }}
+                        </span>
+
+                    </div>
+
+
+                    <span class="price-period">
+
+                        {{
+                            plano.codigo === 'mensal'
+                                ? 'por mês'
+                                : plano.codigo === 'trimestral'
+                                    ? 'por 3 meses'
+                                    : 'por ano'
+                        }}
+
+                    </span>
+
+                </div>
+
+
+                <div class="divider"></div>
+
+
+                <ul class="features">
+
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Álbuns Nacionais</span>
+                    </li>
+
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Álbuns Internacionais</span>
+                    </li>
+
+                    <li>
+                        <span class="check">✓</span>
+                        <span>Organize sua coleção</span>
+                    </li>
+
+                    <li *ngIf="plano.codigo === 'anual'">
+                        <span class="check">✓</span>
+                        <span>Grupo livre para trocas</span>
+                    </li>
+
+                </ul>
+
+
+                <button
+                    class="btn"
+                    type="button"
+                    (click)="assinar(plano)"
+                    [disabled]="carregando"
+                >
+
+                    <span>
+                        {{
+                            carregando
+                                ? 'Gerando PIX...'
+                                : 'Assinar agora'
+                        }}
+                    </span>
+
+                    <span
+                        class="arrow"
+                        *ngIf="!carregando"
+                    >
+                        →
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="plans-security">
+
+        <span>🔒</span>
+
+        <p>
+            Pagamento seguro via PIX
+        </p>
+
+        <span class="separator">•</span>
+
+        <p>
+            Mercado Pago
+        </p>
+
+    </div>
+
+
+    <!-- PAGAMENTO PIX -->
+
+    <div
+        class="pix-container"
+        *ngIf="pagamento"
+    >
+
+        <div class="pix-card">
+
+
+            <div class="pix-header">
+
+                <div class="pix-icon">
+                    ⚡
+                </div>
+
+                <div>
+
+                    <h2>
+                        Pagamento via PIX
+                    </h2>
+
+                    <p>
+                        {{ planoSelecionado?.nome }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="pix-body">
+
+
+                <div
+                    class="pix-qrcode"
+                    *ngIf="pagamento.pix?.qrCodeBase64"
+                >
+
+                    <img
+                        [src]="'data:image/png;base64,' + pagamento.pix.qrCodeBase64"
+                        alt="QR Code PIX"
+                    >
+
+                </div>
+
+
+                <div class="pix-info">
+
+                    <h3>
+                        Escaneie o QR Code
+                    </h3>
+
+                    <p>
+                        Abra o aplicativo do seu banco e escaneie
+                        o código para realizar o pagamento.
+                    </p>
+
+
+                    <div class="pix-value">
+
+                        <span>
+                            Valor
+                        </span>
+
+                        <strong>
+                            R$
+                            {{ pagamento.valor | number:'1.2-2' }}
+                        </strong>
+
+                    </div>
+
+
+                    <button
+                        class="pix-copy"
+                        type="button"
+                        (click)="copiarPix()"
+                    >
+                        📋 Copiar código PIX
+                    </button>
+
+
+                    <div class="pix-code">
+
+                        <textarea
+                            readonly
+                            [value]="pagamento.pix?.qrCode"
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="pix-status">
+
+                        <span class="status-dot"></span>
+
+                        Aguardando pagamento...
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="pix-cancel"
+                type="button"
+                (click)="cancelarPagamento()"
+            >
+                Escolher outro plano
+            </button>
+
+        </div>
+
+    </div>
+
+</section>

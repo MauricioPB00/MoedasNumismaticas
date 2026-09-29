@@ -14,11 +14,7 @@
             R$ {{ plano.valor | number:'1.2-2' }}
         </p>
 
-        <button
-            type="button"
-            class="btn"
-            (click)="continuarPagamento()"
-            [disabled]="carregando">
+        <button type="button" class="btn" (click)="continuarPagamento()" [disabled]="carregando">
             {{ carregando ? 'Gerando PIX...' : 'Continuar para pagamento' }}
         </button>
     </div>
@@ -32,9 +28,7 @@
         </p>
 
         <div class="qr-code" *ngIf="pagamento.pix?.qrCodeBase64">
-            <img
-                [src]="'data:image/png;base64,' + pagamento.pix.qrCodeBase64"
-                alt="QR Code PIX">
+            <img [src]="'data:image/png;base64,' + pagamento.pix.qrCodeBase64" alt="QR Code PIX">
         </div>
 
         <p class="pix-label">
@@ -42,15 +36,10 @@
         </p>
 
         <div class="pix-copy">
-            <textarea
-                readonly
-                [value]="pagamento.pix?.qrCode">
+            <textarea readonly [value]="pagamento.pix?.qrCode">
             </textarea>
 
-            <button
-                type="button"
-                class="btn"
-                (click)="copiarPix()">
+            <button type="button" class="btn" (click)="copiarPix()">
                 Copiar código PIX
             </button>
         </div>

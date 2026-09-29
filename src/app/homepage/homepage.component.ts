@@ -195,6 +195,7 @@ export class HomepageComponent {
     localStorage.removeItem('ControleUsuario');
     localStorage.removeItem('ControleUsuarioPermi');
     localStorage.removeItem('ControleUsuarioIP');
+    localStorage.removeItem('planoSelecionado');
     localStorage.removeItem('jwt');
   }
 
