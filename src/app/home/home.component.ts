@@ -32,9 +32,16 @@ export class HomeComponent implements OnInit {
   selectedIssuer: string = '';
   selectedCountry: string = 'Brasil';
   availableCountries: CountryCAD[] = AVAILABLE_COUNTRIES_CAD;
-  uniqueCategories: string[] = [];
+  uniqueCategories: string[] = [
+    'coin',
+    'banknote'
+  ];
 
   showFilters = false;
+
+  total = 0;
+
+  totalPages = 1;
 
   @ViewChild('video', { static: false }) video!: ElementRef<HTMLVideoElement>;
   stream: MediaStream | null = null;
@@ -51,247 +58,345 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe(
+      params => {
 
-      this.queryParamsInitialized = true;
+        this.queryParamsInitialized = true;
+        this.searchName =
+          params['searchName'] || '';
 
-      if (params['searchName']) {
-        this.searchName = params['searchName'];
+        this.selectedCategory =
+          params['category'] || '';
+
+        this.selectedIssuer =
+          params['issuer'] || '';
+
+        this.selectedCountry =
+          params['country'] || 'Brasil';
+
+
+        this.minYear =
+          params['minYear']
+            ? Number(params['minYear'])
+            : null;
+
+
+        this.maxYear =
+          params['maxYear']
+            ? Number(params['maxYear'])
+            : null;
+
+        this.currentPage =
+          params['page']
+            ? Number(params['page'])
+            : 1;
+
+
+        if (
+          this.currentPage < 1
+        ) {
+          this.currentPage = 1;
+        }
+
+        this.loadCoins(
+          this.selectedCountry,
+          this.currentPage
+        );
       }
-
-      if (params['category']) {
-        this.selectedCategory = params['category'];
-      }
-
-      if (params['issuer']) {
-        this.selectedIssuer = params['issuer'];
-      }
-
-      if (params['country']) {
-        this.selectedCountry = params['country'];
-      }
-
-      if (params['minYear']) {
-        this.minYear = +params['minYear'];
-      }
-
-      if (params['maxYear']) {
-        this.maxYear = +params['maxYear'];
-      }
-
-      this.currentPage = params['page']
-        ? +params['page']
-        : 1;
-
-      this.loadCoins(this.selectedCountry);
-    });
-
-
+    );
   }
 
+  loadCoins(
+    country: string,
+    page: number = 1
+  ): void {
 
-
-
-
-  // verificarAssinatura(): void {
-
-  //   console.log('========== VERIFICAR ASSINATURA ==========');
-
-  //   const planoSelecionado = localStorage.getItem('planoSelecionado');
-
-  //   if (planoSelecionado) {
-  //     console.log('PLANO SELECIONADO → PAGAMENTO');
-  //     this.router.navigate(['/pagamento']);
-  //     return;
-  //   }
-
-  //   this.planoService.statusAssinatura().subscribe({
-
-  //     next: (data) => {
-
-  //       console.log('STATUS ASSINATURA:', data);
-
-  //       if (data.acesso === true) {
-  //         console.log('ASSINATURA ATIVA → ACESSO LIBERADO');
-  //         return;
-  //       }
-
-  //       console.log('SEM ASSINATURA → PLANOS');
-
-  //       this.router.navigate(['/planos']);
-  //     },
-
-  //     error: (error) => {
-
-  //       console.error('ERRO AO VERIFICAR ASSINATURA:', error);
-
-  //       if (error.status === 401) {
-  //         this.router.navigate(['/login']);
-  //         return;
-  //       }
-
-  //       if (error.status === 403) {
-  //         this.router.navigate(['/planos']);
-  //       }
-  //     }
-  //   });
-  // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  loadCoins(country: string) {
     this.loading.show();
+    this.coinsLoaded = false;
+    this.coinService
+      .getCoins(
+        country,
 
-    this.coinService.getCoins(country).subscribe({
-      next: (data) => {
-        this.coins = data.map(coin => {
-          const normalizedIssuer = coin.issuer
-            ?.normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/\s+/g, '-')
-            .replace(/[^\w-]/g, '');
-          return {
-            ...coin,
-            categoryDisplay: coin.category === 'coin' ? 'Moeda' : 'Cédula',
-            flagPath: normalizedIssuer
-              ? `assets/img/bandeiras/bandeira-${normalizedIssuer}.png`
-              : null
-          };
-        });
+        page,
 
-        this.uniqueCategories = [...new Set(this.coins.map(c => c.category))];
+        this.itemsPerPage,
 
-        this.coins.sort((a, b) => {
-          const yearA = a.min_year ?? a.year ?? 0;
-          const yearB = b.min_year ?? b.year ?? 0;
-          return yearA - yearB;
-        });
+        this.searchName,
 
-        this.filteredCoins = [...this.coins];
-        this.coinsLoaded = true;
+        this.selectedCategory,
 
-        this.applyFilters();
+        this.minYear,
 
-        this.loading.hide();
-      },
-      error: (err) => {
-        console.error('Erro ao carregar moedas:', err);
-        this.loading.hide();
-      }
-    });
-  }
+        this.maxYear
+      )
+      .subscribe({
 
+        next: (response) => {
 
+          console.log(
+            '========== PAGINAÇÃO =========='
+          );
 
+          console.log(
+            'Página:',
+            response.page
+          );
 
+          console.log(
+            'Limite:',
+            response.limit
+          );
 
-  onCountryChange(event: any) {
-    this.selectedCountry = event.target.value || 'Brasil';
-    this.loadCoins(this.selectedCountry);
-  }
+          console.log(
+            'Total:',
+            response.total
+          );
 
-  applyFiltersIfReady() {
-    if (this.coinsLoaded && this.queryParamsInitialized && !this.initialFiltersApplied) {
-      this.applyFilters(false, false);
-      this.initialFiltersApplied = true;
-    } else if (this.coinsLoaded && !this.queryParamsInitialized && !this.initialFiltersApplied) {
-      this.applyFilters(true, false);
-      this.initialFiltersApplied = true;
-    }
+          console.log(
+            'Total páginas:',
+            response.totalPages
+          );
 
-  }
+          console.log(
+            'Recebidos:',
+            response.data.length
+          );
 
-  applyFilters(resetPage: boolean = false, updateUrl: boolean = true) {
-    const coinsFiltered = this.coins.filter(coin => {
-      const matchName = this.searchName
-        ? (coin.title || '').toLowerCase().includes(this.searchName.toLowerCase())
-        : true;
+          console.log(
+            '================================'
+          );
 
-      const matchCategory = this.selectedCategory ? coin.category === this.selectedCategory : true;
+          this.currentPage =
+            response.page;
 
-      const matchYear = (() => {
-        const minFilter = this.minYear;
-        const maxFilter = this.maxYear;
-        if (minFilter == null && maxFilter == null) return true;
+          this.itemsPerPage =
+            response.limit;
 
-        const coinMin = coin.min_year ?? coin.year ?? null;
-        const coinMax = coin.max_year ?? coin.min_year ?? coin.year ?? null;
+          this.total =
+            response.total;
 
-        if (minFilter != null && maxFilter == null) return coinMax != null && coinMax >= minFilter;
-        if (minFilter == null && maxFilter != null) return coinMin != null && coinMin <= maxFilter;
-        if (minFilter != null && maxFilter != null)
-          return coinMin != null && coinMax != null && coinMin >= minFilter && coinMax <= maxFilter;
+          this.totalPages =
+            response.totalPages;
 
-        return true;
-      })();
+          this.coins =
+            (response.data || []).map(
+              (coin: any) => {
 
-      return matchName && matchCategory && matchYear;
-    });
+                const normalizedIssuer =
+                  coin.issuer
+                    ?.normalize('NFD')
+                    .replace(
+                      /[\u0300-\u036f]/g,
+                      ''
+                    )
+                    .replace(
+                      /\s+/g,
+                      '-'
+                    )
+                    .replace(
+                      /[^\w-]/g,
+                      ''
+                    );
+                return {
+                  ...coin,
+                  categoryDisplay:
+                    coin.category === 'coin'
+                      ? 'Moeda'
+                      : 'Cédula',
 
-    this.filteredCoins = coinsFiltered;
+                  flagPath:
+                    normalizedIssuer
+                      ? `assets/img/bandeiras/bandeira-${normalizedIssuer}.png`
+                      : null
+                };
+              }
+            );
+          this.coins.sort(
+            (a, b) => {
 
-    if (resetPage) this.currentPage = 1;
+              const yearA =
+                a.min_year ??
+                a.year ??
+                0;
 
-    if (updateUrl) {
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: {
-          searchName: this.searchName || null,
-          category: this.selectedCategory || null,
-          minYear: this.minYear != null ? this.minYear : null,
-          maxYear: this.maxYear != null ? this.maxYear : null,
-          country: this.selectedCountry || null,
-          page: this.currentPage
+              const yearB =
+                b.min_year ??
+                b.year ??
+                0;
+
+              return yearA - yearB;
+            }
+          );
+          this.filteredCoins =
+            [...this.coins];
+          this.coinsLoaded = true;
+          this.loading.hide();
         },
-        queryParamsHandling: 'merge'
+
+        error: (err) => {
+          console.error(
+            'Erro ao carregar moedas:',
+            err
+          );
+          this.coins = [];
+          this.filteredCoins = [];
+          this.total = 0;
+          this.totalPages = 1;
+          this.loading.hide();
+        }
       });
-    }
   }
 
-  clearFilters() {
-    this.loading.show();
-    this.searchName = '';
-    this.selectedCategory = '';
-    this.minYear = null;
-    this.maxYear = null;
+  changePage(
+    page: number
+  ): void {
+
+    if (page < 1) {
+      return;
+    }
+
+    if (
+      page > this.totalPages
+    ) {
+      return;
+    }
+
+    if (
+      page === this.currentPage
+    ) {
+      return;
+    }
+
+
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.route,
+
+        queryParams: {
+          page: page
+        },
+
+        queryParamsHandling: 'merge'
+      }
+    );
+  }
+  applyFilters(): void {
     this.currentPage = 1;
-    this.applyFilters(true, true);
-    this.loading.hide();
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.route,
+
+        queryParams: {
+
+          page: 1,
+
+          searchName:
+            this.searchName || null,
+
+          category:
+            this.selectedCategory || null,
+
+          minYear:
+            this.minYear || null,
+
+          maxYear:
+            this.maxYear || null,
+
+          country:
+            this.selectedCountry || null
+        },
+
+        queryParamsHandling: 'merge'
+      }
+    );
+  }
+
+  clearFilters(): void {
+
+    this.searchName = '';
+
+    this.selectedCategory = '';
+
+    this.minYear = null;
+
+    this.maxYear = null;
+
+    this.currentPage = 1;
+
+
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.route,
+
+        queryParams: {
+
+          page: 1,
+
+          searchName: null,
+
+          category: null,
+
+          minYear: null,
+
+          maxYear: null
+        },
+
+        queryParamsHandling: 'merge'
+      }
+    );
+  }
+
+  onCountryChange(
+    event: Event
+  ): void {
+
+    const select =
+      event.target as HTMLSelectElement;
+
+    this.selectedCountry =
+      select.value;
+
+
+    this.currentPage = 1;
+
+
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.route,
+
+        queryParams: {
+
+          country:
+            this.selectedCountry,
+
+          page: 1,
+
+          searchName:
+            this.searchName || null,
+
+          category:
+            this.selectedCategory || null,
+
+          minYear:
+            this.minYear || null,
+
+          maxYear:
+            this.maxYear || null
+        },
+
+        queryParamsHandling: 'merge'
+      }
+    );
   }
 
   get paginatedCoins() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
     return this.filteredCoins.slice(start, end);
-  }
-
-  get totalPages() {
-    return Math.max(1, Math.ceil(this.filteredCoins.length / this.itemsPerPage));
-  }
-
-  changePage(page: number) {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { page: this.currentPage },
-        queryParamsHandling: 'merge'
-      });
-    }
   }
 
   get uniqueIssuers(): string[] {
@@ -401,7 +506,6 @@ export class HomeComponent implements OnInit {
 
     this.sendToPython(base64Image);
   }
-
 
   sendToPython(base64Image: string) {
     this.loading.show();

@@ -1,57 +1,104 @@
 <div class="filters-container">
+
   <button class="filter-toggle" (click)="showFilters = !showFilters">
-    <i class="fa fa-filter"></i> Filtros
+    <i class="fa fa-filter"></i>
+
+    Filtros
   </button>
 
+
   <div class="filters" [class.active]="showFilters">
-    <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (input)="applyFilters()">
+    <input type="text" placeholder="Buscar por nome" [(ngModel)]="searchName" (keyup.enter)="applyFilters()">
     <div class="country-select">
-      <span class="fi" [ngClass]="'fi-' + getFlagCode(selectedCountry)"></span>
+      <span class="fi" [ngClass]="
+          'fi-' + getFlagCode(selectedCountry)
+        "></span>
       <select [(ngModel)]="selectedCountry" (change)="onCountryChange($event)">
-        <option *ngFor="let country of availableCountries" [value]="country.name">
+        <option *ngFor="
+            let country of availableCountries
+          " [value]="country.name">
           {{ country.name }}
         </option>
       </select>
     </div>
     <select [(ngModel)]="selectedCategory" (change)="applyFilters()">
-      <option value="">Todas categorias</option>
-      <option *ngFor="let cat of uniqueCategories" [value]="cat">
-        {{ cat === 'coin' ? 'Moeda' : cat === 'banknote' ? 'Cédula' : cat }}
+      <option value="">
+        Todas categorias
+      </option>
+      <option *ngFor="
+          let cat of uniqueCategories
+        " [value]="cat">
+        {{
+        cat === 'coin'
+        ? 'Moeda'
+        : cat === 'banknote'
+        ? 'Cédula'
+        : cat
+        }}
       </option>
     </select>
-
-    <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (input)="applyFilters()">
-    <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (input)="applyFilters()">
-
-    <button class="btn-limpar" (click)="clearFilters()">Limpar filtros</button>
+    <input type="number" placeholder="Ano mínimo" [(ngModel)]="minYear" (change)="applyFilters()">
+    <input type="number" placeholder="Ano máximo" [(ngModel)]="maxYear" (change)="applyFilters()">
+    <button class="btn-limpar" (click)="clearFilters()">
+      Limpar filtros
+    </button>
   </div>
 </div>
-
 <div class="coins-container">
-  <a *ngFor="let coin of paginatedCoins" [routerLink]="['/coin', coin.id]" class="coins-container-a">
+  <a *ngFor="
+      let coin of filteredCoins
+    " [routerLink]="[
+      '/coin',
+      coin.id
+    ]" class="coins-container-a">
     <div class="coin-card">
       <div class="coin-images">
-        <img *ngIf="coin.obverse" [src]="'assets/img/imagens/' + coin.obverse" alt="Obverse">
-        <img *ngIf="coin.reverse" [src]="'assets/img/imagens/' + coin.reverse" alt="Reverse">
+        <img *ngIf="coin.obverse" [src]="
+            'assets/img/imagens/'
+            + coin.obverse
+          " alt="Obverse">
+        <img *ngIf="coin.reverse" [src]="
+            'assets/img/imagens/'
+            + coin.reverse
+          " alt="Reverse">
       </div>
-
       <div class="coin-info">
-        <h3>{{ coin.title }}</h3>
+        <h3>
+          {{ coin.title }}
+        </h3>
         <p class="issuer">
           {{ coin.categoryDisplay }}
-          <span *ngIf="coin.issuer" class="fi" [ngClass]="'fi-' + getFlagCode(coin.issuer)"
-            style="margin-left: 6px;"></span>
+          <span *ngIf="coin.issuer" class="fi" [ngClass]="
+              'fi-' + getFlagCode(
+                coin.issuer
+              )
+            " style="margin-left: 6px;"></span>
         </p>
-        <p *ngIf="coin.min_year || coin.max_year">
-          Ano: {{ coin.min_year }} - {{ coin.max_year }}
+        <p *ngIf="
+            coin.min_year ||
+            coin.max_year
+          ">
+          Ano:
+          {{ coin.min_year }}
+          -
+          {{ coin.max_year }}
         </p>
       </div>
-
       <div class="btn">
-        <button type="button" (click)="verDetalhes(coin.id); $event.stopPropagation(); $event.preventDefault();">
+        <button type="button" (click)="
+            verDetalhes(coin.id);
+            $event.stopPropagation();
+            $event.preventDefault()
+          ">
           <i class="fa-solid fa-eye"></i>
         </button>
-        <button type="button" class="icon-inline" (click)="abrirModal($event, coin.id, coin.type)">
+        <button type="button" class="icon-inline" (click)="
+            abrirModal(
+              $event,
+              coin.id,
+              coin.type
+            )
+          ">
           <i class="fa-solid fa-plus"></i>
         </button>
       </div>
@@ -59,35 +106,78 @@
   </a>
 </div>
 
+<div *ngIf="
+    coinsLoaded &&
+    filteredCoins.length === 0
+  " class="no-results">
+  Nenhuma moeda encontrada.
+</div>
+
+<div class="pagination" *ngIf="
+    totalPages > 1
+  ">
+
+  <button (click)="
+      changePage(
+        currentPage - 1
+      )
+    " [disabled]="
+      currentPage <= 1
+    ">
+    Anterior
+  </button>
+
+  <span>
+    Página
+    {{ currentPage }}
+
+    de
+    {{ totalPages }}
+  </span>
+
+  <button (click)="
+      changePage(
+        currentPage + 1
+      )
+    " [disabled]="
+      currentPage >= totalPages
+    ">
+    Próxima
+  </button>
+</div>
+
 <button class="camera-button" (click)="openCameraModal()">
   <i class="fa-solid fa-camera"></i>
 </button>
 
-<div class="pagination">
-  <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
-
-  <span>Página {{ currentPage }} de {{ totalPages }}</span>
-
-  <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Próxima</button>
-</div>
-
 <app-modal-coin *ngIf="showModal" [show]="showModal" [coin]="coin" [coinEntries]="coinEntries"
-  (closed)="showModal = false">
-</app-modal-coin>
+  (closed)="showModal = false"></app-modal-coin>
 
 <div class="camera-modal" *ngIf="cameraModalOpen">
   <div class="camera-modal-content">
+    <button class="close-x" (click)="closeCameraModal()">
+      ×
+    </button>
 
-    <button class="close-x" (click)="closeCameraModal()">×</button>
+    <h2>
+      Buscar Moeda
+    </h2>
 
-    <h2>Buscar Moeda</h2>
-    <p>Centralize a moeda com o guia</p>
+    <p>
+      Centralize a moeda com o guia
+    </p>
 
     <div class="camera-preview">
       <video #video autoplay playsinline></video>
       <div class="camera-guide"></div>
     </div>
-    <p>Mantenha a moeda na orientação correta</p>
-    <button (click)="takePhoto()">Tirar Foto</button>
+
+    <p>
+      Mantenha a moeda na orientação correta
+    </p>
+
+    <button (click)="takePhoto()">
+      Tirar Foto
+    </button>
   </div>
 </div>

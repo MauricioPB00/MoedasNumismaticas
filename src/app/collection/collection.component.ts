@@ -49,8 +49,18 @@ export class CollectionComponent implements OnInit {
 
   pagination: {
     [country: string]: {
-      coins: { page: number; loaded: Coin[] };
-      banknotes: { page: number; loaded: Coin[] };
+      coins: {
+        page: number;
+        loaded: Coin[];
+        loading: boolean;
+        hasMore: boolean;
+      };
+      banknotes: {
+        page: number;
+        loaded: Coin[];
+        loading: boolean;
+        hasMore: boolean;
+      };
     };
   } = {};
 
@@ -63,10 +73,7 @@ export class CollectionComponent implements OnInit {
   ngOnInit(): void {
     this.loadingService.show();
     this.getAlbum();
-    this.pagination[this.activeCountry] = {
-      coins: { page: 1, loaded: [] },
-      banknotes: { page: 1, loaded: [] }
-    };
+    this.initializePagination(this.activeCountry);
     this.loadCountryData(this.activeCountry);
     this.loadingService.hide();
   }
@@ -88,49 +95,41 @@ export class CollectionComponent implements OnInit {
     }).add(() => this.loadingService.hide());
   }
 
-  loadCountryData(country: string) {
-    if (this.countryData[country]) return;
+  loadCountryData(country: string): void {
+    if (!this.pagination[country]) {
+      this.initializePagination(country);
+    }
 
-    this.loadingService.show();
-    this.coinService.getCoinsPdf({ issuer: country }).subscribe({
-      next: (data: Coin[]) => {
-        const all = data.map(coin => ({
-          ...coin,
-          categoryDisplay: coin.category === 'coin' ? 'Moeda' : 'Cédula',
-          showBrazilFlag: coin.issuer === 'Brasil',
-          titleDisplay: coin.title?.replace(/\s*\(.*?\)\s*/g, '').split('-')[0].trim()
-        }));
-
-        this.countryData[country] = {
-          coins: all.filter(c => c.category === 'coin'),
-          banknotes: all.filter(c => c.category === 'banknote')
-        };
-
-        if (!this.pagination[country]) {
-          this.pagination[country] = {
-            coins: { page: 1, loaded: [] },
-            banknotes: { page: 1, loaded: [] }
-          };
-        }
-
-        this.loadMore(country, 'coins');
-        this.loadMore(country, 'banknotes');
-      },
-      error: err => console.error('Erro ao carregar moedas/cédulas:', err)
-    }).add(() => this.loadingService.hide());
+    this.loadMore(country, 'coins');
+    this.loadMore(country, 'banknotes');
   }
 
-  onCountryClick(country: string) {
+  private initializePagination(country: string): void {
+
+    this.pagination[country] = {
+
+      coins: {
+        page: 1,
+        loaded: [],
+        loading: false,
+        hasMore: true
+      },
+      banknotes: {
+        page: 1,
+        loaded: [],
+        loading: false,
+        hasMore: true
+      }
+    };
+
+  }
+
+  onCountryClick(country: string): void {
     if (this.activeCountry !== country) {
       this.activeCountry = country;
-
       if (!this.pagination[country]) {
-        this.pagination[country] = {
-          coins: { page: 1, loaded: [] },
-          banknotes: { page: 1, loaded: [] }
-        };
+        this.initializePagination(country);
       }
-
       this.loadCountryData(country);
     }
   }
@@ -144,15 +143,28 @@ export class CollectionComponent implements OnInit {
   }
 
   applyFilters(): void {
-    this.loadingService.show();
-    if (!this.activeCountry) return;
 
-    this.pagination[this.activeCountry].coins = { page: 1, loaded: [] };
-    this.pagination[this.activeCountry].banknotes = { page: 1, loaded: [] };
+    if (!this.activeCountry) {
+      return;
+    }
+
+    this.pagination[this.activeCountry] = {
+      coins: {
+        page: 1,
+        loaded: [],
+        loading: false,
+        hasMore: true
+      },
+      banknotes: {
+        page: 1,
+        loaded: [],
+        loading: false,
+        hasMore: true
+      }
+    };
 
     this.loadMore(this.activeCountry, 'coins');
     this.loadMore(this.activeCountry, 'banknotes');
-    this.loadingService.hide();
   }
 
   private getYearValue(c: Coin): number {
@@ -181,24 +193,81 @@ export class CollectionComponent implements OnInit {
         : this.getYearValue(b) - this.getYearValue(a));
   }
 
-  loadMore(country: string, type: 'coins' | 'banknotes') {
-    const allItems = type === 'coins'
-      ? this.filteredCoinsByCountry(country)
-      : this.filteredBanknotesByCountry(country);
-    const page = this.pagination[country][type].page;
-    const start = (page - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    const nextItems = allItems.slice(start, end);
+  loadMore(
+    country: string,
+    type: 'coins' | 'banknotes'
+  ): void {
 
-    if (nextItems.length > 0) {
-      this.pagination[country][type].loaded.push(...nextItems);
-      this.pagination[country][type].page += 1;
+    if (!this.pagination[country]) {
+      this.initializePagination(country);
     }
+
+    const pagination = this.pagination[country][type];
+
+    if (pagination.loading || !pagination.hasMore) {
+      return;
+    }
+
+    pagination.loading = true;
+
+    this.coinService.getCoinsPdf({
+      issuer: country,
+      type: type,
+      page: pagination.page,
+      limit: this.pageSize,
+      minYear: this.minYear,
+      maxYear: this.maxYear
+    }).subscribe({
+
+      next: (response) => {
+
+        const items = response.data.map((item: Coin) => ({
+          ...item,
+          categoryDisplay:
+            item.category === 'coin'
+              ? 'Moeda'
+              : 'Cédula',
+
+          showBrazilFlag:
+            item.issuer === 'Brasil',
+
+          titleDisplay:
+            item.title
+              ?.replace(/\s*\(.*?\)\s*/g, '')
+              .split('-')[0]
+              .trim()
+        }));
+
+        pagination.loaded.push(...items);
+        pagination.page = response.page + 1;
+        pagination.hasMore = response.hasMore;
+      },
+
+      error: (err) => {
+        console.error(
+          `Erro ao carregar ${type} de ${country}:`,
+          err
+        );
+      },
+
+      complete: () => {
+        pagination.loading = false;
+      }
+    });
   }
 
-  onScroll(event: any, country: string, type: 'coins' | 'banknotes') {
+  onScroll(
+    event: any,
+    country: string,
+    type: 'coins' | 'banknotes'
+  ): void {
+
     const div = event.target;
-    if (div.scrollTop + div.clientHeight >= div.scrollHeight - 50) {
+
+    if (
+      div.scrollTop + div.clientHeight >=
+      div.scrollHeight - 100
+    ) {
       this.loadMore(country, type);
     }
   }
