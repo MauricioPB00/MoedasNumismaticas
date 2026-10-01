@@ -87,7 +87,9 @@ export class CoinService {
     limit: number;
     minYear?: number;
     maxYear?: number;
-  }) {
+    sort?: 'asc' | 'desc';
+  }): Observable<CollectionPageResponse> {
+
     let httpParams = new HttpParams()
       .set('issuer', params.issuer)
       .set('type', params.type)
@@ -108,11 +110,16 @@ export class CoinService {
       );
     }
 
+    if (params.sort) {
+      httpParams = httpParams.set(
+        'sort',
+        params.sort
+      );
+    }
+
     return this.http.get<CollectionPageResponse>(
       `${API_CONFIG.baseUrl}/coin/list/collection/pdf`,
-      {
-        params: httpParams
-      }
+      { params: httpParams }
     );
   }
 }
