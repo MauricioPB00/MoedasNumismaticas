@@ -1,9 +1,10 @@
-import { Component, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, ElementRef, ViewChild, NgZone, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LoadingService } from '../shared/loading.service';
 import { AVAILABLE_COUNTRIES_CAD } from '../models/countriesCAD';
 import { Plano, PlanoService } from '../AuthService/planos.service';
+import { iniciarCarrosselU } from './carrocel-u';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class HomepageComponent {
   @ViewChild('welcomeSection') welcomeSection!: ElementRef;
   @ViewChild('svgContainer', { static: true }) svgContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('highlightsSection') highlightsSection!: ElementRef;
-
+  private pararCarrossel?: () => void;
   private hasAnimated = false;
   planos: Plano[] = [];
 
@@ -24,7 +25,9 @@ export class HomepageComponent {
     private router: Router,
     private http: HttpClient,
     private loadingService: LoadingService,
-    private planoService: PlanoService
+    private planoService: PlanoService,
+    private host: ElementRef<HTMLElement>,
+    private zone: NgZone
   ) { }
 
   coins = [
@@ -108,6 +111,26 @@ export class HomepageComponent {
     window.addEventListener("scroll", this.handleScroll);
     this.loadSVG();
     this.carregarPlanos();
+  }
+
+  ngAfterViewInit() {
+    const raiz = this.host.nativeElement;
+    const wrapper = raiz.querySelector('.carousel-wrapper') as HTMLElement | null;
+    const track = raiz.querySelector('.carousel-track') as HTMLElement | null;
+
+    if (wrapper && track) {
+      this.zone.runOutsideAngular(() => {
+        this.pararCarrossel = iniciarCarrosselU(wrapper, track, {
+          rise: 110,  // altura do U
+          tilt: 14,   // inclinação nas pontas
+          speed: 45,  // velocidade
+        });
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    this.pararCarrossel?.();
   }
 
   @HostListener('window:scroll', [])

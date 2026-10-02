@@ -181,3 +181,9 @@ body.dark-mode .settings-header-banner .settings-header-profile .banner-upload-c
 body.dark-mode .settings-header-banner .settings-header-profile .banner-upload-container span {
   color: #2b2929;
 }
+
+body.ads-page-body {
+  background: #15120f !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}

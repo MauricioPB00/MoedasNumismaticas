@@ -2,13 +2,14 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../AuthService/user.service';
 import { environment } from 'src/environments/environment';
+import { OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-banner',
   templateUrl: './banner.component.html',
   styleUrls: ['./banner.component.css']
 })
-export class BannerComponent implements OnInit {
+export class BannerComponent implements OnInit, OnDestroy {
   showHeader = false;
   banners: any[] = [];
   environment = environment;
@@ -20,6 +21,11 @@ export class BannerComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadBanners();
+    document.body.classList.add('ads-page-body');
+  }
+  
+  ngOnDestroy(): void {
+    document.body.classList.remove('ads-page-body');
   }
 
   loadBanners() {

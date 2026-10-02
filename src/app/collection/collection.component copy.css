@@ -1,0 +1,593 @@
+h2,
+h1,
+p,
+a,
+h3,
+li {
+  font-family: "Open Sans", sans-serif;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- FOCO VISÍVEL (teclado) ---------- */
+.tabs button:focus-visible,
+.tabs2 button:focus-visible,
+.filters button:focus-visible,
+.filter-toggle:focus-visible {
+  outline: 2px solid #1c1c1c;
+  outline-offset: 2px;
+}
+
+/* =====================================================
+   ABAS (países)
+   ===================================================== */
+.tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.tabs button {
+  background: none;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #666;
+  border-bottom: 3px solid transparent;
+  border-radius: 4px 4px 0 0;
+}
+
+.tabs button.active {
+  color: #1c1c1c;
+  border-bottom-color: #efbf04;
+  font-weight: 700;
+}
+
+.tabs button:hover {
+  color: #1c1c1c;
+}
+
+/* Países em formato "etiqueta" (desktop) */
+.tabs.country-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 999px;
+}
+
+.tabs.country-tabs button:hover {
+  border-color: #1c1c1c;
+  color: #1c1c1c;
+}
+
+.tabs.country-tabs button.active {
+  background: #1c1c1c;
+  border-color: #1c1c1c;
+  color: #efbf04;
+}
+
+.tabs.country-tabs .fi {
+  border-radius: 2px;
+}
+
+.tab-content {
+  border-radius: 0 0 8px 8px;
+  animation: fadeSlide 0.2s ease;
+  overflow-x: auto;
+}
+
+/* =====================================================
+   ABAS 2 (Moedas / Cédulas)
+   ===================================================== */
+.tabs2 {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tabs2 button {
+  background: none;
+  border: none;
+  padding: 0.5rem 1.4rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #666;
+  border-bottom: 3px solid transparent;
+  border-radius: 4px 4px 0 0;
+}
+
+.tabs2 button.active {
+  color: #1c1c1c;
+  border-bottom-color: #efbf04;
+  font-weight: 700;
+}
+
+.tabs2 button:hover {
+  color: #1c1c1c;
+}
+
+.tab2-content {
+  border-radius: 0 0 8px 8px;
+  margin-bottom: 1rem;
+  animation: fadeSlide 0.2s ease;
+  overflow-x: auto;
+}
+
+/* =====================================================
+   PROGRESSO
+   ===================================================== */
+.progress-bar {
+  position: relative;
+  width: 80%;
+  max-width: 500px;
+  height: 26px;
+  background: #232925;
+  border: 1px solid #2b3a31;
+  border-radius: 20px;
+  margin: 0 auto 12px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2e9e6b, #43c98a);
+  border-radius: 20px;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  position: absolute;
+  inset: 0;
+  line-height: 26px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 1px 2px #000000;
+  text-align: center;
+}
+
+/* =====================================================
+   ÁLBUM (grid com scroll infinito)
+   ===================================================== */
+.scroll-container {
+  /* altura = tela inteira menos o que fica acima (menu, abas, filtros, progresso).
+     Se ainda aparecer scroll na página, AUMENTE o 380px; se sobrar espaço embaixo, diminua. */
+  height: calc(100vh - 380px);
+  height: calc(100dvh - 380px);
+  min-height: 320px;
+  max-height: 690px;
+  overflow-y: auto;
+  border: 1px solid #2b3a31;
+  border-radius: 14px;
+  background-color: #16201b;
+  box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.45);
+  scrollbar-width: thin;
+  scrollbar-color: #5a6a60 transparent;
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #5a6a60;
+  border-radius: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #8a9b90;
+}
+
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  align-content: start;
+  gap: 14px;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px clamp(12px, 10vw, 150px) 18px;
+}
+
+/* Cédulas são largas: colunas maiores */
+.album-grid[data-type="banknotes"] {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+/* ---------- CARD (bolso do álbum) ---------- */
+.coin-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 8px 8px;
+  background: #1d2822;
+  border: 1px solid #2b3a31;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.coin-card img {
+  width: 100%;
+  height: 90px;
+  object-fit: contain;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.album-grid[data-type="banknotes"] .coin-card img {
+  height: 110px;
+}
+
+.coin-card:hover {
+  transform: translateY(-3px);
+}
+
+.coin-title {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.3;
+  color: #eeeeee;
+}
+
+.coin-year {
+  margin: auto 0 0;
+  padding-top: 4px;
+  font-size: 12px;
+  color: #b4beb8;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- TENHO ---------- */
+.coin-card.owned {
+  background: #27312b;
+  border: 1px solid #c9a227;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.coin-card.owned:hover {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+}
+
+.coin-card.owned img {
+  opacity: 1;
+  filter: none;
+}
+
+.coin-card.owned .coin-title {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.coin-card.owned .coin-year {
+  color: #d5dbd7;
+}
+
+/* selo de "tenho" (não depende só da cor) */
+.coin-card.owned::after {
+  content: "✓";
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  border-radius: 50%;
+  background: #c9a227;
+  color: #1c1c1c;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* ---------- FALTANDO ---------- */
+.coin-card.missing {
+  background: rgba(255, 255, 255, 0.03);
+  border-style: dashed;
+}
+
+.coin-card.missing img {
+  opacity: 0.3;
+  filter: grayscale(100%);
+}
+
+.coin-card.missing:hover img {
+  opacity: 0.5;
+}
+
+.coin-card.missing .coin-title {
+  color: #8f9c94;
+}
+
+.coin-card.missing .coin-year {
+  color: #75827a;
+}
+
+/* =====================================================
+   FILTROS
+   ===================================================== */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  margin: 0 auto 1rem;
+  max-width: 960px;
+  background-color: #ffffff;
+  border: 1px solid #e3e3e3;
+  border-radius: 12px;
+  top: 0;
+  z-index: 1;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.filters input[type="text"],
+.filters input[type="number"],
+.filters select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #fafafa;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.filters input[type="text"]:focus,
+.filters input[type="number"]:focus,
+.filters select:focus {
+  background: #ffffff;
+  border-color: #1c1c1c;
+  box-shadow: 0 0 0 3px rgba(28, 28, 28, 0.12);
+}
+
+/* Todos os botões: cor e letra sempre visíveis */
+.filters button {
+  padding: 0.5rem 1rem;
+  background-color: #1c1c1c;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.filters button:hover {
+  background-color: #3a3a3a;
+}
+
+.filters button:active {
+  transform: scale(0.97);
+}
+
+/* Ano: Crescente / Decrescente */
+.filters .btn-ordenar {
+  background-color: #1c1c1c;
+  color: #ffffff;
+}
+
+.filters .btn-ordenar:hover {
+  background-color: #3a3a3a;
+}
+
+/* Limpar filtros */
+.filters .btn-limpar,
+button.btn-limpar {
+  background-color: #efbf04 !important;
+  color: #1c1c1c !important;
+  border-radius: 8px !important;
+}
+
+.filters .btn-limpar:hover,
+button.btn-limpar:hover {
+  background-color: #d8aa02 !important;
+}
+
+/* Faltantes (PDF) */
+.filters .btn-pdf {
+  background-color: #c0392b;
+  color: #ffffff;
+}
+
+.filters .btn-pdf:hover {
+  background-color: #a93226;
+}
+
+/* ---------- BOTÕES DO MOBILE ---------- */
+.filter-toggle {
+  background: #efbf04;
+  color: #1c1c1c;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.filter-toggle:hover {
+  background: #d8aa02;
+}
+
+.filter-toggle.active {
+  background: #1c1c1c;
+  color: #efbf04;
+}
+
+/* ---------- PAÍS SELECIONADO ---------- */
+.selected-country {
+  height: 0;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.selected-country .fi {
+  font-size: 1.5rem;
+  border-radius: 3px;
+}
+
+.selected-country h2 {
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.mobile-filter-bar {
+  display: none;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+@media (max-width: 768px) {
+  .selected-country {
+    height: auto;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    margin: 6px 0 10px;
+  }
+
+  .mobile-filter-bar {
+    display: flex;
+    padding: 1rem 1rem 0 1rem;
+  }
+
+  .mobile-filter-bar .filter-toggle {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .filters,
+  .tabs.country-tabs {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .filters {
+    margin: 0 12px 12px;
+    max-width: none;
+  }
+
+  .filters.show,
+  .tabs.country-tabs.show {
+    display: flex;
+  }
+
+  .filters input,
+  .filters button,
+  .tabs.country-tabs button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .tabs.country-tabs button {
+    background: #333333;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tabs.country-tabs button:hover {
+    background: #555555;
+    color: #ffffff;
+  }
+
+  .tabs.country-tabs button.active {
+    background: #efbf04;
+    color: #111111;
+    font-weight: 700;
+  }
+
+  .album-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    /* 330px (menu, filtros, abas, progresso) + 100px do padding-bottom do .mainNumismatico */
+    height: calc(100vh - 430px);
+    height: calc(100dvh - 430px);
+    min-height: 260px;
+    max-height: none;
+    overflow-y: auto;
+    gap: 10px;
+    padding: 10px 8px;
+  }
+
+  .album-grid[data-type="banknotes"] {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .coin-card img {
+    height: 76px;
+  }
+
+  .album-grid[data-type="banknotes"] .coin-card img {
+    height: 80px;
+  }
+
+  .progress-container {
+    margin-bottom: 4px;
+  }
+}
+
+/* =====================================================
+   MOVIMENTO REDUZIDO
+   ===================================================== */
+@media (prefers-reduced-motion: reduce) {
+
+  .tab-content,
+  .tab2-content {
+    animation: none;
+  }
+
+  .coin-card,
+  .coin-card img,
+  .progress-fill {
+    transition: none;
+  }
+
+  .coin-card:hover {
+    transform: none;
+  }
+}
