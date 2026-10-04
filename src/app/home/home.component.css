@@ -1,260 +1,82 @@
-h2,
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;600&display=swap");
+
+/* =========================================================
+   Catálogo — mesmo estilo da Coleção v2
+   Página clara, título gigante, filtros só com linha embaixo.
+   Cada peça é um cartão horizontal: imagens numa "moldura"
+   (como o passe-partout de um quadro) e ações numa cápsula escura.
+   Não precisa mexer no HTML: mesmas classes.
+   ========================================================= */
+
+:host {
+  /* altura do header do app que fica acima desta página */
+  --app-header: 70px;
+
+  --coal: #15120f;
+  --coal-2: #1f1b17;
+  --copper: #d2703f;
+  --patina: #2f7566;
+  --silver: #e9e7e1;
+  --mat: #f1efe9;
+  --text-dark: #5c574f;
+  --text-dim: #a8a398;
+  --line: rgba(255, 255, 255, 0.14);
+  --line-dark: rgba(21, 18, 15, 0.22);
+  --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body: "DM Sans", system-ui, sans-serif;
+
+  display: block;
+  min-height: calc(100dvh - var(--app-header));
+  padding-bottom: 56px;
+  /* anéis finos no canto, esmaecendo (guilhochê) */
+  background:
+    radial-gradient(circle at 100% 0%, transparent 0, transparent 260px, var(--silver) 520px),
+    repeating-radial-gradient(circle at 100% 0%, transparent 0 14px, rgba(21, 18, 15, 0.08) 14px 15px) right top / 540px 540px no-repeat,
+    var(--silver);
+}
+
+/* título da página (gerado por CSS; troque por um <h1> se preferir) */
+:host::before {
+  content: "Catálogo";
+  display: block;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 44px 40px 0;
+  font-family: var(--display);
+  font-size: clamp(3.4rem, 10vw, 8rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  color: var(--coal);
+}
+
+* {
+  box-sizing: border-box;
+}
+
 h1,
+h2,
+h3 {
+  font-family: var(--display);
+}
+
 p,
 a,
-h3,
-li {
-  font-family: "Open Sans", sans-serif;
+li,
+span,
+button,
+input,
+select {
+  font-family: var(--body);
 }
 
-.coins-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  padding: 0 150px 0 150px;
-}
-
-.coins-container-a {
-  color: inherit;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.coins-container-a:visited {
-  color: inherit;
-  text-decoration: none;
-}
-
-.coins-container-a:hover,
-.coins-container-a:focus,
-.coins-container-a:active {
-  color: inherit;
-  text-decoration: none;
-}
-
-
-.coin-card {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  z-index: 0;
-}
-
-.coin-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.coin-images {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.8rem;
-  margin-right: 2rem;
-  min-width: 280px;
-  height: 140px;
-  overflow: hidden;
-  position: relative;
-}
-
-.coin-images img {
-  max-width: 100%;
-  max-width: 240px;
-  max-height: 100%;
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 3px;
   border-radius: 6px;
-  object-fit: contain;
-  background-color: #ffffff;
-  transition: transform 0.2s ease;
 }
 
-.coin-images img:is([src*="obv"], [src*="rev"]) {
-  width: auto;
-  height: 120px;
-}
-
-.coin-images img[src*="cedula"],
-.coin-images img[src*="nota"],
-.coin-images img[src*="banknote"] {
-  width: 100%;
-  height: auto;
-  max-height: 120px;
-  object-fit: contain;
-}
-
-.coin-images img:hover {
-  transform: scale(1.05);
-}
-
-.coin-info {
-  flex: 1;
-}
-
-.coin-info h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.coin-info p {
-  margin: 0.3rem 0;
-  font-size: 0.95rem;
-  color: #444;
-}
-
-.issuer {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.flag {
-  width: 20px;
-  height: auto;
-  border-radius: 3px;
-}
-
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: #f3f3f3;
-  border-bottom: 1px solid #ddd;
-  top: 0;
-  z-index: 1;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.filters input[type="text"],
-.filters input[type="number"],
-.filters select {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-
-.filters input[type="text"]:focus,
-.filters input[type="number"]:focus,
-.filters select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
-}
-
-.filters button {
-  padding: 0.5rem 1rem;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.filters button:hover {
-  background-color: #0056b3;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-  gap: 10px;
-  font-family: "Open Sans", sans-serif;
-}
-
-.pagination button {
-  background: #444;
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.pagination button:hover:not(:disabled) {
-  background: #666;
-}
-
-.pagination button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.btn button {
-  background: #EFBF04;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-}
-
-.btn button i {
-  font-size: 16px;
-}
-
-.btn button:hover {
-  background: #2c7a7b;
-  transform: scale(1.1);
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
-}
-
-.btn button:active {
-  transform: scale(0.95);
-}
-
-button.btn-limpar {
-  background-color: #EFBF04 !important;
-  color: #000 !important;
-  border-radius: 6px !important;
-}
-
-.country-select {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.country-select .fi {
-  width: 24px;
-  height: 18px;
-  border-radius: 3px;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-}
-
-.flag,
-.fi {
-  width: 24px;
-  height: 18px;
-  border-radius: 2px;
-  vertical-align: middle;
-}
-
+/* ================= FILTROS ================= */
 .filters-container {
   position: relative;
 }
@@ -263,6 +85,334 @@ button.btn-limpar {
   display: none;
 }
 
+.filters {
+  max-width: 1280px;
+  margin: 30px auto 0;
+  padding: 0 40px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px 22px;
+}
+
+.filters input[type="text"],
+.filters input[type="number"],
+.filters select {
+  width: 150px;
+  height: 44px;
+  padding: 0 2px;
+  border: none;
+  border-bottom: 2px solid var(--line-dark);
+  border-radius: 0;
+  background: transparent;
+  color: var(--coal);
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.filters input[type="text"] {
+  width: 230px;
+}
+
+.filters input::placeholder {
+  color: #7b766d;
+  font-weight: 400;
+}
+
+.filters select {
+  max-width: 210px;
+  padding-right: 28px;
+  cursor: pointer;
+  background: transparent
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 8'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%2315120f' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat right 4px center / 12px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.filters input[type="text"]:focus,
+.filters input[type="number"]:focus,
+.filters select:focus {
+  border-bottom-color: var(--copper);
+}
+
+/* país: bandeira + select, com a linha no conjunto */
+.country-select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid var(--line-dark);
+  transition: border-color 0.2s ease;
+}
+
+.country-select:focus-within {
+  border-bottom-color: var(--copper);
+}
+
+.country-select select,
+.country-select select:focus {
+  border-bottom: none;
+}
+
+.fi {
+  flex: none;
+  width: 26px;
+  height: 19px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(21, 18, 15, 0.28);
+  vertical-align: middle;
+}
+
+.filters button {
+  height: 44px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.filters button:hover {
+  transform: translateY(-1px);
+}
+
+.filters .btn-limpar {
+  background: var(--copper);
+  color: var(--coal);
+}
+
+.filters .btn-limpar:hover {
+  background: #e58554;
+}
+
+/* ================= OS CARTÕES ================= */
+.coins-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 40px 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+  gap: 22px;
+}
+
+.coins-container-a,
+.coins-container-a:visited,
+.coins-container-a:hover,
+.coins-container-a:focus,
+.coins-container-a:active {
+  display: block;
+  border-radius: 30px;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.coin-card {
+  height: 100%;
+  padding: 14px;
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  border-radius: 30px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(21, 18, 15, 0.08);
+  transition: translate 0.3s ease, box-shadow 0.3s ease;
+}
+
+.coin-card:hover {
+  translate: 0 -5px;
+  box-shadow: 0 26px 50px rgba(21, 18, 15, 0.18);
+}
+
+/* moldura (passe-partout): o branco das imagens se funde com ela */
+.coin-images {
+  flex: none;
+  width: 270px;
+  min-width: 0;
+  height: auto;
+  min-height: 150px;
+  margin: 0;
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--mat);
+}
+
+.coin-images img {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
+  width: auto;
+  height: 118px;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+  background: none;
+  mix-blend-mode: multiply;
+  transition: transform 0.4s ease;
+}
+
+.coin-card:hover .coin-images img:first-child {
+  transform: rotate(-4deg) scale(1.06);
+}
+
+.coin-card:hover .coin-images img:last-child:not(:first-child) {
+  transform: rotate(4deg) scale(1.06);
+}
+
+.coin-info {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 0;
+  align-self: center;
+  text-align: left;
+}
+
+.coin-info h3 {
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--coal);
+}
+
+.coin-info p {
+  margin: 4px 0;
+  font-size: 0.92rem;
+  color: var(--text-dark);
+}
+
+.issuer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ================= AÇÕES: CÁPSULA ESCURA ================= */
+.btn {
+  align-self: center;
+  margin: 0;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  background: var(--coal);
+}
+
+.btn button {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--silver);
+  cursor: pointer;
+  box-shadow: none;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.btn button i {
+  font-size: 0.95rem;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+.btn button:hover {
+  background: var(--silver);
+  color: var(--coal);
+  transform: scale(1.08);
+  box-shadow: none;
+}
+
+.btn button:active {
+  transform: scale(0.95);
+}
+
+/* o "+" é o destaque de cobre e gira no hover */
+.btn button.icon-inline {
+  background: var(--copper);
+  color: var(--coal);
+}
+
+.btn button.icon-inline:hover {
+  background: #e58554;
+  color: var(--coal);
+}
+
+.btn button.icon-inline:hover i {
+  transform: rotate(90deg);
+}
+
+/* ---- sem resultados: slot vazio ---- */
+.no-results {
+  margin: 80px auto;
+  text-align: center;
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--text-dark);
+}
+
+.no-results::before {
+  content: "";
+  display: block;
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle closest-side, var(--silver) 85.9%, transparent 86.5%),
+    repeating-conic-gradient(#c3beb3 0 3deg, #aaa598 3deg 6deg);
+}
+
+/* ================= PAGINAÇÃO ================= */
+.pagination {
+  margin: 30px 0 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  color: var(--text-dark);
+  font-size: 0.92rem;
+}
+
+.pagination button {
+  padding: 11px 24px;
+  border: none;
+  border-radius: 999px;
+  background: var(--coal);
+  color: var(--silver);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: var(--patina);
+  transform: translateY(-1px);
+}
+
+.pagination button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ================= CÂMERA (só no celular) ================= */
 .camera-button {
   display: none;
 }
@@ -271,91 +421,95 @@ button.btn-limpar {
   display: none;
 }
 
-@media (max-width: 768px) {
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= TABLET ================= */
+@media (max-width: 1100px) {
   .coins-container {
     grid-template-columns: 1fr;
-    padding: 0 15px 0 15px;
+  }
+}
+
+/* ================= CELULAR ================= */
+@media (max-width: 768px) {
+  :host::before {
+    padding: 30px 16px 0;
+  }
+
+  .coins-container {
+    padding: 24px 16px 8px;
   }
 
   .coin-card {
     flex-direction: column;
+    gap: 14px;
     text-align: center;
   }
 
   .coin-images {
-    margin: 0 0 1rem 0;
-    justify-content: center;
+    width: 100%;
+    min-height: 140px;
   }
 
   .coin-images img {
-    max-width: 120px;
+    max-width: 140px;
   }
 
   .coin-info {
     text-align: center;
   }
 
-  .coin-info p {
+  .issuer {
     justify-content: center;
-  }
-
-  .filters {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .filters input[type="text"],
-  .filters input[type="number"],
-  .filters select,
-  .filters button {
-    width: 100%;
   }
 
   .btn {
     flex-direction: row;
-    gap: 6px;
-    margin-top: 6px;
   }
 
-  .btn button {
-    width: 36px;
-    height: 36px;
-  }
-
+  /* botão que abre os filtros */
   .filter-toggle {
+    width: calc(100% - 32px);
+    margin: 18px 16px 0;
+    padding: 12px 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    background: var(--sidebar-color, #333);
-    color: white;
+    gap: 8px;
     border: none;
-    border-radius: 6px;
-    padding: 10px 16px;
-    cursor: pointer;
+    border-radius: 999px;
+    background: var(--coal);
+    color: var(--silver);
     font-size: 1rem;
-    margin: 10px auto;
-    transition: background 0.3s ease;
-    width: 90%;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
   }
 
   .filter-toggle:hover {
-    background: var(--sidebar-bt-color-hover, #555);
+    background: var(--patina);
   }
 
+  /* os filtros abrem como um cartão logo abaixo do botão */
   .filters {
     display: none;
-    flex-direction: column;
-    gap: 10px;
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     position: absolute;
-    top: 55px;
-    left: 0;
-    right: 0;
+    top: 68px;
+    left: 16px;
+    right: 16px;
     z-index: 100;
+    max-width: none;
+    margin: 0;
+    padding: 20px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    border-radius: 28px;
+    background: #fff;
+    box-shadow: 0 24px 50px rgba(21, 18, 15, 0.25);
   }
 
   .filters.active {
@@ -363,159 +517,182 @@ button.btn-limpar {
     animation: slideDown 0.3s ease;
   }
 
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .filters input,
+  .filters input[type="text"],
+  .filters input[type="number"],
   .filters select,
   .filters button {
     width: 100%;
-    font-size: 0.95rem;
+    max-width: none;
   }
 
-  .filters .btn-limpar {
-    background: #efbf04;
-    border: none;
-    border-radius: 6px;
-    padding: 8px;
-    color: #fff;
-    cursor: pointer;
+  .country-select select {
+    flex: 1;
   }
 
+  /* botão flutuante de câmera: moeda com aro serrilhado */
   .camera-button {
     position: fixed;
     right: 20px;
     bottom: 80px;
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    background: #007bff;
-    color: white;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
+    z-index: 9999;
+    width: 66px;
+    height: 66px;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    z-index: 9999;
-    transition: 0.2s ease;
+    border: 5px solid transparent;
+    border-radius: 50%;
+    background:
+      linear-gradient(var(--coal), var(--coal)) padding-box,
+      repeating-conic-gradient(var(--copper) 0 6deg, #7c3f21 6deg 12deg) border-box;
+    color: var(--copper);
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease;
   }
 
   .camera-button:hover {
-    background: #005dc1;
+    transform: scale(1.06) rotate(-8deg);
   }
 
   .camera-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    z-index: 999;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    background: rgba(21, 18, 15, 0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
 
   .camera-modal-content {
     position: relative;
-    background: white;
-    padding: 30px;
-    border-radius: 16px;
-    width: 95%;
-    max-width: 550px;
+    width: 94%;
+    max-width: 520px;
+    padding: 30px 24px 26px;
+    border: 1px solid var(--line);
+    border-radius: 30px;
+    background: var(--coal-2);
+    color: var(--silver);
     text-align: center;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+    animation: slideDown 0.3s ease-out;
+  }
+
+  .camera-modal-content h2 {
+    margin: 0 0 6px;
+    font-size: 1.9rem;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    color: var(--silver);
+  }
+
+  .camera-modal-content h2::after {
+    content: "";
+    display: inline-block;
+    width: 0.2em;
+    height: 0.2em;
+    margin-left: 0.1em;
+    border-radius: 50%;
+    background: var(--copper);
+  }
+
+  .camera-modal-content p {
+    margin: 4px 0;
+    font-size: 0.92rem;
+    color: var(--text-dim);
   }
 
   .camera-preview {
-    background: #efefef;
-    height: 380px;
-    margin-top: 18px;
-    margin-bottom: 25px;
-    border-radius: 12px;
+    position: relative;
+    height: 360px;
+    margin: 18px 0 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .camera-guide {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 250px;
-    height: 250px;
-    transform: translate(-50%, -50%);
-    border: 3px dashed rgba(255, 255, 255, 0.8);
-    border-radius: 50%;
-    pointer-events: none;
-  }
-
-  .close-x {
-    position: absolute;
-    right: 15px;
-    top: 12px;
-    border: none;
-    background: transparent;
-    font-size: 32px;
-    cursor: pointer;
-    color: #444;
-    transition: 0.2s;
-  }
-
-  .close-x:hover {
-    color: #000;
+    overflow: hidden;
+    border-radius: 24px;
+    background: #000;
   }
 
   .camera-preview video {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 24px;
   }
 
-  .camera-modal-content h2 {
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
+  /* guia circular */
+  .camera-guide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 240px;
+    height: 240px;
+    border: 3px dashed rgba(210, 112, 63, 0.95);
+    border-radius: 50%;
+    box-shadow: 0 0 0 999px rgba(21, 18, 15, 0.35);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
   }
 
-  .camera-modal-content h4 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    font-weight: 500;
-    color: #333;
+  .close-x {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--silver);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
   }
 
-  .camera-modal-content p {
-    font-size: 0.95rem;
-    margin: 0.3rem 0;
-    color: #333;
+  .close-x:hover {
+    background: var(--copper);
+    color: var(--coal);
   }
 
   .camera-modal-content button:not(.close-x) {
-    background-color: #ff9900;
-    color: #1a1a1a;
+    width: 100%;
+    height: 50px;
+    margin-top: 6px;
     border: none;
-    padding: 0.7rem 1.5rem;
-    margin-top: 1rem;
+    border-radius: 999px;
+    background: var(--copper);
+    color: var(--coal);
     font-size: 1rem;
-    font-weight: 600;
-    border-radius: 8px;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition: background 0.2s ease, transform 0.2s ease;
   }
 
   .camera-modal-content button:not(.close-x):hover {
-    background-color: #ffb733;
+    background: #e58554;
     transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coin-card,
+  .coin-images img,
+  .btn button,
+  .btn button i {
+    transition-duration: 0.01ms;
+  }
+
+  .filters.active,
+  .camera-modal-content {
+    animation: none;
   }
 }

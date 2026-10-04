@@ -1,319 +1,370 @@
-h2,
-h1,
-p,
-a,
-h3,
-li {
-    font-family: "Open Sans", sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap");
+
+/* =========================================================
+   Barra de navegação do app — mesmo estilo das páginas
+   - Barra escura com uma faixa de BORDA SERRILHADA de moeda
+     (embaixo no desktop, em cima no celular)
+   - Marca: uma moedinha à esquerda (feita por CSS)
+   - Itens em pílula; ícones em cobre
+   - Botão Home do celular = moeda com aro serrilhado
+   - Toggle claro/escuro redesenhado
+   Mantém a altura de 50px no desktop (65px no celular),
+   então o espaço que as páginas reservam não muda.
+   Não precisa mexer no HTML: mesmas classes e ids.
+   ========================================================= */
+
+:host {
+  --coal: #15120f;
+  --coal-3: #2a251f;
+  --copper: #d2703f;
+  --copper-dark: #7c3f21;
+  --silver: #e9e7e1;
+  --line: rgba(255, 255, 255, 0.14);
+  --body: "DM Sans", system-ui, sans-serif;
 }
 
-/* =====================
-   SIDEBAR HORIZONTAL
-===================== */
+* {
+  box-sizing: border-box;
+}
+
+a {
+  font-family: var(--body);
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+
+/* ================= BARRA (desktop) ================= */
 #horizontal-bar {
-    width: 100%;
-    height: 50px;
-    background: var(--sidebar-color);
-    color: var(--sidebar-txt-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1.5rem;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 50px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* o [ngStyle] do HTML põe uma cor inline; !important garante o visual novo.
+     Se quiser que a cor continue vindo do tema, apague esta linha. */
+  background-color: var(--coal) !important;
+  color: var(--silver);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
+/* faixa de borda serrilhada, como o contorno de uma moeda */
+#horizontal-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--copper) 0 3px, var(--copper-dark) 3px 6px);
+  pointer-events: none;
+}
+
+/* marca: moedinha com aro serrilhado */
+#horizontal-bar::before {
+  content: "";
+  flex: none;
+  width: 28px;
+  height: 28px;
+  margin-right: 14px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle closest-side, #43382f 0%, var(--coal) 85.9%, transparent 86.5%),
+    repeating-conic-gradient(var(--copper) 0 6deg, var(--copper-dark) 6deg 12deg);
+  box-shadow: 0 0 12px rgba(210, 112, 63, 0.4);
+}
+
+/* ================= MENUS ================= */
 .horizontal-menu {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    list-style: none;
-}
-
-.horizontal-menu li a {
-    color: var(--sidebar-txt-color);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    font-family: "Open Sans", sans-serif;
-    font-size: 0.95rem;
-    transition: color var(--transition);
-    padding: 0;
-}
-
-.horizontal-menu li a i {
-    margin-right: 6px;
-    font-size: 1rem;
-}
-
-.horizontal-menu li a:hover {
-    color: var(--sidebar-bt-color-hover);
-}
-
-.home-center-mobile {
-    display: none;
-}
-
-.desktop-home {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 2rem;
-}
-
-.left-menu,
-.right-menu {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
 }
 
 .left-menu {
-    gap: 3.0rem;
-    margin-left: 100px;
+  margin-left: 0;
+  gap: 4px;
+}
+
+.right-menu-desktop {
+  margin-left: auto;
+  gap: 4px;
 }
 
 .horizontal-menu li a {
-    padding: 0;
+  height: 36px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  color: var(--silver);
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
+.horizontal-menu li a i {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--copper);
+  transition: transform 0.25s ease;
+}
+
+.horizontal-menu li a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.horizontal-menu li a:hover i {
+  transform: scale(1.15) rotate(-6deg);
+}
+
+/* ícones sozinhos (perfil, configurações, ajuda): botões redondos */
+.right-menu-desktop li a {
+  width: 36px;
+  padding: 0;
+  justify-content: center;
+}
+
+.right-menu-desktop li a span {
+  display: none;
+}
+
+/* no desktop o menu da direita "mobile" não aparece */
+@media (min-width: 1025px) {
+  .right-menu {
+    display: none;
+  }
+
+  .settings-mobile {
+    display: none !important;
+  }
+
+  .settings-desktop {
+    display: flex !important;
+  }
+}
+
+/* o botão Home central só existe no celular */
 .home-center-mobile {
-    display: none;
+  display: none;
 }
 
-/* ========================
-   TOGGLE DARK MODE
-======================== */
+/* ================= TOGGLE CLARO / ESCURO ================= */
 .checkboxDiv {
-    display: flex;
-    align-items: center;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }
 
+/* o checkbox fica invisível, mas continua acessível pelo teclado */
 #darkModeToggle {
-    display: none;
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
 }
 
 .checkbox-label {
-    width: 55px;
-    height: 28px;
-    background-color: #f07d17;
-    border-radius: 50px;
-    position: relative;
-    cursor: pointer;
-    transition: background-color var(--transition);
+  position: relative;
+  width: 56px;
+  height: 30px;
+  border-radius: 999px;
+  background-color: var(--copper);
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#darkModeToggle:focus-visible + .checkbox-label {
+  outline: 2px solid var(--silver);
+  outline-offset: 2px;
 }
 
 .checkbox-label i {
-    color: #fff;
-    font-size: 0.9rem;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: opacity var(--transition);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  color: var(--coal);
+  transition: opacity 0.3s ease, color 0.3s ease;
 }
 
 .checkbox-label .fa-moon {
-    left: 8px;
+  left: 9px;
 }
 
 .checkbox-label .fa-sun {
-    right: 8px;
+  right: 9px;
 }
 
 .checkbox-label .ball {
-    width: 22px;
-    height: 22px;
-    background-color: #fff;
-    border-radius: 50%;
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    transition: transform var(--transition);
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--silver);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  transition: transform 0.3s ease;
 }
 
-input[type="checkbox"]:checked+.checkbox-label {
-    background-color: #081e36;
+input[type="checkbox"]:checked + .checkbox-label {
+  background-color: var(--coal-3);
+  box-shadow: inset 0 0 0 1px var(--line);
 }
 
-input[type="checkbox"]:checked+.checkbox-label .ball {
-    transform: translateX(27px);
+input[type="checkbox"]:checked + .checkbox-label .ball {
+  transform: translateX(26px);
 }
 
-input[type="checkbox"]:checked+.checkbox-label .fa-sun {
-    opacity: 0;
+input[type="checkbox"]:checked + .checkbox-label .fa-moon {
+  color: var(--copper);
 }
 
-input[type="checkbox"]:not(:checked)+.checkbox-label .fa-moon {
-    opacity: 0;
+input[type="checkbox"]:checked + .checkbox-label .fa-sun {
+  opacity: 0;
 }
 
-/* ========================
-   LOGOUT
-======================== */
-.logout {
-    display: flex;
-    align-items: center;
-    margin-left: 1rem;
+input[type="checkbox"]:not(:checked) + .checkbox-label .fa-moon {
+  opacity: 0;
 }
 
-.logout button {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    font-family: "Open Sans", sans-serif;
-    font-size: 0.95rem;
-    background-color: #61605f;
-    color: var(--sidebar-txt-color);
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color var(--transition), transform var(--transition);
-}
-
-.logout button:hover {
-    background-color: #ebaf30;
-    transform: translateY(-1px);
-}
-
-/* ========================
-   CONTAINER E IMAGENS
-======================== */
-.container {
-    height: 100vh;
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    padding-top: 60px;
-}
-
-.container img {
-    display: block;
-    margin: 0 auto;
-    height: auto;
-}
-
-.logo-img {
-    padding-top: 15%;
-    max-width: 40%;
-}
-
-.line {
-    width: 100%;
-    height: 1px;
-    margin-top: 40px;
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* ========================
-   TEXTO E LINKS INTERNOS
-======================== */
-
-h2 {
-    text-align: center;
-    font-family: "Open Sans", sans-serif;
-    font-size: 1.1rem;
-    color: var(--sidebar-txt-color);
-    font-weight: 300;
-}
-
-/* =========================
-   MOBILE / TABLET
-========================= */
+/* ================= CELULAR / TABLET: BARRA EMBAIXO ================= */
 @media (max-width: 1024px) {
+  #horizontal-bar {
+    top: auto;
+    bottom: 0;
+    height: 65px;
+    padding: 0 16px;
+    justify-content: center;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+  }
 
-    #horizontal-bar {
-        position: fixed;
-        bottom: 0;
-        top: auto;
-        left: 0;
-        width: 100%;
-        height: 65px;
-        background: var(--sidebar-color);
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0;
-        z-index: 999;
-    }
+  /* a faixa serrilhada passa para a borda de cima */
+  #horizontal-bar::after {
+    top: 0;
+    bottom: auto;
+  }
 
-    .wrapper {
-        padding-bottom: 80px;
-    }
+  #horizontal-bar::before {
+    display: none;
+  }
 
-    .home-center-mobile {
-        position: absolute;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 70px;
-        height: 70px;
-        background: var(--sidebar-color);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
-        z-index: 1000;
-    }
+  .wrapper {
+    padding-bottom: 80px;
+  }
 
-    .home-center-mobile i {
-        font-size: 1.7rem;
-        color: #f07d17;
-    }
+  .left-menu,
+  .right-menu {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+  }
 
-    .horizontal-menu li a span,
-    .horizontal-menu li a[href="/help"],
-    .checkboxDiv,
-    .settings-desktop {
-        display: none !important;
-    }
+  .left-menu {
+    justify-content: flex-start;
+    margin-left: 0;
+  }
 
-    .left-menu,
-    .right-menu {
-        display: flex;
-        gap: 40px;
-        flex: 1;
-    }
+  .right-menu {
+    justify-content: flex-end;
+  }
 
-    .left-menu {
-        justify-content: flex-start;
-        margin-left: 0px;
-    }
+  .right-menu-desktop {
+    margin-left: 0;
+  }
 
-    .right-menu {
-        justify-content: flex-end;
-    }
+  /* ícones grandes e redondos para o toque */
+  .horizontal-menu li a {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+  }
 
-    .left-menu li a i,
-    .right-menu li a i {
-        font-size: 1.4rem;
-    }
+  .left-menu li a i,
+  .right-menu li a i {
+    font-size: 1.35rem;
+  }
 
-    .desktop-home {
-        display: none !important;
-    }
+  .horizontal-menu li a span,
+  .horizontal-menu li a[href="/help"],
+  .checkboxDiv,
+  .settings-desktop {
+    display: none !important;
+  }
 
-    .left-menu li:nth-child(1),
-    .left-menu li:nth-child(4) {
-        display: none;
-    }
+  .desktop-home {
+    display: none !important;
+  }
+
+  /* no celular, Álbum e Mapa ficam à esquerda (Home e Coleção saem daqui) */
+  .left-menu li:nth-child(1),
+  .left-menu li:nth-child(4) {
+    display: none;
+  }
+
+  /* botão Home central: uma moeda que sobressai da barra */
+  .home-center-mobile {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    z-index: 1000;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid transparent;
+    border-radius: 50%;
+    background:
+      linear-gradient(var(--coal), var(--coal)) padding-box,
+      repeating-conic-gradient(var(--copper) 0 6deg, var(--copper-dark) 6deg 12deg) border-box;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(210, 112, 63, 0.3);
+    transform: translateX(-50%);
+    transition: transform 0.25s ease;
+  }
+
+  .home-center-mobile:hover {
+    transform: translateX(-50%) scale(1.06) rotate(-8deg);
+  }
+
+  .home-center-mobile a {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .home-center-mobile i {
+    font-size: 1.6rem;
+    color: var(--copper);
+  }
 }
 
-@media (min-width: 1025px) {
-    .settings-mobile {
-        display: none !important;
-    }
-
-    .settings-desktop {
-        display: flex !important;
-    }
-
-    .right-menu li:first-child {
-        display: none;
-    }
+@media (prefers-reduced-motion: reduce) {
+  .horizontal-menu li a,
+  .horizontal-menu li a i,
+  .checkbox-label,
+  .checkbox-label .ball,
+  .home-center-mobile {
+    transition-duration: 0.01ms;
+  }
 }

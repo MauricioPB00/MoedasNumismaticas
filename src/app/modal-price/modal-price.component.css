@@ -1,160 +1,340 @@
-h2,
-h1,
-p,
-a,
-h3,
-li {
-  font-family: "Open Sans", sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;600&display=swap");
+
+/* =========================================================
+   Modal "Valor do Álbum" — mesmo estilo dos outros modais
+   - O TOTAL vira o destaque: bloco de cobre com número gigante
+   - Moedas, Cédulas e países em linhas limpas
+   - O gráfico fica num painel com anéis finos no canto
+   Não precisa mexer no HTML: mesmas classes.
+   ========================================================= */
+
+:host {
+  --coal: #15120f;
+  --coal-2: #1f1b17;
+  --copper: #d2703f;
+  --silver: #e9e7e1;
+  --text-dim: #a8a398;
+  --line: rgba(255, 255, 255, 0.14);
+  --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body: "DM Sans", system-ui, sans-serif;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--display);
+}
+
+p,
+a,
+li,
+span,
+button {
+  font-family: var(--body);
+}
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ================= FUNDO E CAIXA ================= */
 .half-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  background: rgba(21, 18, 15, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .half-modal-content {
-  background: #fff;
+  position: relative;
   width: 90%;
   max-width: 1400px;
   height: 80%;
-  padding: 30px 20px;
-  border-radius: 12px;
-  position: relative;
-  overflow-y: auto;
+  padding: 28px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(210, 112, 63, 0.16), transparent 40%),
+    var(--coal-2);
+  color: var(--silver);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  animation: fadeIn 0.25s ease-in-out;
 }
 
+.half-modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.half-modal-content::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* o botão de fechar acompanha a rolagem */
 .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.8rem;
-  background: none;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  flex: none;
+  align-self: flex-end;
+  width: 38px;
+  height: 38px;
+  margin: -8px -4px -46px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--silver);
+  font-size: 1.5rem;
+  line-height: 1;
   cursor: pointer;
-  color: #333;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .close-btn:hover {
-  color: #EFBF04;
+  background: var(--copper);
+  color: var(--coal);
 }
 
 .modal-flex {
-  display: flex;
-  gap: 20px;
   width: 100%;
   height: 100%;
-}
-
-.album-chart {
-  flex: 1.5;
-  background: #fafafa;
-  border-radius: 12px;
-  padding: 20px;
+  min-height: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  gap: 22px;
 }
 
-.album-chart canvas {
-  width: 500px !important;
-  height: 500px !important;
-}
-
-
+/* ================= VALORES (coluna da esquerda) ================= */
 .album-value {
   flex: 1;
-  background: #f5f5f5;
-  border-radius: 12px;
-  padding: 20px;
+  min-width: 0;
+  padding: 8px 6px 8px 4px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  border: 1px solid #ddd;
+  gap: 4px;
+  overflow-y: auto;
+  border: none;
+  border-radius: 0;
+  background: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
 }
 
 .album-value h2 {
-  font-size: 1.6rem;
-  margin-bottom: 10px;
-  text-align: center;
-  color: #333;
+  order: -2;
+  margin: 0 0 18px;
+  padding-right: 48px;
+  text-align: left;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--silver);
 }
 
+.album-value h2::after {
+  content: "";
+  display: inline-block;
+  width: 0.2em;
+  height: 0.2em;
+  margin-left: 0.1em;
+  border-radius: 50%;
+  background: var(--copper);
+}
+
+/* linhas limpas, sem caixas */
 .value-item {
+  margin: 0;
+  padding: 14px 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #fff;
-  padding: 10px 15px;
-  border-radius: 8px;
+  gap: 16px;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
   font-size: 1rem;
-  border: 1px solid #e0e0e0;
-  margin-bottom: 8px;
-}
-
-.value-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-size: 1rem;
-  border: 1px solid #e0e0e0;
-  margin-bottom: 8px;
 }
 
 .value-item h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-family: var(--body);
+  font-size: 1rem;
   font-weight: 500;
-  color: #444;
+  color: var(--text-dim);
 }
 
 .value-item .value {
-  font-weight: bold;
-  color: #333;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--silver);
+  white-space: nowrap;
 }
 
+/* TOTAL: o destaque, sobe para o topo */
 .value-item.total {
-  background: #efbf04;
-  border-color: #d9a903;
+  order: -1;
+  margin: 0 0 12px;
+  padding: 22px 24px 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  border: none;
+  border-radius: 28px;
+  background: var(--copper);
+  box-shadow: 0 20px 40px rgba(210, 112, 63, 0.25);
 }
 
-.value-item.total h3,
+.value-item.total h3 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(21, 18, 15, 0.75);
+}
+
 .value-item.total .total-value {
-  color: #fff;
-  font-weight: bold;
+  font-size: clamp(2rem, 4.4vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--coal);
+}
+
+/* lista por país: rótulo + linhas menores */
+.album-value > div:not(.value-item)::before {
+  content: "Por país";
+  display: block;
+  margin: 18px 0 2px 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
 }
 
 .value-item.country {
-  background: #b4b3ad;
-  border-color: #cccac2;
+  padding: 11px 4px;
+  background: none;
+  border-color: var(--line);
 }
 
-.value-item.country h3,
+.value-item.country h3 {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--silver);
+}
+
 .value-item.country .value {
-  color: #fff;
-  font-weight: bold;
+  font-size: 1.05rem;
+  color: var(--silver);
 }
 
+/* ================= GRÁFICO (painel da direita) ================= */
+.album-chart {
+  flex: 1.5;
+  min-width: 0;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  /* anéis finos no canto, como o guilhochê de uma cédula */
+  background:
+    repeating-radial-gradient(circle at 100% 0%, transparent 0 14px, rgba(255, 255, 255, 0.05) 14px 15px),
+    rgba(255, 255, 255, 0.04);
+}
+
+.album-chart h2 {
+  align-self: flex-start;
+  margin: 0;
+  padding-right: 48px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--silver);
+}
+
+.album-chart canvas {
+  max-width: 100%;
+  margin: auto;
+  width: 500px !important;
+  height: 500px !important;
+}
+
+/* ================= ANIMAÇÃO ================= */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ================= TABLET ================= */
+@media (max-width: 1100px) {
+  .album-chart canvas {
+    width: 380px !important;
+    height: 380px !important;
+  }
+}
+
+/* ================= CELULAR ================= */
 @media (max-width: 768px) {
+  .half-modal-content {
+    width: 94%;
+    height: 86%;
+    padding: 22px 16px;
+    border-radius: 26px;
+  }
+
   .modal-flex {
+    height: auto;
     flex-direction: column;
+  }
+
+  .album-value {
+    flex: none;
+    overflow-y: visible;
+  }
+
+  .album-chart {
+    flex: none;
+    padding: 18px;
+    border-radius: 24px;
   }
 
   .album-chart canvas {
     width: 250px !important;
     height: 250px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .half-modal-content {
+    animation: none;
   }
 }

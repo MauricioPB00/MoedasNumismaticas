@@ -1,253 +1,384 @@
-h2,
-h1,
-p,
-a,
-h3,
-li {
-  font-family: "Open Sans", sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;600&display=swap");
+
+/* =========================================================
+   Modal "Gerenciar Moeda" (app-modal-coin) + aviso de conquista
+   Mesmo estilo dos outros modais: escuro, abas em pílula,
+   linhas da tabela como pílulas, botões de cobre.
+   O aviso de conquista vira uma pílula com a insígnia
+   "estourando" para fora, sobre uma moeda serrilhada.
+   Não precisa mexer no HTML: mesmas classes.
+   ========================================================= */
+
+:host {
+  --coal: #15120f;
+  --coal-2: #1f1b17;
+  --panel: #262220;
+  --copper: #d2703f;
+  --patina: #2f7566;
+  --silver: #e9e7e1;
+  --text-dim: #a8a398;
+  --line: rgba(255, 255, 255, 0.14);
+  --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body: "DM Sans", system-ui, sans-serif;
 }
 
-/* === FUNDO DO MODAL === */
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--display);
+}
+
+p,
+a,
+li,
+span,
+button,
+input,
+select,
+td,
+th {
+  font-family: var(--body);
+}
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ================= FUNDO E CAIXA ================= */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  z-index: 99999;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  background: rgba(21, 18, 15, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
-/* === CONTAINER DO MODAL === */
 .modal-container {
-  background: #fff;
-  border-radius: 12px;
+  position: relative;
   width: 90%;
   max-width: 950px;
-  padding: 1.5rem;
-  position: relative;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  animation: fadeIn 0.25s ease-in-out;
+  padding: 28px;
   overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(210, 112, 63, 0.16), transparent 40%),
+    var(--coal-2);
+  color: var(--silver);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+  animation: fadeIn 0.25s ease-in-out;
 }
 
-/* === CABEÇALHO === */
+/* ================= CABEÇALHO ================= */
 .modal-header {
+  padding-bottom: 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.5rem;
+  border-bottom: none;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 1.5rem;
-  color: #333;
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--silver);
+}
+
+.modal-header h2::after {
+  content: "";
+  display: inline-block;
+  width: 0.2em;
+  height: 0.2em;
+  margin-left: 0.1em;
+  border-radius: 50%;
+  background: var(--copper);
 }
 
 .close-btn {
-  background: none;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
-  font-size: 1.4rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--silver);
+  font-size: 1rem;
+  line-height: 1;
   cursor: pointer;
-  color: #666;
-  transition: 0.2s;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .close-btn:hover {
-  color: #d33;
+  background: var(--copper);
+  color: var(--coal);
 }
 
-/* === TABS === */
+/* ================= ABAS (seletor em pílula) ================= */
 .tabs {
+  width: fit-content;
+  margin: 20px auto 22px;
+  padding: 5px;
   display: flex;
-  justify-content: center;
-  margin: 1rem 0;
-  border-bottom: 1px solid #ddd;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--coal);
 }
 
 .tabs button {
-  background: none;
+  padding: 10px 26px;
   border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--silver);
+  font-size: 0.95rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-  color: #666;
-  border-bottom: 3px solid transparent;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.tabs button:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .tabs button.active {
-  color: #007bff;
-  border-bottom-color: #007bff;
-  font-weight: bold;
+  background: var(--silver);
+  color: var(--coal);
+  font-weight: 700;
 }
 
-/* === CONTEÚDO === */
+/* ================= CONTEÚDO ================= */
 .tab-content {
-  padding: 1rem;
-  background: #fafafa;
-  border-radius: 8px;
-  animation: fadeSlide 0.2s ease;
+  padding: 0;
   overflow-x: auto;
+  border-radius: 24px;
+  background: transparent;
+  animation: fadeSlide 0.2s ease;
 }
 
-/* === FORMULÁRIO === */
 .album-form {
-  padding: 15px;
-  background-color: #fcfaf7;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px 16px 16px;
+  border-radius: 24px;
+  background: var(--panel);
+  box-shadow: none;
 }
 
 .album-form h3 {
-  margin-bottom: 15px;
-  color: #333;
+  margin: 0 0 12px 6px;
+  text-align: left;
   font-size: 1.3rem;
-  text-align: center;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: var(--silver);
 }
 
+/* ---- tabela: cada linha vira uma pílula ---- */
 .album-form table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 10px;
   min-width: 600px;
-}
-
-.album-form th,
-.album-form td {
-  padding: 10px;
-  text-align: center;
-  font-size: 0.95rem;
-  word-break: break-word;
+  border-collapse: separate;
+  border-spacing: 0 8px;
 }
 
 .album-form th {
-  background-color: #f0d97c;
-  color: #000;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 6px 10px;
+  border-radius: 0;
+  background: var(--panel);
+  color: var(--text-dim);
+  font-size: 0.74rem;
   font-weight: 600;
-  border-radius: 6px 6px 0 0;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .album-form td {
-  background-color: #fff;
-  border-radius: 6px;
-  transition: all 0.2s ease-in-out;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--silver);
+  font-size: 0.95rem;
+  text-align: center;
   vertical-align: middle;
+  word-break: break-word;
+  transition: background-color 0.2s ease;
+}
+
+.album-form td:first-child {
+  border-radius: 18px 0 0 18px;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.album-form td:last-child {
+  border-radius: 0 18px 18px 0;
+}
+
+.album-form tbody tr:hover td {
+  background: rgba(210, 112, 63, 0.14);
 }
 
 .album-form td .actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  flex-wrap: wrap;
 }
 
 .album-form td input,
 .album-form td select {
-  width: 100px;
-  padding: 5px 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  width: 110px;
+  height: 38px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--silver);
   font-size: 0.9rem;
   text-align: center;
+  outline: none;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
-.album-form td button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.album-form td input:focus,
+.album-form td select:focus {
+  background-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 0 2px var(--copper);
+}
+
+.album-form td select option {
+  background: var(--coal);
+  color: var(--silver);
+}
+
+/* quantidade que o usuário já tem */
+.album-qty {
   display: inline-block;
+  padding: 3px 14px;
+  border-radius: 999px;
+  background: rgba(210, 112, 63, 0.2);
+  font-weight: 700;
+  color: #f0a77f;
+}
+
+/* botões */
+.album-form td button {
+  display: inline-block;
+  height: 38px;
   margin: 0;
+  padding: 0 20px;
+  border: none;
+  border-radius: 999px;
+  background: var(--copper);
+  color: var(--coal);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.album-form td button:hover:not(:disabled) {
+  background: #e58554;
+  transform: translateY(-1px);
+}
+
+.album-form td button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 .album-form td .btn-remove {
-  background-color: #dc3545;
+  border: 1px solid rgba(231, 76, 60, 0.55);
+  background: rgba(231, 76, 60, 0.18);
+  color: #ff8f80;
 }
 
 .album-form td .btn-remove:hover {
-  background-color: #b02a37;
+  border-color: #e74c3c;
+  background: #e74c3c;
+  color: #fff;
 }
 
-.album-form>button {
+.album-form > button {
   display: block;
   margin: 15px auto 0;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 999px;
 }
 
-.album-form>button:hover {
-  transform: scale(1.05);
-}
-
-/* === ROLAGEM === */
+/* ================= ROLAGEM ================= */
 .album-form.scrollable-table {
   max-height: 450px;
+  padding-right: 10px;
   overflow-y: auto;
-  padding-right: 5px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
 }
 
-/* Scroll */
 .album-form.scrollable-table::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .album-form.scrollable-table::-webkit-scrollbar-track {
-  background: #f0f0f0;
-  border-radius: 8px;
+  background: transparent;
 }
 
 .album-form.scrollable-table::-webkit-scrollbar-thumb {
-  background: #c6a500;
   border-radius: 8px;
-  transition: background 0.3s ease;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .album-form.scrollable-table::-webkit-scrollbar-thumb:hover {
-  background: #a38500;
+  background: var(--copper);
 }
 
-/* === ANIMAÇÕES === */
+/* ================= ANIMAÇÕES ================= */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 @keyframes fadeSlide {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* === RESPONSIVO === */
+/* ================= CELULAR / TABLET: linhas viram cartões ================= */
 @media (max-width: 900px) {
   .modal-container {
     width: 95%;
-    padding: 1rem;
-    max-height: 90vh;
+    max-height: 90dvh;
+    padding: 20px 16px;
     overflow-y: auto;
+  }
+
+  .modal-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .tabs button {
+    padding: 9px 18px;
+    font-size: 0.9rem;
   }
 
   .album-form table {
@@ -268,24 +399,48 @@ li {
   }
 
   .album-form tr {
-    background: #fff;
-    margin-bottom: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.06);
   }
 
-  .album-form td {
+  .album-form td,
+  .album-form td:first-child,
+  .album-form td:last-child {
+    padding: 8px 6px;
+    border-radius: 0;
+    background: transparent;
     text-align: left;
-    padding: 8px 10px;
   }
 
+  .album-form tbody tr:hover td {
+    background: transparent;
+  }
+
+  /* rótulos de cada campo (a tabela de "Adicionar" não tem data-label) */
   .album-form td::before {
-    content: attr(data-label);
-    font-weight: 600;
     display: block;
     margin-bottom: 4px;
-    color: #555;
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: var(--text-dim);
+  }
+
+  .album-form td[data-label]::before {
+    content: attr(data-label);
+  }
+
+  .album-form td:not([data-label]):nth-child(1)::before {
+    content: "Ano";
+  }
+
+  .album-form td:not([data-label]):nth-child(2)::before {
+    content: "Quantidade";
+  }
+
+  .album-form td:not([data-label]):nth-child(3)::before {
+    content: "Estado";
   }
 
   .album-form td input,
@@ -296,7 +451,7 @@ li {
 
   .album-form td .actions {
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
   }
 
   .btn-remove {
@@ -304,101 +459,144 @@ li {
   }
 }
 
-/* INSIGNIAAAAAAAAAAA */
-
+/* ================= AVISO DE CONQUISTA (insígnia) ================= */
 .achievement-overlay {
   position: fixed;
   inset: 0;
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 99999;
   pointer-events: none;
   animation: fadeInOut 4s ease forwards;
 }
 
+/* pílula escura; a insígnia estoura para fora, à esquerda */
 .achievement-card {
   position: relative;
   display: flex;
   align-items: center;
   gap: 24px;
-  background: rgba(20, 20, 20, 0.85);
+  padding: 22px 48px 22px 28px;
+  border: 1px solid rgba(210, 112, 63, 0.6);
+  border-radius: 999px;
+  background: rgba(21, 18, 15, 0.92);
   backdrop-filter: blur(8px);
-  padding: 20px 28px;
-  border-radius: 18px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(210, 112, 63, 0.25);
   animation: slidePop 0.6s ease-out;
+}
+
+/* moeda serrilhada atrás da insígnia */
+.achievement-card::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -66px;
+  width: 172px;
+  height: 172px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle closest-side, #43382f 0%, var(--coal) 85.9%, transparent 86.5%),
+    repeating-conic-gradient(var(--copper) 0 3deg, #7c3f21 3deg 6deg);
+  box-shadow: 0 0 40px rgba(210, 112, 63, 0.45);
+  transform: translateY(-50%);
 }
 
 .achievement-card img {
   position: absolute;
   left: -100px;
+  z-index: 1;
   width: 240px;
   height: auto;
-  animation: popBig 0.6s ease-out;
   filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.7));
   pointer-events: none;
+  animation: popBig 0.6s ease-out;
 }
 
 .achievement-text {
   margin-left: 120px;
 }
 
+.achievement-text::before {
+  content: "Conquista desbloqueada";
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
 .achievement-text h3 {
   margin: 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: #ffd369;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #f0a77f;
 }
 
 .achievement-text p {
   margin: 6px 0 0;
-  font-size: 15px;
-  color: #e0e0e0;
+  font-size: 0.95rem;
+  color: var(--silver);
 }
 
 @keyframes popBig {
-  0% {
-    transform: scale(0.4);
-    opacity: 0;
-  }
-
-  60% {
-    transform: scale(1.15);
-    opacity: 1;
-  }
-
-  100% {
-    transform: scale(1);
-  }
+  0%   { transform: scale(0.4); opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); }
 }
 
 @keyframes slidePop {
-  0% {
-    transform: translateY(20px) scale(0.9);
-    opacity: 0;
-  }
-
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
+  0%   { transform: translateY(20px) scale(0.9); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 @keyframes fadeInOut {
-  0% {
-    opacity: 0
+  0%   { opacity: 0; }
+  10%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (max-width: 600px) {
+  .achievement-card {
+    gap: 12px;
+    padding: 18px 30px 18px 20px;
   }
 
-  10% {
-    opacity: 1
+  .achievement-card::before {
+    left: -50px;
+    width: 140px;
+    height: 140px;
   }
 
-  85% {
-    opacity: 1
+  .achievement-card img {
+    left: -78px;
+    width: 190px;
   }
 
-  100% {
-    opacity: 0
+  .achievement-text {
+    margin-left: 84px;
+  }
+
+  .achievement-text h3 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-container,
+  .tab-content,
+  .achievement-card,
+  .achievement-card img {
+    animation: none;
+  }
+
+  .tabs button,
+  .album-form td button {
+    transition-duration: 0.01ms;
   }
 }

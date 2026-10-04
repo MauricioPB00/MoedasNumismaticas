@@ -1,96 +1,195 @@
-h2,
-h1,
-p,
-a,
-h3,
-li {
-  font-family: "Open Sans", sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;600&display=swap");
+
+/* =========================================================
+   Detalhe da moeda — mesmo estilo do Catálogo e da Coleção v2
+   Página clara. À esquerda, as imagens numa placa em formato de
+   "U" (topo reto, fundo bem redondo) e a tabela de preços.
+   À direita, um painel escuro com os dados.
+   Não precisa mexer no HTML: mesmas classes.
+   ========================================================= */
+
+:host {
+  /* altura do header do app que fica acima desta página */
+  --app-header: 70px;
+
+  --coal: #15120f;
+  --coal-2: #1f1b17;
+  --copper: #d2703f;
+  --patina: #2f7566;
+  --silver: #e9e7e1;
+  --mat: #f1efe9;
+  --text-dark: #5c574f;
+  --text-dim: #a8a398;
+  --line: rgba(255, 255, 255, 0.14);
+  --line-dark: rgba(21, 18, 15, 0.22);
+  --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body: "DM Sans", system-ui, sans-serif;
+
+  display: block;
+  min-height: calc(100dvh - var(--app-header));
+  padding-bottom: 64px;
+  /* anéis finos no canto, esmaecendo (guilhochê) */
+  background:
+    radial-gradient(circle at 100% 0%, transparent 0, transparent 260px, var(--silver) 520px),
+    repeating-radial-gradient(circle at 100% 0%, transparent 0 14px, rgba(21, 18, 15, 0.08) 14px 15px) right top / 540px 540px no-repeat,
+    var(--silver);
 }
 
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--display);
+}
+
+p,
+a,
+li,
+span,
+label,
+button,
+input,
+small,
+td,
+th {
+  font-family: var(--body);
+}
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ================= TÍTULO ================= */
 .coin-detail {
-  max-width: 1400px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 44px 40px 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--coal);
 }
 
 .coin-title {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: #2c3e50;
+  margin: 0 0 40px;
+  text-align: left;
+  font-size: clamp(2.4rem, 7vw, 5.6rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  color: var(--coal);
 }
 
 .coin-title .meta {
-  display: block;
-  font-size: 0.9rem;
-  color: #555;
-  margin-top: 0.5rem;
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-family: var(--body);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--text-dark);
 }
 
 .coin-title .meta span {
+  margin-right: 0;
+}
+
+.coin-title .meta > span + span {
+  margin-left: 0.5em;
+}
+
+.coin-title .meta > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+  color: var(--coal);
+}
+
+.flag,
+.flag-icon {
+  flex: none;
+  width: 26px;
+  height: 19px;
   margin-right: 8px;
-}
-
-.flag {
-  width: 22px;
-  height: auto;
-  border-radius: 3px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(21, 18, 15, 0.28);
   vertical-align: middle;
-  margin-right: 4px;
 }
 
+/* ================= LAYOUT: IMAGENS | DADOS ================= */
 .coin-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 40px;
   align-items: start;
 }
 
 .coin-images {
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0;
 }
 
+/* placa em U: topo reto, fundo bem redondo, moldura dupla */
 .coin-img-row {
+  padding: 40px 32px 72px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: 16px;
+  border-radius: 40px 40px 160px 160px;
+  background: var(--mat);
+  box-shadow:
+    0 20px 50px rgba(21, 18, 15, 0.12),
+    inset 0 0 0 10px #fff,
+    inset 0 0 0 11px rgba(21, 18, 15, 0.1);
 }
 
+/* o branco das imagens se funde com a placa */
 .coin-img {
+  flex: 1 1 0;
+  min-width: 0;
   width: 100%;
-  max-width: 220px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  max-width: 240px;
+  height: auto;
+  border-radius: 0;
+  box-shadow: none;
+  mix-blend-mode: multiply;
+  transition: transform 0.4s ease;
 }
 
 .coin-img:hover {
-  transform: scale(1.05);
+  transform: scale(1.06) rotate(-3deg);
 }
 
-.img-descriptions p {
-  font-size: 0.95rem;
-  color: #555;
-  text-align: center;
-  margin: 0.3rem 0;
+/* cédulas: uma embaixo da outra */
+.coin-img-row.is-banknote {
+  flex-direction: column;
+  gap: 18px;
+}
+
+.coin-img-row.is-banknote .coin-img {
+  flex: none;
+  max-width: 380px;
 }
 
 .coin-edge-img {
-  max-width: 220px;
   width: 100%;
+  max-width: 220px;
   height: auto;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   object-fit: contain;
+  box-shadow: none;
   transition: transform 0.3s ease;
 }
 
@@ -98,435 +197,457 @@ li {
   transform: scale(1.05);
 }
 
-.more-info h3 {
-  margin-top: 1.5rem;
-  font-size: 1.2rem;
-  color: #2c3e50;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 0.3rem;
-  margin-bottom: 0.8rem;
+/* descrições de anverso e reverso */
+.img-descriptions {
+  margin-top: 28px;
+}
+
+.img-descriptions p {
+  margin: 8px 0;
+  text-align: left;
+  font-size: 0.97rem;
+  line-height: 1.5;
+  color: var(--text-dark);
+}
+
+.img-descriptions strong,
+.more-info strong {
+  color: var(--coal);
+}
+
+.coin-images h3 {
+  margin: 34px 0 12px;
+  padding: 0;
+  border: none;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: var(--coal);
 }
 
 .more-info p {
-  font-size: 0.95rem;
-  margin: 0.3rem 0;
-}
-
-.coin-info {
-  background: #f7f9fc;
-  padding: 0rem 1.5rem 1.5rem 1.5rem;
-  border-radius: 12px;
-  border: 1px solid #e0e6ed;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.coin-info .section {
-  margin-bottom: 2rem;
-}
-
-.coin-info h3 {
-  font-size: 1.2rem;
-  color: #2c3e50;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.3rem;
-  margin-bottom: 0.5rem;
-}
-
-.coin-info p {
   margin: 6px 0;
   font-size: 0.95rem;
-  line-height: 1.4;
+  line-height: 1.5;
+  color: var(--text-dark);
 }
 
-.coin-info strong {
-  color: #2c3e50;
+/* o título aparece de novo dentro de "more-info": esconde a repetição */
+.more-info > div > h2 {
+  display: none;
 }
 
-.coin-info ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0.5rem 0;
-}
-
-.coin-info li {
-  padding: 2px 0;
-}
-
-/* Tags */
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-}
-
-.tag {
-  background-color: #e1f0ff;
-  color: #0366d6;
-  padding: 3px 8px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-}
-
-
-
-.open-modal-btn {
-  position: sticky;
-  top: 10px;
-  background-color: #EFBF04;
-  border: none;
-  color: #222;
-  font-weight: 600;
-  border-radius: 10px;
-  padding: 12px;
-  width: 100%;
-  z-index: 10;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-
-.open-modal-btn:hover {
-  background: linear-gradient(135deg, #9e7f04, #EFBF04) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-}
-
-
-/* /////////////////// tabela quantidade ////////////// */
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1.5rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #fafafa;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.table thead {
-  background: linear-gradient(135deg, #243b55, #141e30);
-  color: #fff;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
-}
-
-.table th {
-  padding: 0.9rem 1rem;
-  text-align: center;
-  font-weight: 600;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
-}
-
-.table td {
-  padding: 0.85rem 1rem;
-  text-align: center;
-  color: #333;
-  border-bottom: 1px solid #e5e5e5;
-  background-color: #fff;
-  transition: background-color 0.2s ease, transform 0.15s ease;
-}
-
-.table tbody tr:nth-child(even) td {
-  background-color: #f8f8f8;
-}
-
-.table tbody tr:hover td {
-  background-color: #f1f6ff;
-  transform: scale(1.01);
-}
-
-.table th {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-
-
-.coin-table-wrapper {
-  margin-top: 1.5rem;
-  border-radius: 15px;
-  overflow: hidden;
-}
-
-/* ===== TABELA ===== */
-.coin-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #101010;
-  border-radius: 10px;
-}
-
-.coin-table thead {
-  background: linear-gradient(90deg, #0072ff, #00c6ff);
-}
-
-.coin-table th {
-  padding: 1rem;
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #fff;
-}
-
-.coin-table td {
-  padding: 0.9rem 1rem;
-  border-bottom: 1px solid #333;
-  color: #ddd;
-}
-
-.coin-table tbody tr:hover {
-  background: rgba(0, 114, 255, 0.1);
-  transition: 0.2s;
-}
-
+/* ================= TABELA DE TIRAGEM E PREÇOS ================= */
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(21, 18, 15, 0.08);
 }
 
-.flag-icon {
-  margin-right: 6px;
-  border-radius: 2px;
-  vertical-align: middle;
+.table {
+  width: 100%;
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: visible;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: none;
 }
 
+.table thead {
+  background: transparent;
+}
 
-/* Fundo escuro por trás do modal */
+.table th {
+  position: static;
+  padding: 14px 12px;
+  border: none;
+  background: var(--coal);
+  color: var(--silver);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.table th:first-child,
+.table td:first-child {
+  padding-left: 20px;
+  text-align: left;
+}
+
+.table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(21, 18, 15, 0.08);
+  background: #fff;
+  color: var(--coal);
+  font-size: 0.92rem;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.table td:first-child {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.table tbody tr:nth-child(even) td {
+  background: #faf9f6;
+}
+
+.table tbody tr:hover td {
+  background: rgba(210, 112, 63, 0.14);
+  transform: none;
+}
+
+/* ================= PAINEL ESCURO DE DADOS ================= */
+.coin-info {
+  padding: 30px 28px 32px;
+  border: none;
+  border-radius: 40px;
+  background: var(--coal);
+  color: var(--silver);
+  box-shadow: 0 30px 60px rgba(21, 18, 15, 0.25);
+}
+
+.coin-info > h3 {
+  margin: 0 0 16px;
+  padding: 0;
+  border: none;
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--silver);
+}
+
+.coin-info > h3::after {
+  content: "";
+  display: inline-block;
+  width: 0.2em;
+  height: 0.2em;
+  margin-left: 0.1em;
+  border-radius: 50%;
+  background: var(--copper);
+}
+
+.open-modal-btn {
+  position: sticky;
+  top: 16px;
+  z-index: 10;
+  width: 100%;
+  height: 52px;
+  margin-bottom: 10px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 999px;
+  background: var(--copper);
+  color: var(--coal);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.open-modal-btn:hover {
+  background: #e58554;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+}
+
+.coin-info .section {
+  margin: 0 0 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.coin-info .section:last-child {
+  margin-bottom: 0;
+}
+
+.coin-info .section h3 {
+  margin: 0 0 14px;
+  padding: 0;
+  border: none;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--silver);
+}
+
+.coin-info p {
+  margin: 8px 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--silver);
+}
+
+/* rótulo apagado, valor em destaque */
+.coin-info strong {
+  font-weight: 500;
+  color: var(--text-dim);
+}
+
+.coin-info ul {
+  margin: 0.5rem 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.coin-info li {
+  position: relative;
+  padding: 3px 0 3px 16px;
+  font-size: 0.95rem;
+  color: var(--silver);
+}
+
+.coin-info li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.95em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--copper);
+}
+
+/* tags */
+.tags {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(210, 112, 63, 0.2);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #f0a77f;
+}
+
+/* ================= MODAL DE EDIÇÃO ================= */
 .modal-backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.55);
+  inset: 0;
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  background: rgba(21, 18, 15, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
-/* Caixa do modal */
 .edit-form {
+  position: relative;
   width: 95%;
   max-width: 450px;
-  background: #ffffff;
-  padding: 25px 30px;
-  border-radius: 14px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
-  animation: fadeInScale .25s ease forwards;
-  position: relative;
-}
-
-/* Animação suave */
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  max-height: 92dvh;
+  padding: 28px 28px 26px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--coal-2);
+  color: var(--silver);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+  animation: fadeInScale 0.25s ease forwards;
 }
 
 .edit-form h3,
 .edit-form h4 {
-  margin-bottom: 12px;
-  color: #333;
-  text-align: center;
+  margin: 0 0 12px;
+  text-align: left;
+  color: var(--silver);
+}
+
+.edit-form h3 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.edit-form h3::after {
+  content: "";
+  display: inline-block;
+  width: 0.2em;
+  height: 0.2em;
+  margin-left: 0.1em;
+  border-radius: 50%;
+  background: var(--copper);
+}
+
+.edit-form h4 {
+  margin-top: 18px;
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
 .edit-form label {
-  font-weight: 600;
   display: block;
-  margin-top: 12px;
-  margin-bottom: 4px;
-  color: #444;
+  margin: 12px 0 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-dim);
 }
 
 .edit-form input {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--silver);
+  font-size: 0.95rem;
   outline: none;
-  font-size: 14px;
-  transition: border 0.2s ease;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .edit-form input:focus {
-  border-color: #3b82f6;
+  background-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 2px var(--copper);
 }
 
 .edit-form button {
-  margin-top: 18px;
-  padding: 12px;
   width: 48%;
+  height: 48px;
+  margin-top: 22px;
+  padding: 0;
   border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
 }
 
-.edit-form button:first-of-type {
-  background: #3b82f6;
-  color: #fff;
-}
-
-.edit-form button:first-of-type:hover {
-  background: #1e64d8;
-}
-
-.edit-form button:last-of-type {
-  background: #ddd;
-  color: #333;
-}
-
-.edit-form button:last-of-type:hover {
-  background: #c8c8c8;
-}
-
-.edit-form button+button {
+.edit-form button + button {
   margin-left: 4%;
 }
 
+.edit-form button:first-of-type {
+  background: var(--copper);
+  color: var(--coal);
+}
 
-/* ===== RESPONSIVIDADE ===== */
+.edit-form button:first-of-type:hover {
+  background: #e58554;
+  transform: translateY(-1px);
+}
+
+.edit-form button:last-of-type {
+  border: 1.5px solid rgba(233, 231, 225, 0.35);
+  background: transparent;
+  color: var(--silver);
+}
+
+.edit-form button:last-of-type:hover {
+  border-color: var(--silver);
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ================= TABLET ================= */
 @media (max-width: 1024px) {
   .coin-layout {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 32px;
   }
 
-  .coin-img-row.is-banknote {
-    display: block;
-    max-width: 100%;
-    overflow-x: hidden;
+  .coin-img-row {
+    border-radius: 32px 32px 100px 100px;
   }
 
   .coin-img-row.is-banknote .coin-img {
-    display: block;
-    width: 100%;
     max-width: 350px;
-    height: auto;
-    margin: 0 auto 15px;
-    object-fit: contain;
   }
 
   .coin-img-row.is-coin {
-    display: flex;
     flex-wrap: nowrap;
     max-width: 100%;
     overflow-x: auto;
-    gap: 15px;
   }
 
   .coin-img-row.is-coin .coin-img {
-    width: 140px;
-    height: 140px;
-    object-fit: contain;
     flex-shrink: 0;
+    width: 150px;
+    height: auto;
   }
 }
 
+/* ================= CELULAR ================= */
 @media (max-width: 768px) {
-
-  .coin-img-row.is-banknote {
-    display: block;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  .coin-img-row.is-banknote .coin-img {
-    display: block;
-    width: 100%;
-    max-width: 350px;
-    height: auto;
-    margin: 0 auto 15px;
-    object-fit: contain;
-  }
-
-  .coin-img-row.is-coin {
-    display: flex;
-    flex-wrap: nowrap;
-    max-width: 100%;
-    overflow-x: auto;
-    gap: 15px;
-  }
-
-  .coin-img-row.is-coin .coin-img {
-    width: 140px;
-    height: 140px;
-    object-fit: contain;
-    flex-shrink: 0;
-  }
-
   .coin-detail {
-    padding: 1rem;
+    padding: 28px 16px 0;
   }
 
   .coin-title {
-    font-size: 1.5rem;
+    margin-bottom: 28px;
   }
 
   .coin-title .meta {
-    font-size: 0.8rem;
-  }
-
-  .coin-img,
-  .coin-edge-img {
-    max-width: 100%;
-  }
-
-  .coin-info {
-    padding: 1rem;
-  }
-
-  .open-modal-btn {
-    padding: 10px;
     font-size: 0.9rem;
   }
 
-  .table th,
-  .table td {
-    padding: 0.5rem 0.6rem;
-    font-size: 0.75rem;
+  .coin-img-row {
+    padding: 28px 18px 56px;
+    box-shadow:
+      0 20px 50px rgba(21, 18, 15, 0.12),
+      inset 0 0 0 8px #fff,
+      inset 0 0 0 9px rgba(21, 18, 15, 0.1);
+  }
+
+  .coin-info {
+    padding: 24px 20px 26px;
+    border-radius: 32px;
   }
 
   .table {
     min-width: 400px;
   }
-}
-
-@media (max-width: 480px) {
-  .coin-title {
-    font-size: 1.3rem;
-  }
-
-  .coin-info h3 {
-    font-size: 1rem;
-  }
-
-  .open-modal-btn {
-    font-size: 0.85rem;
-    padding: 8px;
-  }
 
   .table th,
   .table td {
-    padding: 0.6rem 0.1rem;
-    font-size: 0.7rem;
+    padding: 11px 8px;
+    font-size: 0.75rem;
   }
 
+  .table th:first-child,
+  .table td:first-child {
+    padding-left: 14px;
+  }
+}
+
+@media (max-width: 480px) {
   .table {
-    min-width: 300px;
+    min-width: 330px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edit-form {
+    animation: none;
+  }
+
+  .coin-img,
+  .open-modal-btn,
+  .table td {
+    transition-duration: 0.01ms;
   }
 }

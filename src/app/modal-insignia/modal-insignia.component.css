@@ -1,173 +1,354 @@
-h2,
-h1,
-p,
-a,
-h3,
-li {
-    font-family: "Open Sans", sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;600&display=swap");
+
+/* =========================================================
+   Modal de insígnias — mesmo estilo dos outros modais
+   - Escuro, com brilho de cobre no canto
+   - Cada insígnia fica sobre uma MOEDA serrilhada:
+     desbloqueada = aro de cobre com brilho (e gira no hover);
+     bloqueada = aro apagado, imagem em cinza
+   - A próxima insígnia (a que mostra o progresso) ganha
+     contorno de cobre
+   Não precisa mexer no HTML: mesmas classes.
+   ========================================================= */
+
+:host {
+  --coal: #15120f;
+  --coal-2: #1f1b17;
+  --copper: #d2703f;
+  --patina: #2f7566;
+  --silver: #e9e7e1;
+  --text-dim: #a8a398;
+  --line: rgba(255, 255, 255, 0.14);
+  --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body: "DM Sans", system-ui, sans-serif;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--display);
+}
+
+p,
+a,
+li,
+span,
+button {
+  font-family: var(--body);
+}
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ================= FUNDO E CAIXA ================= */
 .half-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(21, 18, 15, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .half-modal-content {
-    background: #fff;
-    width: 90%;
-    max-width: 1400px;
-    height: 80%;
-    padding: 30px 20px;
-    border-radius: 12px;
-    position: relative;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  position: relative;
+  width: 90%;
+  max-width: 1400px;
+  height: 80%;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(210, 112, 63, 0.16), transparent 40%),
+    var(--coal-2);
+  color: var(--silver);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  animation: fadeIn 0.25s ease-in-out;
 }
 
+.half-modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.half-modal-content::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* o botão de fechar acompanha a rolagem */
 .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 1.8rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #333;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  flex: none;
+  align-self: flex-end;
+  width: 38px;
+  height: 38px;
+  margin: -12px -8px -50px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--silver);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .close-btn:hover {
-    color: #EFBF04;
+  background: var(--copper);
+  color: var(--coal);
 }
 
-.insignia-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 20px;
-}
-
+/* ================= COLEÇÕES ================= */
 .collection-block {
-    margin-bottom: 45px;
+  margin-bottom: 20px;
 }
 
 .collection-title {
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 18px;
-    color: #333;
-    border-left: 6px solid #efbf04;
-    padding-left: 14px;
+  margin: 0 0 22px;
+  padding: 0 52px 14px 0;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--silver);
 }
 
+.collection-title::after {
+  content: "";
+  display: inline-block;
+  width: 0.2em;
+  height: 0.2em;
+  margin-left: 0.1em;
+  border-radius: 50%;
+  background: var(--copper);
+}
+
+.insignia-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 20px;
+}
+
+/* ================= O CARTÃO DA INSÍGNIA ================= */
 .insignia-card {
-    background: linear-gradient(145deg, #ffffff, #f0f0f0);
-    border-radius: 16px;
-    padding: 18px 16px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 10px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+  --disc: 148px; /* tamanho da moeda atrás da insígnia */
+  --img: 110px;  /* tamanho da imagem da insígnia */
+
+  position: relative;
+  padding: 24px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: none;
+  transition: translate 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .insignia-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+  translate: 0 -6px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* a próxima insígnia (a que mostra o progresso) fica em destaque */
+.insignia-card:has(.progress-inline) {
+  border-color: rgba(210, 112, 63, 0.7);
+  background: rgba(210, 112, 63, 0.08);
+}
+
+/* ---- moeda atrás da insígnia (aro serrilhado + palco escuro) ---- */
+.insignia-card::before {
+  content: "";
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  width: var(--disc);
+  height: var(--disc);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle closest-side, #43382f 0%, var(--coal) 85.9%, transparent 86.5%),
+    repeating-conic-gradient(var(--copper) 0 3deg, #7c3f21 3deg 6deg);
+  box-shadow: 0 0 28px rgba(210, 112, 63, 0.4);
+  opacity: 1;
+  transform: translateX(-50%);
+  animation: ringSpin 8s linear infinite paused;
+}
+
+.insignia-card:not(.locked):hover::before {
+  animation-play-state: running;
 }
 
 .insignia-card img {
-    width: 110px;
-    height: auto;
-    transition: transform 0.3s ease, filter 0.3s ease;
+  position: relative;
+  z-index: 1;
+  width: var(--img);
+  height: var(--img);
+  margin: calc((var(--disc) - var(--img)) / 2) auto calc((var(--disc) - var(--img)) / 2 + 14px);
+  object-fit: contain;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.6));
+  transition: transform 0.4s ease, filter 0.3s ease, opacity 0.3s ease;
+}
+
+.insignia-card:not(.locked):hover img {
+  transform: scale(1.08) rotate(-4deg);
 }
 
 .insignia-card h4 {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 4px 0 0;
-    color: #333;
+  margin: 0 0 12px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--silver);
 }
 
 .insignia-card p {
-    font-size: 13px;
-    color: #666;
-    line-height: 1.4;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--text-dim);
 }
 
+/* progresso da próxima insígnia */
+.progress-inline {
+  margin: 0 0 10px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(210, 112, 63, 0.2);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #f0a77f;
+}
+
+/* estado: desbloqueada */
 .insignia-card .unlocked {
-    margin-top: auto;
-    font-size: 12px;
-    font-weight: 600;
-    color: #2e7d32;
-    background: rgba(46, 125, 50, 0.1);
-    padding: 6px 10px;
-    border-radius: 20px;
+  margin-top: auto;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(47, 117, 102, 0.28);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #7fd1bb;
 }
 
+/* ---- bloqueada: moeda apagada, imagem em cinza ---- */
 .insignia-card.locked {
-    opacity: 0.65;
-    filter: grayscale(100%);
+  opacity: 1;
+  filter: none;
+}
+
+.insignia-card.locked::before {
+  background:
+    radial-gradient(circle closest-side, #2a2622 0%, var(--coal) 85.9%, transparent 86.5%),
+    repeating-conic-gradient(#3a3631 0 3deg, #26221e 3deg 6deg);
+  box-shadow: none;
 }
 
 .insignia-card.locked img {
-    filter: grayscale(100%);
+  opacity: 0.4;
+  filter: grayscale(100%);
+}
+
+.insignia-card.locked h4 {
+  color: var(--text-dim);
 }
 
 .insignia-card.locked .locked-text {
-    margin-top: auto;
-    font-size: 12px;
-    font-weight: 600;
-    color: #777;
-    background: rgba(0, 0, 0, 0.08);
-    padding: 6px 10px;
-    border-radius: 20px;
+  margin-top: auto;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dim);
 }
 
-.insignia-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    background: linear-gradient(120deg,
-            transparent,
-            rgba(255, 215, 0, 0.15),
-            transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+/* ================= ANIMAÇÕES ================= */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
-.insignia-card:hover::before {
-    opacity: 1;
+@keyframes ringSpin {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to   { transform: translateX(-50%) rotate(360deg); }
 }
 
+/* ================= CELULAR ================= */
 @media (max-width: 768px) {
-    .album-value {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 14px;
-    }
+  .half-modal-content {
+    width: 94%;
+    height: 86%;
+    padding: 24px 16px;
+    border-radius: 26px;
+  }
 
-    .insignia-card img {
-        width: 90px;
-    }
+  .collection-title {
+    padding-right: 46px;
+  }
 
-    .insignia-card h4 {
-        font-size: 14px;
-    }
+  .insignia-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
 
-    .insignia-card p {
-        font-size: 12px;
-    }
+  .insignia-card {
+    --disc: 124px;
+    --img: 92px;
+    padding: 20px 12px 16px;
+  }
+
+  .insignia-card::before {
+    top: 20px;
+  }
+
+  .insignia-card h4 {
+    font-size: 0.9rem;
+  }
+
+  .insignia-card p {
+    font-size: 0.78rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .half-modal-content {
+    animation: none;
+  }
+
+  .insignia-card::before {
+    animation: none;
+  }
+
+  .insignia-card,
+  .insignia-card img {
+    transition-duration: 0.01ms;
+  }
 }

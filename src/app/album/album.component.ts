@@ -425,88 +425,366 @@ export class AlbumComponent implements OnInit {
   }
 
   gerarPDF(): void {
-    const content: any[] = [];
+    // ---------- cores ----------
+    const INK = '#15120f';
+    const COPPER = '#d2703f';
+    const PAPER = '#f7f5f0';
+    const LINE = '#e2ded6';
+    const MUTED = '#7b766d';
+    const CONTENT_W = 555; // A4 (595) menos as margens 20 + 20
 
-    content.push({
-      columns: [
-        { image: logoBase64, width: 80 },
-        {
-          stack: [
-            { text: 'Álbum Numismático', fontSize: 18, bold: true },
-            { text: 'Organize, catalogue e explore o fascinante mundo das moedas.', fontSize: 10 },
-            { text: 'www.albumnumismatico.com.br', fontSize: 10 }
-          ],
-          margin: [10, 0, 0, 0]
-        }
-      ],
-      margin: [0, 0, 0, 20]
-    });
+    const typeLabels: { [key: string]: string } = {
+      all: 'Tudo',
+      coins: 'Moedas',
+      banknotes: 'Cédulas',
+      repeated: 'Repetidas'
+    };
+    const typeLabel = typeLabels[this.selectedPDFType] ?? 'Coleção';
+    const countryLabel =
+      this.selectedPDFCountry && this.selectedPDFCountry !== 'all'
+        ? this.selectedPDFCountry
+        : 'Todos os países';
 
-    let itemsToPrint: any[] = this.albumCoins;
+    // ---------- 1) filtra os itens ----------
+    // normaliza o país (itens sem país viram "Desconhecido")
+    let itemsToPrint: any[] = (this.albumCoins || []).map((i: any) => ({
+      ...i,
+      issuerName: i.issuer || 'Desconhecido'
+    }));
 
     if (this.selectedPDFType === 'coins') {
       itemsToPrint = itemsToPrint.filter(i => i.category === 'coin');
     } else if (this.selectedPDFType === 'banknotes') {
       itemsToPrint = itemsToPrint.filter(i => i.category === 'banknote');
     } else if (this.selectedPDFType === 'repeated') {
-      itemsToPrint = itemsToPrint.filter(i => i.quantity > 1)
-        .map(i => ({ ...i, quantity: i.quantity - 1 }));
+      // repetida = o que passa de 1 unidade (desconta 1 do total e de cada ano)
+      itemsToPrint = itemsToPrint
+        .map(i => {
+          if (i.years && i.years.length) {
+            const years = i.years
+              .filter((y: any) => Number(y.quantity) > 1)
+              .map((y: any) => ({ ...y, quantity: Number(y.quantity) - 1 }));
+            if (!years.length) return null;
+            const total = years.reduce((s: number, y: any) => s + Number(y.quantity), 0);
+            return { ...i, years, quantity: total };
+          }
+          return Number(i.quantity) > 1 ? { ...i, quantity: Number(i.quantity) - 1 } : null;
+        })
+        .filter((i: any) => i !== null);
     }
 
     if (this.selectedPDFCountry && this.selectedPDFCountry !== 'all') {
-      itemsToPrint = itemsToPrint.filter(i => i.issuer === this.selectedPDFCountry);
+      itemsToPrint = itemsToPrint.filter(i => i.issuerName === this.selectedPDFCountry);
     }
 
-    const addSection = (title: string, items: any[]) => {
-      if (!items.length) return;
+    if (!itemsToPrint.length) {
+      alert('Nenhum item encontrado para os filtros escolhidos.');
+      return;
+    }
 
-      content.push({ text: title, fontSize: 16, bold: true, color: '#444', margin: [0, 5, 0, 10] });
+    // ---------- 2) funções de apoio ----------
+    interface Row { year: string; quantity: number; condition: string; }
 
-      items.forEach(item => {
-        content.push({ text: item.title, bold: true, fontSize: 14, margin: [0, 2, 0, 5] });
-
-        const tableBody = [['Ano', 'Quantidade', 'Condição']];
-        const years = item.years && item.years.length
+    // linhas de ano de um item (ordenadas por ano)
+    const rowsOf = (item: any): Row[] => {
+      const list: any[] =
+        item.years && item.years.length
           ? item.years
-          : [{ year: item.year ?? '-', quantity: item.quantity ?? 1, condition: item.condition ?? '-' }];
+          : [{ year: item.year, quantity: item.quantity ?? 1, condition: item.condition }];
 
-        years.forEach((y: { year: number | string; quantity: number | string; condition: string | null }) => {
-          tableBody.push([
-            y.year?.toString() ?? '-',
-            y.quantity?.toString() ?? '0',
-            y.condition || '-'
+      return list
+        .map((y: any) => ({
+          year: y.year != null && y.year !== '' ? String(y.year) : '-',
+          quantity: Number(y.quantity ?? 0) || 0,
+          condition: y.condition || '-'
+        }))
+        .sort((a: Row, b: Row) => (Number(a.year) || 0) - (Number(b.year) || 0));
+    };
+
+    const piecesOf = (item: any): number =>
+      rowsOf(item).reduce((s, r) => s + r.quantity, 0);
+
+    const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
+
+    // tabela de uma seção (Item | Ano · Qtd · Condição)
+    const buildTable = (list: any[]) => {
+      const body: any[] = [
+        [
+          { text: 'Item', style: 'th' },
+          { text: 'Anos, quantidade e condição', style: 'th' }
+        ]
+      ];
+
+      list.forEach(item => {
+        const rows = rowsOf(item);
+        const pieces = rows.reduce((s, r) => s + r.quantity, 0);
+
+        const inner: any[] = [
+          [
+            { text: 'ANO', style: 'mini' },
+            { text: 'QTD', style: 'mini', alignment: 'center' },
+            { text: 'CONDIÇÃO', style: 'mini', alignment: 'center' }
+          ]
+        ];
+
+        rows.forEach(r => {
+          inner.push([
+            { text: r.year, fontSize: 9.5, bold: true },
+            {
+              text: String(r.quantity),
+              fontSize: 9.5,
+              alignment: 'center',
+              bold: r.quantity > 1,
+              color: r.quantity > 1 ? COPPER : INK
+            },
+            {
+              text: r.condition,
+              fontSize: 9.5,
+              alignment: 'center',
+              color: r.condition === '-' ? MUTED : INK
+            }
           ]);
         });
 
-        content.push({
-          table: { headerRows: 1, widths: ['*', 'auto', 'auto'], body: tableBody },
-          layout: { fillColor: (rowIndex: number) => rowIndex === 0 ? '#EFBF04' : null },
-          margin: [0, 0, 0, 15]
-        });
+        body.push([
+          {
+            stack: [
+              { text: item.title || '—', style: 'itemTitle' },
+              {
+                text: `${pieces} ${plural(pieces, 'peça', 'peças')}`,
+                fontSize: 8,
+                color: MUTED,
+                margin: [0, 2, 0, 0]
+              }
+            ]
+          },
+          {
+            table: { widths: ['*', 50, 90], body: inner },
+            layout: {
+              hLineWidth: (i: number, node: any) =>
+                i === 0 || i === node.table.body.length ? 0 : 0.5,
+              vLineWidth: () => 0,
+              hLineColor: () => LINE,
+              paddingLeft: () => 4,
+              paddingRight: () => 4,
+              paddingTop: () => 3,
+              paddingBottom: () => 3
+            }
+          }
+        ]);
       });
+
+      return {
+        table: {
+          headerRows: 1,
+          dontBreakRows: true,
+          keepWithHeaderRows: 1,
+          widths: [170, '*'],
+          body
+        },
+        layout: {
+          fillColor: (rowIndex: number) =>
+            rowIndex === 0 ? INK : rowIndex % 2 === 0 ? PAPER : null,
+          hLineWidth: (i: number) => (i <= 1 ? 0 : 0.5),
+          vLineWidth: () => 0,
+          hLineColor: () => LINE,
+          paddingLeft: () => 10,
+          paddingRight: () => 10,
+          paddingTop: () => 8,
+          paddingBottom: () => 8
+        },
+        margin: [0, 0, 0, 14]
+      };
     };
 
-    const countries = Array.from(new Set(itemsToPrint.map(i => i.issuer || 'Desconhecido')));
+    // rótulo de seção (Moedas, Cédulas...)
+    const sectionLabel = (text: string) => ({
+      text: text.toUpperCase(),
+      fontSize: 8.5,
+      bold: true,
+      color: COPPER,
+      characterSpacing: 1,
+      margin: [0, 6, 0, 6],
+      headlineLevel: 2
+    });
+
+    // ---------- 3) resumo ----------
+    const countries = Array.from(new Set(itemsToPrint.map(i => i.issuerName as string)));
+    const totalItems = itemsToPrint.length;
+    const totalPieces = itemsToPrint.reduce((s, i) => s + piecesOf(i), 0);
+    const today = new Date().toLocaleDateString('pt-BR');
+
+    const stat = (label: string, value: string, color: string = INK) => ({
+      stack: [
+        { text: label, style: 'statLabel' },
+        { text: value, style: 'statValue', color }
+      ]
+    });
+
+    // ---------- 4) conteúdo ----------
+    const content: any[] = [
+      { text: 'Minha coleção', fontSize: 28, bold: true, color: INK },
+      {
+        text: typeLabel,
+        fontSize: 12,
+        bold: true,
+        color: COPPER,
+        margin: [0, 2, 0, 2]
+      },
+      {
+        text: `${countryLabel} · gerado em ${today}`,
+        fontSize: 8.5,
+        color: MUTED,
+        margin: [0, 0, 0, 14]
+      },
+      {
+        table: {
+          widths: ['*', '*', '*'],
+          body: [[
+            stat('ITENS', String(totalItems)),
+            stat('PEÇAS', String(totalPieces), COPPER),
+            stat('PAÍSES', String(countries.length))
+          ]]
+        },
+        layout: {
+          hLineWidth: () => 0,
+          vLineWidth: () => 0,
+          fillColor: () => PAPER,
+          paddingLeft: () => 14,
+          paddingRight: () => 8,
+          paddingTop: () => 10,
+          paddingBottom: () => 10
+        },
+        margin: [0, 0, 0, 6]
+      }
+    ];
 
     countries.forEach(country => {
-      const itemsByCountry = itemsToPrint.filter(i => i.issuer === country);
+      const itemsByCountry = itemsToPrint.filter(i => i.issuerName === country);
+      const countryPieces = itemsByCountry.reduce((s, i) => s + piecesOf(i), 0);
 
-      content.push({ text: country, fontSize: 20, bold: true, color: '#EFBF04', margin: [0, 10, 0, 10] });
+      // título do país + contagem
+      content.push({
+        headlineLevel: 1,
+        columns: [
+          { width: '*', text: country, fontSize: 20, bold: true, color: INK },
+          {
+            width: 'auto',
+            text: `${itemsByCountry.length} ${plural(itemsByCountry.length, 'item', 'itens')} · ${countryPieces} ${plural(countryPieces, 'peça', 'peças')}`,
+            fontSize: 9,
+            color: MUTED,
+            margin: [0, 10, 0, 0]
+          }
+        ],
+        margin: [0, 16, 0, 4]
+      });
+      content.push({
+        canvas: [{ type: 'rect', x: 0, y: 0, w: 40, h: 3, color: COPPER }],
+        margin: [0, 0, 0, 8]
+      });
 
       if (this.selectedPDFType === 'all') {
         const coins = itemsByCountry.filter(i => i.category === 'coin');
         const banknotes = itemsByCountry.filter(i => i.category === 'banknote');
 
-        addSection('Minhas Moedas', coins);
-        addSection('Minhas Cédulas', banknotes);
+        if (coins.length) {
+          content.push(sectionLabel('Minhas moedas'), buildTable(coins));
+        }
+        if (banknotes.length) {
+          content.push(sectionLabel('Minhas cédulas'), buildTable(banknotes));
+        }
       } else {
-        const titulo = this.selectedPDFType === 'coins' ? 'Moedas' :
-          this.selectedPDFType === 'banknotes' ? 'Cédulas' : 'Itens Repetidos';
-        addSection(titulo, itemsByCountry);
+        const titulo =
+          this.selectedPDFType === 'coins' ? 'Moedas'
+            : this.selectedPDFType === 'banknotes' ? 'Cédulas'
+              : 'Itens repetidos';
+        content.push(sectionLabel(titulo), buildTable(itemsByCountry));
       }
     });
 
-    pdfMake.createPdf({ content }).open();
+    // ---------- 5) documento ----------
+    const docDefinition: any = {
+      pageSize: 'A4',
+      pageMargins: [20, 70, 20, 40],
+
+      info: {
+        title: `Coleção - ${typeLabel} - ${countryLabel}`,
+        author: 'Álbum Numismático'
+      },
+
+      defaultStyle: { font: 'Roboto', color: INK },
+
+      header: () => ({
+        margin: [20, 18, 20, 0],
+        stack: [
+          {
+            columns: [
+              { image: logoBase64, width: 26 },
+              {
+                width: '*',
+                margin: [8, 1, 0, 0],
+                stack: [
+                  { text: 'Álbum Numismático', fontSize: 13, bold: true, color: INK },
+                  {
+                    text: 'Organize, catalogue e explore o fascinante mundo das moedas.',
+                    fontSize: 7.5,
+                    color: MUTED
+                  }
+                ]
+              },
+              {
+                width: 'auto',
+                margin: [0, 8, 0, 0],
+                text: 'www.albumnumismatico.com.br',
+                fontSize: 8,
+                color: COPPER
+              }
+            ]
+          },
+          {
+            margin: [0, 8, 0, 0],
+            canvas: [{ type: 'rect', x: 0, y: 0, w: CONTENT_W, h: 2, color: COPPER }]
+          }
+        ]
+      }),
+
+      footer: (currentPage: number, pageCount: number) => ({
+        margin: [20, 12, 20, 0],
+        columns: [
+          { text: `Gerado em ${today}`, fontSize: 8, color: MUTED },
+          {
+            text: `Página ${currentPage} de ${pageCount}`,
+            fontSize: 8,
+            color: MUTED,
+            alignment: 'right'
+          }
+        ]
+      }),
+
+      // evita título de país/seção sozinho no fim da página
+      pageBreakBefore: (currentNode: any, followingNodesOnPage: any[]) =>
+        currentNode.headlineLevel != null && followingNodesOnPage.length === 0,
+
+      content,
+
+      styles: {
+        th: { bold: true, color: '#ffffff', fontSize: 9 },
+        itemTitle: { fontSize: 10.5, bold: true },
+        mini: { fontSize: 7, color: MUTED, characterSpacing: 0.5 },
+        statLabel: { fontSize: 7, color: MUTED, characterSpacing: 0.6 },
+        statValue: { fontSize: 22, bold: true, margin: [0, 2, 0, 0] }
+      }
+    };
+
+    const fileName = `colecao-${countryLabel}-${typeLabel}`
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, '-');
+
+    // .download() é mais confiável que .open() (pop-up pode ser bloqueado)
+    pdfMake.createPdf(docDefinition).download(`${fileName}.pdf`);
+    // Para abrir numa nova aba em vez de baixar: pdfMake.createPdf(docDefinition).open();
   }
 
 
