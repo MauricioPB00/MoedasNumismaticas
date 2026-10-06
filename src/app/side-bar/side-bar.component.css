@@ -1,17 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap");
 
-/* =========================================================
-   Barra de navegação do app — mesmo estilo das páginas
-   - Barra escura com uma faixa de BORDA SERRILHADA de moeda
-     (embaixo no desktop, em cima no celular)
-   - Marca: uma moedinha à esquerda (feita por CSS)
-   - Itens em pílula; ícones em cobre
-   - Botão Home do celular = moeda com aro serrilhado
-   - Toggle claro/escuro redesenhado
-   Mantém a altura de 50px no desktop (65px no celular),
-   então o espaço que as páginas reservam não muda.
-   Não precisa mexer no HTML: mesmas classes e ids.
-   ========================================================= */
 
 :host {
   --coal: #15120f;

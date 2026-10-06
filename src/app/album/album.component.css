@@ -1,17 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;600&display=swap");
 
-/* =========================================================
-   Coleção — v2 (direção nova)
-   Página CLARA, para as imagens das moedas (fundo branco) ficarem
-   naturais, sem "caixas" brancas em fundo escuro.
-   - Título gigante "Coleção" no topo
-   - Filtros editoriais (campos só com linha embaixo)
-   - Cartões brancos com UM canto grande e arredondado, onde
-     mora o botão de editar
-   - Modal de PDF continua escuro
-   Não precisa mexer no HTML: mesmas classes.
-   ========================================================= */
-
 :host {
   /* altura do header do app que fica acima desta página */
   --app-header: 70px;

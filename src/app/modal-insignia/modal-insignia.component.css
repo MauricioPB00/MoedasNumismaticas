@@ -1,15 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;600&display=swap");
 
-/* =========================================================
-   Modal de insígnias — mesmo estilo dos outros modais
-   - Escuro, com brilho de cobre no canto
-   - Cada insígnia fica sobre uma MOEDA serrilhada:
-     desbloqueada = aro de cobre com brilho (e gira no hover);
-     bloqueada = aro apagado, imagem em cinza
-   - A próxima insígnia (a que mostra o progresso) ganha
-     contorno de cobre
-   Não precisa mexer no HTML: mesmas classes.
-   ========================================================= */
 
 :host {
   --coal: #15120f;

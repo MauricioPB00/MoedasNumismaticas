@@ -1,14 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;600&display=swap");
 
-/* =========================================================
-   Modal "Gerenciar Moeda" (app-modal-coin) + aviso de conquista
-   Mesmo estilo dos outros modais: escuro, abas em pílula,
-   linhas da tabela como pílulas, botões de cobre.
-   O aviso de conquista vira uma pílula com a insígnia
-   "estourando" para fora, sobre uma moeda serrilhada.
-   Não precisa mexer no HTML: mesmas classes.
-   ========================================================= */
-
 :host {
   --coal: #15120f;
   --coal-2: #1f1b17;

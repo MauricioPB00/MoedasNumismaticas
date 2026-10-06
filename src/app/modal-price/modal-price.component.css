@@ -1,12 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;600&display=swap");
 
-/* =========================================================
-   Modal "Valor do Álbum" — mesmo estilo dos outros modais
-   - O TOTAL vira o destaque: bloco de cobre com número gigante
-   - Moedas, Cédulas e países em linhas limpas
-   - O gráfico fica num painel com anéis finos no canto
-   Não precisa mexer no HTML: mesmas classes.
-   ========================================================= */
+
 
 :host {
   --coal: #15120f;

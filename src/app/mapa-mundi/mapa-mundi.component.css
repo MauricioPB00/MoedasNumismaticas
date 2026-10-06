@@ -1,12 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;600&display=swap");
 
-/* =========================================================
-   Mapa de países — v2 (mais ousada)
-   Página escura. O SELECT de países vira o título gigante.
-   O mapa fica num painel claro em formato de "U" e a lista
-   de países é um cartão de cobre que invade o mapa.
-   Não precisa mexer no HTML: mesmas classes.
-   ========================================================= */
 
 :host {
   display: block;

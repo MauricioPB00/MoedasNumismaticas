@@ -1,12 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;600&display=swap");
 
-/* =========================================================
-   Catálogo — mesmo estilo da Coleção v2
-   Página clara, título gigante, filtros só com linha embaixo.
-   Cada peça é um cartão horizontal: imagens numa "moldura"
-   (como o passe-partout de um quadro) e ações numa cápsula escura.
-   Não precisa mexer no HTML: mesmas classes.
-   ========================================================= */
+
 
 :host {
   /* altura do header do app que fica acima desta página */

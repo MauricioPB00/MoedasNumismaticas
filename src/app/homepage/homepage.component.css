@@ -246,17 +246,6 @@ a {
 }
 
 /* ================= CARROSSEL (vitrine com spot de luz) ================= */
-/* =========================================================
-   CARROSSEL — cards em formato de "U" + moeda recortada em círculo
-   Substitui todo o bloco "CARROSSEL" do CSS atual
-   (do comentário CARROSSEL até antes do comentário DESTAQUES).
-   Usa as variáveis do :host (--coal, --coal-2, --copper, --silver...).
-   Sem nth-child: o loop infinito não "pula".
-
-   Ajustes rápidos (no .coin-card):
-   --img   = tamanho da imagem (maior = mais zoom, come mais do branco)
-   --crop  = raio do recorte redondo (menor = corta mais da borda)
-   ========================================================= */
 
 .home-carousel {
   padding: 0 0 120px;
@@ -271,9 +260,7 @@ a {
   mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
 }
 
-/* o movimento (em U) é feito pelo carrossel-u.ts:
-   ele move a trilha e curva cada card conforme a posição na tela.
-   padding de cima = espaço para as pontas do U subirem */
+
 .carousel-track {
   position: relative;
   display: flex;

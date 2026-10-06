@@ -132,40 +132,6 @@ export class HomeComponent implements OnInit {
       .subscribe({
 
         next: (response) => {
-
-          console.log(
-            '========== PAGINAÇÃO =========='
-          );
-
-          console.log(
-            'Página:',
-            response.page
-          );
-
-          console.log(
-            'Limite:',
-            response.limit
-          );
-
-          console.log(
-            'Total:',
-            response.total
-          );
-
-          console.log(
-            'Total páginas:',
-            response.totalPages
-          );
-
-          console.log(
-            'Recebidos:',
-            response.data.length
-          );
-
-          console.log(
-            '================================'
-          );
-
           this.currentPage =
             response.page;
 
