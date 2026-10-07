@@ -40,6 +40,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './AuthService/jwt.interceptor';
 import { PagamentoComponent } from './pagamento/pagamento.component';
 import { PlanosComponent } from './planos/planos.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { PlanosComponent } from './planos/planos.component';
     ModalInsigniaComponent,
     PagamentoComponent,
     PlanosComponent,
+    UserComponent,
   ],
   imports: [
     BrowserModule,

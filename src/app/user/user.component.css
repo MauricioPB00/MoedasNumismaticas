@@ -1,0 +1,301 @@
+.users-page {
+  min-height: 100vh;
+  padding: 40px;
+  background: #15120f;
+  color: #f4eee7;
+}
+
+/* HEADER */
+
+.page-header {
+  max-width: 1200px;
+  margin: 0 auto 35px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+
+  color: #b97845;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+
+.page-header p {
+  margin: 8px 0 0;
+
+  color: #9d938b;
+  font-size: 15px;
+}
+
+.users-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 12px 18px;
+
+  border: 1px solid rgba(185, 120, 69, 0.25);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.users-count strong {
+  font-size: 22px;
+  color: #c88952;
+}
+
+.users-count span {
+  color: #9d938b;
+  font-size: 13px;
+}
+
+/* GRID */
+
+.users-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 22px;
+}
+
+/* CARD */
+
+.user-card {
+  position: relative;
+  overflow: hidden;
+
+  min-height: 270px;
+
+  padding: 28px 24px 22px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.015)
+    );
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-5px);
+
+  border-color: rgba(185, 120, 69, 0.55);
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(185, 120, 69, 0.08);
+}
+
+/* DECORAÇÃO */
+
+.card-background {
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  top: -100px;
+  right: -80px;
+
+  border-radius: 50%;
+
+  background: rgba(185, 120, 69, 0.08);
+
+  pointer-events: none;
+}
+
+/* AVATAR */
+
+.user-avatar {
+  position: relative;
+
+  width: 90px;
+  height: 90px;
+
+  margin-bottom: 20px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  border: 3px solid rgba(185, 120, 69, 0.45);
+
+  background: #211c18;
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.35);
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 32px;
+  font-weight: 700;
+
+  color: #d29a68;
+}
+
+/* INFO */
+
+.user-info {
+  position: relative;
+}
+
+.user-info h2 {
+  margin: 0;
+
+  max-width: 100%;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: 20px;
+  font-weight: 600;
+
+  color: #f5eee8;
+}
+
+.profile-label {
+  display: inline-block;
+
+  margin-top: 7px;
+
+  font-size: 12px;
+
+  color: #9d938b;
+}
+
+/* LINK */
+
+.view-profile {
+  position: absolute;
+
+  bottom: 20px;
+  left: 24px;
+  right: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-top: 15px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #b97845;
+}
+
+.view-profile span {
+  font-size: 18px;
+
+  transition: transform 0.2s ease;
+}
+
+.user-card:hover .view-profile span {
+  transform: translateX(5px);
+}
+
+/* EMPTY */
+
+.empty-state {
+  max-width: 500px;
+
+  margin: 80px auto;
+
+  text-align: center;
+
+  color: #9d938b;
+}
+
+.empty-icon {
+  margin-bottom: 15px;
+
+  font-size: 42px;
+}
+
+.empty-state h2 {
+  margin: 0 0 8px;
+
+  color: #eee6df;
+  font-size: 21px;
+}
+
+.empty-state p {
+  margin: 0;
+
+  font-size: 14px;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+  .users-page {
+    padding: 25px 16px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+  }
+
+  .users-count {
+    align-self: stretch;
+  }
+
+  .users-grid {
+    grid-template-columns: 1fr;
+  }
+
+}

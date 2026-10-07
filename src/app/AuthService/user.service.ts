@@ -21,13 +21,30 @@ export class UserService {
       })
     };
 
-    return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/user`, httpOptions)
+    return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/users`, httpOptions)
       .pipe(
         retry(0),
         catchError(this.handleError)
       );
   }
 
+  getUsers(): Observable<any> {
+    const token = localStorage.getItem('jwt'); // token do localStorage
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      })
+    };
+
+    return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/users`, httpOptions)
+      .pipe(
+        retry(0),
+        catchError(this.handleError)
+      );
+  }
+ 
   getUserInfo(): Observable<any> {
     const token = localStorage.getItem('jwt');
 

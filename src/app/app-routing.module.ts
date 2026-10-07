@@ -18,6 +18,7 @@ import { CatalogoComponent } from './catalogo/catalogo.component';
 import { BannerComponent } from './banner/banner.component';
 import { PagamentoComponent } from './pagamento/pagamento.component';
 import { PlanosComponent } from './planos/planos.component';
+import { UserComponent } from './user/user.component';
 
 enum Permi { admin = 2, operador = 1 }
 
@@ -38,6 +39,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard, AssinaturaGuard], data: { roles: [Permi.admin] } },
   { path: 'pagamento', component: PagamentoComponent, canActivate: [AuthGuard, AssinaturaGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: 'planos', component: PlanosComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
+  { path: 'user', component: UserComponent, canActivate: [AuthGuard], data: { roles: [Permi.operador, Permi.admin] } },
   { path: '**', component: HomepageComponent, canActivate: [AuthGuard] }, // novas rotas tem q ser antes dessa coringa 
 ];
 

@@ -1,0 +1,61 @@
+<div class="users-page">
+
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">COMUNIDADE</span>
+      <h1>Colecionadores</h1>
+      <p>Explore os perfis dos colecionadores do Álbum Numismático.</p>
+    </div>
+
+    <div class="users-count">
+      <strong>{{ users.length }}</strong>
+      <span>colecionadores</span>
+    </div>
+  </div>
+
+  <div class="users-grid">
+
+    <div class="user-card" *ngFor="let user of users" (click)="abrirPerfil(user.id)">
+
+      <div class="card-background"></div>
+
+      <div class="user-avatar">
+
+        <img *ngIf="user.photo" [src]="getUserPhotoPath(user.photo)" [alt]="user.name" />
+
+        <div class="avatar-placeholder" *ngIf="!user.photo">
+          {{ user.name?.charAt(0)?.toUpperCase() }}
+        </div>
+
+      </div>
+
+      <div class="user-info">
+
+        <h2>{{ user.name }}</h2>
+
+        <span class="profile-label">
+          Colecionador
+        </span>
+
+      </div>
+
+      <div class="view-profile">
+        Ver perfil
+        <span>→</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="empty-state" *ngIf="!users.length">
+    <div class="empty-icon">👥</div>
+
+    <h2>Nenhum colecionador encontrado</h2>
+
+    <p>
+      Ainda não existem colecionadores para exibir.
+    </p>
+  </div>
+
+</div>
