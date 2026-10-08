@@ -21,7 +21,7 @@ export class UserService {
       })
     };
 
-    return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/users`, httpOptions)
+    return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/user`, httpOptions)
       .pipe(
         retry(0),
         catchError(this.handleError)
