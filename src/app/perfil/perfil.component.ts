@@ -13,6 +13,10 @@ import {
 } from '../AuthService/perfil.service';
 
 import {
+  CoinsService
+} from '../AuthService/coins.service'; // AJUSTE o caminho para o seu CoinsService
+
+import {
   environment
 } from 'src/environments/environment';
 
@@ -33,10 +37,17 @@ export class PerfilComponent implements OnInit {
   sortBy: 'quantity' | 'title' | 'year' = 'quantity';
   sortDir: 'asc' | 'desc' = 'desc'; // por padrão: as com mais unidades primeiro
 
+  // ---------- comparação com o MEU álbum ----------
+  ownedKeys = new Set<string>();
+  albumLoaded = false;   // só mostra as marcações depois que o meu álbum carregou
+  onlyMissing = false;   // filtro "Que não tenho"
+  issuerFilter = '';     // filtro por país/emissor ('' = todos)
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private perfilService: PerfilService
+    private perfilService: PerfilService,
+    private coinsService: CoinsService
   ) { }
 
   ngOnInit(): void {
@@ -49,6 +60,7 @@ export class PerfilComponent implements OnInit {
       return;
     }
     this.carregarPerfil(id);
+    this.carregarMeuAlbum();
   }
 
   carregarPerfil(id: number): void {
@@ -59,6 +71,8 @@ export class PerfilComponent implements OnInit {
     this.typeFilter = 'all';
     this.sortBy = 'quantity';
     this.sortDir = 'desc';
+    this.onlyMissing = false;
+    this.issuerFilter = '';
 
     this.perfilService
       .getPerfil(id)
@@ -79,6 +93,56 @@ export class PerfilComponent implements OnInit {
         }
       });
   }
+
+  // =========================================================
+  // MEU ÁLBUM (para saber o que eu tenho / não tenho)
+  // =========================================================
+
+  /** carrega as peças que EU tenho para comparar com as repetidas do perfil */
+  carregarMeuAlbum(): void {
+    this.coinsService.getAlbumByUser().subscribe({
+      next: (res: any[]) => {
+        this.ownedKeys = new Set((res || []).map(i => this.getItemKey(i)));
+        this.albumLoaded = true;
+
+        // DEBUG: descomente para conferir se as chaves batem
+        // console.log('MINHAS CHAVES:', [...this.ownedKeys]);
+        // console.log('EXEMPLO REPETIDA:', this.repeatedAll[0], this.getItemKey(this.repeatedAll[0]));
+      },
+      error: (err) => {
+        console.error('Erro ao carregar meu álbum:', err);
+        this.albumLoaded = false; // sem álbum, não marca nada (evita falso "não tenho")
+      }
+    });
+  }
+
+  /**
+   * Chave única da peça. AJUSTE os campos conforme o retorno da sua API:
+   * o item do álbum e o item de "repeated" precisam gerar a MESMA chave.
+   * Se o álbum não tiver "type", remova o type da chave.
+   */
+  private getItemKey(item: any): string {
+    const id = item?.coin_id ?? item?.coinId ?? item?.id;
+    return `${item?.type ?? ''}:${id}`;
+  }
+
+  /** true quando EU não tenho essa peça */
+  isMissing(item: any): boolean {
+    return this.albumLoaded && !this.ownedKeys.has(this.getItemKey(item));
+  }
+
+  /** quantas repetidas do perfil eu não tenho */
+  get missingCount(): number {
+    return this.repeatedAll.filter(i => this.isMissing(i)).length;
+  }
+
+  toggleOnlyMissing(): void {
+    this.onlyMissing = !this.onlyMissing;
+  }
+
+  // =========================================================
+  // HELPERS DO PERFIL
+  // =========================================================
 
   getUserPhotoPath(photo: string | null): string {
     if (!photo) {
@@ -124,7 +188,7 @@ export class PerfilComponent implements OnInit {
   }
 
   // =========================================================
-  // FILTRO (Todas / Moedas / Cédulas) E ORDENAÇÃO DAS REPETIDAS
+  // FILTRO (Todas / Moedas / Cédulas / Que não tenho) E ORDENAÇÃO
   // =========================================================
 
   /** todas as repetidas do perfil */
@@ -140,6 +204,32 @@ export class PerfilComponent implements OnInit {
     return this.repeatedAll.filter(i => i.type === 'banknote').length;
   }
 
+  /** lista de países/emissores presentes nas repetidas (sem repetir, em ordem alfabética) */
+  get issuers(): string[] {
+    const set = new Set<string>(
+      this.repeatedAll
+        .map(i => (i.issuer || '').trim())
+        .filter(Boolean)
+    );
+    return [...set].sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
+  }
+
+  /** quantas repetidas existem de um país (mostrado no select) */
+  issuerCount(issuer: string): number {
+    return this.repeatedAll.filter(i => (i.issuer || '').trim() === issuer).length;
+  }
+
+  setIssuerFilter(issuer: string): void {
+    this.issuerFilter = issuer;
+  }
+
+  /** limpa todos os filtros (usado no botão "Ver todas") */
+  clearFilters(): void {
+    this.typeFilter = 'all';
+    this.onlyMissing = false;
+    this.issuerFilter = '';
+  }
+
   /** só mostra a opção "Ano" se alguma peça tiver ano */
   get hasYears(): boolean {
     return this.repeatedAll.some(i => this.getItemYear(i) !== null);
@@ -148,7 +238,9 @@ export class PerfilComponent implements OnInit {
   /** repetidas já filtradas e ordenadas (é isso que o HTML lista) */
   get filteredRepeated(): any[] {
     const list = this.repeatedAll.filter(
-      i => this.typeFilter === 'all' || i.type === this.typeFilter
+      i => (this.typeFilter === 'all' || i.type === this.typeFilter)
+        && (!this.onlyMissing || this.isMissing(i))
+        && (!this.issuerFilter || (i.issuer || '').trim() === this.issuerFilter)
     );
 
     const dir = this.sortDir === 'asc' ? 1 : -1;

@@ -175,9 +175,27 @@
                                 (click)="setTypeFilter('banknote')">
                                 Cédulas <span>{{ banknotesCount }}</span>
                             </button>
+
+                            <!-- só aparece depois que o meu álbum carregou -->
+                            <button type="button" class="chip chip-missing" *ngIf="albumLoaded"
+                                [class.active]="onlyMissing" (click)="toggleOnlyMissing()">
+                                Que não tenho <span>{{ missingCount }}</span>
+                            </button>
                         </div>
 
                         <div class="sort-controls">
+                            <!-- filtro por país / emissor -->
+                            <label class="sort-select" *ngIf="issuers.length > 1">
+                                <span>País</span>
+                                <select (change)="setIssuerFilter($any($event.target).value)">
+                                    <option value="" [selected]="issuerFilter === ''">Todos os países</option>
+                                    <option *ngFor="let issuer of issuers" [value]="issuer"
+                                        [selected]="issuerFilter === issuer">
+                                        {{ issuer }} ({{ issuerCount(issuer) }})
+                                    </option>
+                                </select>
+                            </label>
+
                             <label class="sort-select">
                                 <span>Ordenar por</span>
                                 <select (change)="setSortBy($any($event.target).value)">
@@ -196,8 +214,14 @@
                     </div>
 
                     <div class="repeated-grid" *ngIf="filteredRepeated.length; else noMatch">
-                        <div class="repeated-card" *ngFor="let item of filteredRepeated; trackBy: trackByItem">
+                        <div class="repeated-card" [class.is-missing]="isMissing(item)"
+                            *ngFor="let item of filteredRepeated; trackBy: trackByItem">
                             <div class="repeated-image">
+                                <!-- selos: o que eu não tenho / o que eu já tenho -->
+                                <span class="own-badge missing" *ngIf="isMissing(item)">Você não tem</span>
+                                <span class="own-badge owned" *ngIf="albumLoaded && !isMissing(item)">✓ Você já
+                                    tem</span>
+
                                 <img *ngIf="item.obverse" [src]="getImagePath(item.obverse)" [alt]="item.title"
                                     loading="lazy" />
                                 <!-- <img *ngIf="item.reverse" [src]="getImagePath(item.reverse)" [alt]="item.title" /> -->
@@ -229,10 +253,13 @@
                     <!-- nada encontrado para o filtro escolhido -->
                     <ng-template #noMatch>
                         <div class="repeated-empty">
-                            <p>
-                                Nenhuma {{ typeFilter === 'coin' ? 'moeda' : 'cédula' }} repetida encontrada.
+                            <p *ngIf="onlyMissing">
+                                Nenhuma repetida que você não tenha com esses filtros.
                             </p>
-                            <button type="button" class="chip" (click)="setTypeFilter('all')">
+                            <p *ngIf="!onlyMissing">
+                                Nenhuma peça repetida encontrada com esses filtros.
+                            </p>
+                            <button type="button" class="chip" (click)="clearFilters()">
                                 Ver todas
                             </button>
                         </div>
