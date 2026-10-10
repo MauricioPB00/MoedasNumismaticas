@@ -27,15 +27,15 @@ export class UserComponent {
   }
 
   getUsuario() {
-    this.loadingService.show();
+    // this.loadingService.show();
     this.userService.getUsers().pipe(take(1)).subscribe({
       next: (res) => {
         this.users = res;
-        this.loadingService.hide();
+        // this.loadingService.hide();
       },
       error: (err) => {
         this.toastr.error(err, 'Erro ao carregar usuários');
-        this.loadingService.hide();
+        // this.loadingService.hide();
       }
     });
   }
@@ -49,6 +49,8 @@ export class UserComponent {
   }
 
   abrirPerfil(userId: number): void {
-    this.router.navigate(['/perfil', userId]);
+    Promise.resolve().then(() => {
+      this.router.navigate(['/perfil', userId]);
+    });
   }
 }

@@ -1,0 +1,354 @@
+<div class="perfil-page">
+    <div class="perfil-loading" *ngIf="carregando">
+        <div class="loading-circle"></div>
+        <p>Carregando perfil...</p>
+    </div>
+
+    <div class="perfil-error" *ngIf="!carregando && erro">
+        <div class="error-icon">!</div>
+        <h2>Perfil não encontrado</h2>
+        <p>
+            Não foi possível carregar este perfil.
+        </p>
+        <button type="button" (click)="voltar()">
+            Voltar para colecionadores
+        </button>
+    </div>
+
+    <div class="perfil-content" *ngIf="!carregando && !erro && perfil">
+        <button class="back-button" type="button" (click)="voltar()">
+            <span>←</span>
+            Voltar para colecionadores
+        </button>
+        <section class="profile-header">
+            <div class="profile-cover"></div>
+            <div class="profile-header-content">
+                <div class="profile-avatar">
+                    <img [src]="getUserPhotoPath(perfil.user.photo)" [alt]="perfil.user.name" />
+                </div>
+                <div class="profile-identity">
+                    <span class="profile-eyebrow">
+                        COLECIONADOR
+                    </span>
+                    <h1>
+                        {{ perfil.user.name }}
+                    </h1>
+                    <div class="profile-meta">
+                        <span *ngIf="perfil.user.city">
+                            📍 {{ perfil.user.city }}
+                        </span>
+                        <span *ngIf="perfil.user.since">
+                            🗓 Colecionando desde
+                            {{ formatSince(perfil.user.since) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    🪙
+                </div>
+                <div class="stat-value">
+                    {{ perfil.stats.coins }}
+                </div>
+                <div class="stat-label">
+                    Moedas
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    💵
+                </div>
+                <div class="stat-value">
+                    {{ perfil.stats.banknotes }}
+                </div>
+                <div class="stat-label">
+                    Cédulas
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    📦
+                </div>
+                <div class="stat-value">
+                    {{ perfil.stats.items }}
+                </div>
+                <div class="stat-label">
+                    Peças
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    🌎
+                </div>
+                <div class="stat-value">
+                    {{ perfil.stats.countries }}
+                </div>
+                <div class="stat-label">
+                    Emissores
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    ♻️
+                </div>
+                <div class="stat-value">
+                    {{ perfil.stats.repeated }}
+                </div>
+                <div class="stat-label">
+                    Repetidas
+                </div>
+            </div>
+        </section>
+
+        <div class="profile-columns">
+            <div class="profile-main">
+                <section class="profile-section">
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-eyebrow">
+                                COLEÇÃO
+                            </span>
+                            <h2>
+                                Jornada do colecionador
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="progress-card">
+                        <div class="progress-top">
+                            <span>
+                                Peças catalogadas
+                            </span>
+                            <strong>
+                                {{ perfil.stats.items }}
+                            </strong>
+                        </div>
+                        <div class="progress-bar">
+
+                            <div class="progress-fill" [style.width.%]="getCollectionPercentage()"></div>
+                        </div>
+                        <p>
+                            Continue aumentando sua coleção e descubra
+                            novas peças pelo catálogo.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ================= PEÇAS REPETIDAS (com filtro e ordenação) ================= -->
+                <section class="profile-section" *ngIf="perfil.repeated?.length">
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-eyebrow">
+                                DUPLICADAS
+                            </span>
+                            <h2>
+                                Peças repetidas
+                            </h2>
+                        </div>
+                        <!-- mostra "filtradas / total" quando há filtro ativo -->
+                        <span class="section-count">
+                            {{ filteredRepeated.length }}<ng-container
+                                *ngIf="filteredRepeated.length !== repeatedAll.length"> / {{ repeatedAll.length
+                                }}</ng-container>
+                        </span>
+                    </div>
+
+                    <!-- filtro por tipo e ordenação -->
+                    <div class="repeated-toolbar">
+                        <div class="filter-chips" role="group" aria-label="Filtrar por tipo">
+                            <button type="button" class="chip" [class.active]="typeFilter === 'all'"
+                                (click)="setTypeFilter('all')">
+                                Todas <span>{{ repeatedAll.length }}</span>
+                            </button>
+                            <button type="button" class="chip" [class.active]="typeFilter === 'coin'"
+                                (click)="setTypeFilter('coin')">
+                                Moedas <span>{{ coinsCount }}</span>
+                            </button>
+                            <button type="button" class="chip" [class.active]="typeFilter === 'banknote'"
+                                (click)="setTypeFilter('banknote')">
+                                Cédulas <span>{{ banknotesCount }}</span>
+                            </button>
+                        </div>
+
+                        <div class="sort-controls">
+                            <label class="sort-select">
+                                <span>Ordenar por</span>
+                                <select (change)="setSortBy($any($event.target).value)">
+                                    <option value="quantity" [selected]="sortBy === 'quantity'">Quantidade</option>
+                                    <option value="title" [selected]="sortBy === 'title'">Título</option>
+                                    <option value="year" [selected]="sortBy === 'year'" *ngIf="hasYears">Ano</option>
+                                </select>
+                            </label>
+
+                            <button type="button" class="sort-dir" (click)="toggleSortDir()"
+                                [attr.aria-label]="'Ordem: ' + sortDirLabel + '. Clique para inverter'">
+                                <span aria-hidden="true">{{ sortDir === 'asc' ? '↑' : '↓' }}</span>
+                                {{ sortDirLabel }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="repeated-grid" *ngIf="filteredRepeated.length; else noMatch">
+                        <div class="repeated-card" *ngFor="let item of filteredRepeated; trackBy: trackByItem">
+                            <div class="repeated-image">
+                                <img *ngIf="item.obverse" [src]="getImagePath(item.obverse)" [alt]="item.title"
+                                    loading="lazy" />
+                                <!-- <img *ngIf="item.reverse" [src]="getImagePath(item.reverse)" [alt]="item.title" /> -->
+                                <div class="image-placeholder" *ngIf="!item.obverse">
+                                    {{ item.type === 'coin' ? '🪙' : '💵' }}
+                                </div>
+                            </div>
+
+                            <div class="repeated-info">
+                                <span class="item-type">
+                                    {{ item.type === 'coin'
+                                    ? 'MOEDA'
+                                    : 'CÉDULA'
+                                    }}
+                                </span>
+                                <h3>
+                                    {{ item.title }}
+                                </h3>
+                                <p *ngIf="item.issuer">
+                                    {{ item.issuer }}
+                                </p>
+                                <span class="quantity">
+                                    {{ item.quantity }} {{ item.quantity === 1 ? 'unidade' : 'unidades' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- nada encontrado para o filtro escolhido -->
+                    <ng-template #noMatch>
+                        <div class="repeated-empty">
+                            <p>
+                                Nenhuma {{ typeFilter === 'coin' ? 'moeda' : 'cédula' }} repetida encontrada.
+                            </p>
+                            <button type="button" class="chip" (click)="setTypeFilter('all')">
+                                Ver todas
+                            </button>
+                        </div>
+                    </ng-template>
+                </section>
+
+                <section class="profile-section empty-section" *ngIf="!perfil.repeated?.length">
+                    <div class="empty-small-icon">
+                        ♻
+                    </div>
+                    <h2>
+                        Nenhuma peça repetida
+                    </h2>
+                    <p>
+                        Este colecionador ainda não possui peças
+                        duplicadas registradas.
+                    </p>
+                </section>
+            </div>
+
+            <aside class="profile-sidebar">
+                <section class="sidebar-card">
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-eyebrow">
+                                MUNDO
+                            </span>
+                            <h2>
+                                Emissores
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="countries-list" *ngIf="perfil.countries?.length">
+                        <div class="country-item" *ngFor="let country of perfil.countries">
+                            <span class="country-dot"></span>
+                            <span>
+                                {{ country }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-empty" *ngIf="!perfil.countries?.length">
+                        Nenhum emissor registrado.
+                    </div>
+                </section>
+
+                <section class="sidebar-card">
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-eyebrow">
+                                HISTÓRIA
+                            </span>
+                            <h2>
+                                Anos da coleção
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="years-info">
+                        <div>
+                            <span>
+                                Peça mais antiga
+                            </span>
+                            <strong>
+                                {{ perfil.years.oldest || '—' }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>
+                                Peça mais recente
+                            </span>
+                            <strong>
+                                {{ perfil.years.newest || '—' }}
+                            </strong>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sidebar-card">
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-eyebrow">
+                                CONQUISTAS
+                            </span>
+                            <h2>
+                                Medalhas
+                            </h2>
+                        </div>
+                        <span class="section-count">
+                            {{ perfil.achievements.length }}
+                        </span>
+                    </div>
+
+                    <div class="achievement-list" *ngIf="perfil.achievements?.length">
+                        <div class="achievement" *ngFor="let achievement of perfil.achievements">
+                            <div class="achievement-icon">
+                                {{ achievement.icon }}
+                            </div>
+                            <div>
+                                <strong>
+                                    {{ achievement.title }}
+                                </strong>
+                                <p>
+                                    {{ achievement.description }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar-empty" *ngIf="!perfil.achievements?.length">
+                        As primeiras conquistas aparecerão
+                        conforme a coleção crescer.
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </div>
+</div>

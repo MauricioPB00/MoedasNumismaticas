@@ -41,6 +41,7 @@ import { JwtInterceptor } from './AuthService/jwt.interceptor';
 import { PagamentoComponent } from './pagamento/pagamento.component';
 import { PlanosComponent } from './planos/planos.component';
 import { UserComponent } from './user/user.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { UserComponent } from './user/user.component';
     PagamentoComponent,
     PlanosComponent,
     UserComponent,
+    PerfilComponent,
   ],
   imports: [
     BrowserModule,
