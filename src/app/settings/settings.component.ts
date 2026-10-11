@@ -46,6 +46,42 @@ export class SettingsComponent implements OnInit {
       this.user = JSON.parse(controleUsuario);
     }
     this.loadAdvertising();
+    this.carregarUsuario();
+  }
+
+
+  carregarUsuario(): void {
+    this.loadingService.show();
+
+    this.userService.getUserInfo()
+      .pipe(take(1))
+      .subscribe({
+        next: (res: any) => {
+          const usuario = res?.user ?? res?.usuario ?? res;
+
+          if (usuario && typeof usuario === 'object') {
+            this.user = { ...usuario };
+
+            localStorage.setItem(
+              'ControleUsuario',
+              JSON.stringify(this.user)
+            );
+          } else {
+            this.toastr.error('Não foi possível carregar seus dados.');
+          }
+
+          this.loadingService.hide();
+        },
+        error: (err) => {
+          console.error('Erro ao buscar dados do usuário:', err);
+
+          this.toastr.error(
+            'Não foi possível carregar seus dados. Tente novamente.'
+          );
+
+          this.loadingService.hide();
+        }
+      });
   }
 
   toggleForm() {

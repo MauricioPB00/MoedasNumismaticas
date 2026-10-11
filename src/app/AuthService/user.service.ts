@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { API_CONFIG } from '../config/api.config';
 import { Observable, throwError } from 'rxjs';
-import { retry, catchError } from 'rxjs/operators';
+import { take, retry, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -45,22 +45,58 @@ export class UserService {
       );
   }
  
-  getUserInfo(): Observable<any> {
-    const token = localStorage.getItem('jwt');
+ 
+getUserInfo(): Observable<any> {
+  const token = localStorage.getItem('jwt');
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      })
-    };
-
-    return this.httpClient.get<any>(`${API_CONFIG.baseUrl}/informacao`, httpOptions)
-      .pipe(
-        retry(0),
-        catchError(this.handleError)
-      );
+  if (!token) {
+    return throwError(() => new Error('Token JWT não encontrado.'));
   }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+
+  return this.httpClient.get<any>(
+    `${API_CONFIG.baseUrl}/informacao`,
+    { headers }
+  ).pipe(
+    take(1),
+    catchError(this.handleError)
+  );
+}
+
+updateUser(user: any): Observable<any> {
+  const token = localStorage.getItem('jwt');
+
+  if (!token) {
+    return throwError(() => new Error('Token JWT não encontrado.'));
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  });
+
+  const dados = {
+    name: user.name,
+    email: user.email,
+    cpf: user.cpf,
+    rg: user.rg,
+    datNasc: user.datNasc,
+    city: user.city,
+    number: user.number
+  };
+
+  return this.httpClient.put<any>(
+    `${API_CONFIG.baseUrl}/update`,
+    dados,
+    { headers }
+  ).pipe(
+    take(1),
+    catchError(this.handleError)
+  );
+}
 
   uploadPhoto(file: File): Observable<any> {
     const token = localStorage.getItem('jwt');
@@ -75,23 +111,6 @@ export class UserService {
     formData.append('photo', file);
 
     return this.httpClient.post<any>(`${API_CONFIG.baseUrl}/photo`, formData, httpOptions)
-      .pipe(
-        retry(0),
-        catchError(this.handleError)
-      );
-  }
-
-  updateUser(user: any): Observable<any> {
-    const token = localStorage.getItem('jwt');
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      })
-    };
-
-    return this.httpClient.put<any>(`${API_CONFIG.baseUrl}/update`, JSON.stringify(user), httpOptions)
       .pipe(
         retry(0),
         catchError(this.handleError)
