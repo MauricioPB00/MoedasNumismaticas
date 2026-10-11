@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent {
+export class UserComponent implements OnInit {
   users: any[] = [];
   environment = environment;
 
@@ -52,5 +52,10 @@ export class UserComponent {
     Promise.resolve().then(() => {
       this.router.navigate(['/perfil', userId]);
     });
+  }
+
+  /** botão sanduíche -> tela "Alterar meus dados" */
+  irParaConfig(): void {
+    this.router.navigate(['/settings']); // AJUSTE para a rota real da tela de configurações
   }
 }

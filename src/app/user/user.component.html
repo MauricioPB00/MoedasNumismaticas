@@ -7,9 +7,21 @@
       <p>Explore os perfis dos colecionadores do Álbum Numismático.</p>
     </div>
 
-    <div class="users-count">
-      <strong>{{ users.length }}</strong>
-      <span>colecionadores</span>
+    <div class="header-actions">
+      <div class="users-count">
+        <strong>{{ users.length }}</strong>
+        <span>colecionadores</span>
+      </div>
+
+      <!-- sanduíche: vai para as configurações -->
+      <button type="button" class="menu-button" (click)="irParaConfig()" aria-label="Abrir configurações"
+        title="Configurações">
+        <span class="menu-lines" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
     </div>
   </div>
 

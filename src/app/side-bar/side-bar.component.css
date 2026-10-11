@@ -231,7 +231,7 @@ input[type="checkbox"]:not(:checked) + .checkbox-label .fa-moon {
   opacity: 0;
 }
 
-/* ================= CELULAR / TABLET: BARRA EMBAIXO ================= */
+/* ================= CELULAR / TABLET: BARRA EMBAIXO (só 5 itens) ================= */
 @media (max-width: 1024px) {
   #horizontal-bar {
     top: auto;
@@ -257,24 +257,31 @@ input[type="checkbox"]:not(:checked) + .checkbox-label .fa-moon {
     padding-bottom: 80px;
   }
 
+  /* menus de cada lado da moeda Home, com os ícones distribuídos */
   .left-menu,
   .right-menu {
     flex: 1;
+    min-width: 0;
     display: flex;
-    gap: 20px;
+    gap: 8px;
+    justify-content: space-evenly;
   }
 
+  /* reserva o espaço da moeda Home (70px) no centro da barra:
+     metade da moeda (35px) + 10px de folga = 45px de cada lado */
   .left-menu {
-    justify-content: flex-start;
     margin-left: 0;
+    padding-right: 45px;
   }
 
   .right-menu {
-    justify-content: flex-end;
+    padding-left: 45px;
   }
 
+  /* NOVO: esconde todo o bloco do desktop (perfil admin, usuário duplicado,
+     configurações, ajuda e toggle). No celular ficam só os 5 itens. */
   .right-menu-desktop {
-    margin-left: 0;
+    display: none !important;
   }
 
   /* ícones grandes e redondos para o toque */

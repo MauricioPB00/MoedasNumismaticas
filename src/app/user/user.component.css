@@ -273,6 +273,93 @@
   font-size: 14px;
 }
 
+/* ===== Cole no FINAL do seu user.component.css ===== */
+
+/* agrupa contador + sanduíche lado a lado */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* BOTÃO SANDUÍCHE */
+.menu-button {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid rgba(185, 120, 69, 0.25);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.2s ease;
+}
+
+.menu-button:hover {
+  border-color: rgba(185, 120, 69, 0.6);
+  background: rgba(185, 120, 69, 0.1);
+}
+
+.menu-button:active {
+  transform: scale(0.95);
+}
+
+.menu-button:focus-visible {
+  outline: 2px solid #b97845;
+  outline-offset: 2px;
+}
+
+.menu-lines {
+  width: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-lines span {
+  display: block;
+
+  height: 2px;
+  width: 100%;
+
+  border-radius: 2px;
+
+  background: #c88952;
+
+  transition: width 0.2s ease;
+}
+
+/* efeito: a linha do meio encurta no hover */
+.menu-button:hover .menu-lines span:nth-child(2) {
+  width: 70%;
+}
+
+/* MOBILE */
+@media (max-width: 700px) {
+
+  .header-actions {
+    align-self: stretch;
+  }
+
+  .header-actions .users-count {
+    flex: 1;
+  }
+
+}
+
+
 /* MOBILE */
 
 @media (max-width: 700px) {

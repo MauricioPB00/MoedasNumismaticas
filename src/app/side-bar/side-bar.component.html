@@ -10,18 +10,21 @@
 
         <ul class="horizontal-menu list-unstyled d-flex right-menu">
             <li><a href="/collection"><i class="fa fa-folder"></i><span>Coleção</span></a></li>
-            <li class="settings-mobile">
+            <!-- <li class="settings-mobile">
                 <a href="/settings"><i class="fa fa-cog"></i></a>
+            </li> -->
+            <li>
+                <a routerLink="/user"><i class="fa fa-user"></i></a>
             </li>
         </ul>
         <ul class="horizontal-menu list-unstyled d-flex right-menu-desktop">
             <li *ngIf="loginService.hasRole('ROLE_ADMIN')">
                 <a routerLink="/profile"><i class="fa fa-user"></i></a>
-            </li>
-            <li>
+            </li> 
+             <li>
                 <a routerLink="/user"><i class="fa fa-user"></i></a>
-            </li>
-            <li class="settings-desktop"><a href="/settings"><i class="fa fa-cog"></i><span></span></a></li>
+            </li> 
+             <li class="settings-desktop"><a href="/settings"><i class="fa fa-cog"></i><span></span></a></li> 
             <li><a href="/help"><i class="fa fa-question-circle"></i><span></span></a></li>
             <div class="checkboxDiv">
                 <input type="checkbox" name="checkbox" id="darkModeToggle" (change)="toggleDarkMode()"
