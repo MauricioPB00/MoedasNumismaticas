@@ -4,6 +4,11 @@ import * as svgPanZoom from 'svg-pan-zoom';
 import { CoinsService } from '../AuthService/coins.service';
 import { AVAILABLE_COUNTRIES, Country } from '../models/countries';
 import { LoadingService } from '../shared/loading.service';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+(pdfMake as any).vfs = (pdfFonts as any).vfs;
+import { logoBase64 } from 'src/assets/logo';
+
 
 export interface CountryData {
   code: string;
@@ -31,6 +36,16 @@ export class MapaMundiComponent implements OnInit {
   highlightedCountryCode: string | null = null;
 
   selectedCountryCode: string = '';
+  private flagCache: { [code: string]: string } = {};
+  private readonly ISO_CODES: string[] = (
+    'ad ae af ag ai al am ao ar as at au aw ax az ba bb bd be bf bg bh bi bj bl bm bn bo bq br bs bt bw by bz ' +
+    'ca cc cd cf cg ch ci ck cl cm cn co cr cu cv cw cx cy cz de dj dk dm do dz ec ee eg eh er es et fi fj fk fm fo fr ' +
+    'ga gb gd ge gf gg gh gi gl gm gn gp gq gr gt gu gw gy hk hn hr ht hu id ie il im in iq ir is it je jm jo jp ' +
+    'ke kg kh ki km kn kp kr kw ky kz la lb lc li lk lr ls lt lu lv ly ma mc md me mf mg mh mk ml mm mn mo mp mq mr ms mt mu mv mw mx my mz ' +
+    'na nc ne nf ng ni nl no np nr nu nz om pa pe pf pg ph pk pl pm pn pr ps pt pw py qa re ro rs ru rw ' +
+    'sa sb sc sd se sg sh si sj sk sl sm sn so sr ss st sv sx sy sz tc td tg th tj tk tl tm tn to tr tt tv tw tz ' +
+    'ua ug us uy uz va vc ve vg vi vn vu wf ws ye yt za zm zw'
+  ).split(' ');
 
   availableCountries: Country[] = AVAILABLE_COUNTRIES;
 
@@ -358,5 +373,273 @@ export class MapaMundiComponent implements OnInit {
         path.setAttribute('stroke-width', '0.5');
       });
     });
+  }
+
+  // =====================================================================
+  // PDF DE PAÍSES
+  // =====================================================================
+
+  private blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result as string);
+      r.onerror = () => reject();
+      r.readAsDataURL(blob);
+    });
+  }
+
+  private async loadFlags(codes: string[]): Promise<void> {
+    const toLoad = Array.from(new Set(codes.filter(c => c && !this.flagCache[c])));
+    await Promise.all(toLoad.map(async code => {
+      try {
+        const res = await fetch(`https://flagcdn.com/w40/${code}.png`);
+        if (!res.ok) return;
+        this.flagCache[code] = await this.blobToBase64(await res.blob());
+      } catch { /* sem bandeira: segue sem imagem */ }
+    }));
+  }
+
+  async gerarPDFPaises(): Promise<void> {
+    // ---------- cores ----------
+    const INK = '#15120f';
+    const COPPER = '#d2703f';
+    const PAPER = '#f7f5f0';
+    const LINE = '#e2ded6';
+    const MUTED = '#7b766d';
+    const OWNED_BG = '#fbefe7';
+    const CONTENT_W = 555; // A4 (595) menos as margens 20 + 20
+
+    if (!this.albumCoins?.length) {
+      alert('Nenhum item no álbum para gerar o PDF.');
+      return;
+    }
+
+    this.loadingService.show();
+
+    try {
+      // ---------- 1) totais por país (separando moeda e cédula) ----------
+      const coinsByIssuer: Record<string, number> = {};
+      const notesByIssuer: Record<string, number> = {};
+
+      this.albumCoins.forEach(item => {
+        const issuer = item.issuer || 'Desconhecido';
+        const qty = Number(item.quantity) || 1;
+        if (item.category === 'coin') coinsByIssuer[issuer] = (coinsByIssuer[issuer] || 0) + qty;
+        else if (item.category === 'banknote') notesByIssuer[issuer] = (notesByIssuer[issuer] || 0) + qty;
+      });
+
+      interface CountryRow { name: string; code: string; }
+
+      const all: CountryRow[] = this.availableCountries.map(c => ({
+        name: c.name,
+        code: (c.code || '').toLowerCase()
+      }));
+      const knownNames = new Set(all.map(c => c.name));
+      const knownCodes = new Set(all.map(c => c.code));
+
+      const regionNames = new (Intl as any).DisplayNames(['pt-BR'], { type: 'region' });
+      this.ISO_CODES.forEach(code => {
+        if (knownCodes.has(code)) return;
+        let name = '';
+        try { name = regionNames.of(code.toUpperCase()) || ''; } catch { /* ignora */ }
+        if (!name || name.toUpperCase() === code.toUpperCase() || knownNames.has(name)) return;
+        knownCodes.add(code);
+        knownNames.add(name);
+        all.push({ name, code });
+      });
+
+      [...Object.keys(coinsByIssuer), ...Object.keys(notesByIssuer)].forEach(name => {
+        if (!knownNames.has(name)) {
+          knownNames.add(name);
+          all.push({ name, code: '' });
+        }
+      });
+
+      all.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+
+      await this.loadFlags(all.map(c => c.code));
+
+      const today = new Date().toLocaleDateString('pt-BR');
+      const totalCountries = all.length;
+      const withCoins = all.filter(c => (coinsByIssuer[c.name] || 0) > 0).length;
+      const withNotes = all.filter(c => (notesByIssuer[c.name] || 0) > 0).length;
+      const withAny = all.filter(c =>
+        (coinsByIssuer[c.name] || 0) > 0 || (notesByIssuer[c.name] || 0) > 0
+      ).length;
+
+      const stat = (label: string, value: string, color: string = INK) => ({
+        stack: [
+          { text: label, style: 'statLabel' },
+          { text: value, style: 'statValue', color }
+        ]
+      });
+
+      const buildTable = () => {
+        const body: any[] = [[
+          { text: '', style: 'th' },
+          { text: 'País', style: 'th' },
+          { text: 'Moedas', style: 'th', alignment: 'center' },
+          { text: 'Cédulas', style: 'th', alignment: 'center' }
+        ]];
+
+        all.forEach(c => {
+          const coins = coinsByIssuer[c.name] || 0;
+          const notes = notesByIssuer[c.name] || 0;
+          const has = coins > 0 || notes > 0;
+          const fill = has ? OWNED_BG : null;
+          const flag = this.flagCache[c.code];
+
+          const qtyCell = (n: number) => ({
+            text: String(n),
+            fontSize: 9.5,
+            bold: n > 0,
+            alignment: 'center',
+            color: n > 0 ? COPPER : MUTED,
+            fillColor: fill
+          });
+
+          body.push([
+            flag
+              ? { image: flag, fit: [22, 15], opacity: has ? 1 : 0.35, fillColor: fill }
+              : { text: '', fillColor: fill },
+            {
+              text: c.name,
+              fontSize: 9.5,
+              bold: has,
+              color: has ? INK : MUTED,
+              fillColor: fill
+            },
+            qtyCell(coins),
+            qtyCell(notes)
+          ]);
+        });
+
+        return {
+          table: {
+            headerRows: 1,
+            dontBreakRows: true,
+            widths: [28, '*', 70, 70],
+            body
+          },
+          layout: {
+            fillColor: (rowIndex: number) => (rowIndex === 0 ? INK : null),
+            hLineWidth: (i: number) => (i <= 1 ? 0 : 0.5),
+            vLineWidth: () => 0,
+            hLineColor: () => LINE,
+            paddingLeft: () => 8,
+            paddingRight: () => 8,
+            paddingTop: () => 5,
+            paddingBottom: () => 5
+          }
+        };
+      };
+
+      const content: any[] = [
+        { text: 'Meus países', fontSize: 28, bold: true, color: INK },
+        {
+          text: 'Moedas e cédulas por país',
+          fontSize: 12,
+          bold: true,
+          color: COPPER,
+          margin: [0, 2, 0, 2]
+        },
+        {
+          text: `Destacado = você tem algum item · gerado em ${today}`,
+          fontSize: 8.5,
+          color: MUTED,
+          margin: [0, 0, 0, 14]
+        },
+        {
+          table: {
+            widths: ['*', '*', '*', '*'],
+            body: [[
+              stat('PAÍSES', String(totalCountries)),
+              stat('COM ITENS', String(withAny), COPPER),
+              stat('COM MOEDAS', String(withCoins), COPPER),
+              stat('COM CÉDULAS', String(withNotes), COPPER)
+            ]]
+          },
+          layout: {
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+            fillColor: () => PAPER,
+            paddingLeft: () => 14,
+            paddingRight: () => 8,
+            paddingTop: () => 10,
+            paddingBottom: () => 10
+          },
+          margin: [0, 0, 0, 14]
+        },
+
+        buildTable()
+      ];
+
+      const docDefinition: any = {
+        pageSize: 'A4',
+        pageMargins: [20, 70, 20, 40],
+
+        info: { title: 'Meus países - Álbum Numismático', author: 'Álbum Numismático' },
+        defaultStyle: { font: 'Roboto', color: INK },
+
+        header: () => ({
+          margin: [20, 18, 20, 0],
+          stack: [
+            {
+              columns: [
+                { image: logoBase64, width: 26 },
+                {
+                  width: '*',
+                  margin: [8, 1, 0, 0],
+                  stack: [
+                    { text: 'Álbum Numismático', fontSize: 13, bold: true, color: INK },
+                    {
+                      text: 'Organize, catalogue e explore o fascinante mundo das moedas.',
+                      fontSize: 7.5,
+                      color: MUTED
+                    }
+                  ]
+                },
+                {
+                  width: 'auto',
+                  margin: [0, 8, 0, 0],
+                  text: 'www.albumnumismatico.com.br',
+                  fontSize: 8,
+                  color: COPPER
+                }
+              ]
+            },
+            {
+              margin: [0, 8, 0, 0],
+              canvas: [{ type: 'rect', x: 0, y: 0, w: CONTENT_W, h: 2, color: COPPER }]
+            }
+          ]
+        }),
+
+        footer: (currentPage: number, pageCount: number) => ({
+          margin: [20, 12, 20, 0],
+          columns: [
+            { text: `Gerado em ${today}`, fontSize: 8, color: MUTED },
+            {
+              text: `Página ${currentPage} de ${pageCount}`,
+              fontSize: 8,
+              color: MUTED,
+              alignment: 'right'
+            }
+          ]
+        }),
+
+        content,
+
+        styles: {
+          th: { bold: true, color: '#ffffff', fontSize: 9 },
+          statLabel: { fontSize: 7, color: MUTED, characterSpacing: 0.6 },
+          statValue: { fontSize: 22, bold: true, margin: [0, 2, 0, 0] }
+        }
+      };
+
+      pdfMake.createPdf(docDefinition).download('meus-paises-moedas-e-cedulas.pdf');
+    } finally {
+      this.loadingService.hide();
+    }
   }
 }
