@@ -1,5 +1,4 @@
 <div class="users-page">
-
   <div class="page-header">
     <div>
       <span class="eyebrow">COMUNIDADE</span>
@@ -9,11 +8,10 @@
 
     <div class="header-actions">
       <div class="users-count">
-        <strong>{{ users.length }}</strong>
+        <strong>{{ filteredUsers.length }}</strong>
         <span>colecionadores</span>
       </div>
 
-      <!-- sanduíche: vai para as configurações -->
       <button type="button" class="menu-button" (click)="irParaConfig()" aria-label="Abrir configurações"
         title="Configurações">
         <span class="menu-lines" aria-hidden="true">
@@ -25,49 +23,38 @@
     </div>
   </div>
 
+  <div class="search-box">
+    <span class="search-icon" aria-hidden="true">🔍</span>
+    <input type="text" class="search-input" placeholder="Buscar por nome ou ID..." [(ngModel)]="searchTerm"
+      aria-label="Buscar colecionador por nome ou ID" />
+    <button type="button" class="search-clear" *ngIf="searchTerm" (click)="limparBusca()"
+      aria-label="Limpar busca">✕</button>
+  </div>
+
   <div class="users-grid">
-
-    <div class="user-card" *ngFor="let user of users" (click)="abrirPerfil(user.id)">
-
+    <div class="user-card" *ngFor="let user of filteredUsers" (click)="abrirPerfil(user.id)">
       <div class="card-background"></div>
-
       <div class="user-avatar">
-
         <img *ngIf="user.photo" [src]="getUserPhotoPath(user.photo)" [alt]="user.name" />
-
         <div class="avatar-placeholder" *ngIf="!user.photo">
           {{ user.name?.charAt(0)?.toUpperCase() }}
         </div>
-
       </div>
-
       <div class="user-info">
-
         <h2>{{ user.name }}</h2>
-
-        <span class="profile-label">
-          Colecionador
-        </span>
-
+        <span class="profile-label">Colecionador</span>
       </div>
-
       <div class="view-profile">
         Ver perfil
         <span>→</span>
       </div>
-
     </div>
-
   </div>
 
-  <div class="empty-state" *ngIf="!users.length">
-    <div class="empty-icon">👥</div>
-
+  <div class="empty-state" *ngIf="!filteredUsers.length">
+    <div class="empty-icon">{{ searchTerm ? '🔍' : '👥' }}</div>
     <h2>Nenhum colecionador encontrado</h2>
-
-    <p>
-      Ainda não existem colecionadores para exibir.
-    </p>
+    <p *ngIf="!searchTerm">Ainda não existem colecionadores para exibir.</p>
+    <p *ngIf="searchTerm">Nenhum resultado para "{{ searchTerm }}". Tente outro nome ou ID.</p>
   </div>
-
 </div>

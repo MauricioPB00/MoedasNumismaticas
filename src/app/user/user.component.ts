@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 })
 export class UserComponent implements OnInit {
   users: any[] = [];
+  searchTerm = '';
   environment = environment;
 
   constructor(
@@ -26,16 +27,37 @@ export class UserComponent implements OnInit {
     this.getUsuario();
   }
 
+  get filteredUsers(): any[] {
+    const term = this.normalize(this.searchTerm);
+    if (!term) {
+      return this.users;
+    }
+
+    return this.users.filter(user =>
+      this.normalize(user.name).includes(term) ||
+      String(user.id).includes(term)
+    );
+  }
+
+  private normalize(value: any): string {
+    return String(value ?? '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+  }
+
+  limparBusca(): void {
+    this.searchTerm = '';
+  }
+
   getUsuario() {
-    // this.loadingService.show();
     this.userService.getUsers().pipe(take(1)).subscribe({
       next: (res) => {
         this.users = res;
-        // this.loadingService.hide();
       },
       error: (err) => {
         this.toastr.error(err, 'Erro ao carregar usuários');
-        // this.loadingService.hide();
       }
     });
   }
@@ -54,8 +76,7 @@ export class UserComponent implements OnInit {
     });
   }
 
-  /** botão sanduíche -> tela "Alterar meus dados" */
   irParaConfig(): void {
-    this.router.navigate(['/settings']); // AJUSTE para a rota real da tela de configurações
+    this.router.navigate(['/settings']);
   }
 }
